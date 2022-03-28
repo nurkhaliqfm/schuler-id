@@ -6,6 +6,11 @@ class Home extends BaseController
 {
     public function index()
     {
-        return view('welcome_message');
+        $data = [
+            'title' => 'Dasboard Schuler.id',
+            'user_name' => 'codefm.my.id'
+        ];
+
+        return view('home/dashboard', $data);
     }
 }

@@ -1,0 +1,119 @@
+/*----------------
+Fonts
+---------------*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+/*----------------
+Global Css
+---------------*/
+:root {
+  --main-color: #ffffff;
+  --color-1: #004aad;
+  --color-2: #cfe3f2;
+  --color-3: #dedede;
+  --color-bg: #e1dede;
+  --shadow-navbar: 0px 2px 7px rgba(0, 0, 0, 0.25);
+  --shadow-white-box: 0px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  line-height: 1.5;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none !important;
+}
+
+/*----------------
+Navbar
+---------------*/
+.navbar {
+  height: 60px;
+  background-color: var(--main-color);
+  padding: 10px 0;
+  box-shadow: var(--shadow-navbar);
+}
+
+.navbar .navbar-brand {
+  width: 250px;
+}
+
+.navbar .navbar-brand img {
+  display: block;
+  margin: auto;
+}
+
+.navbar .navbar-username {
+  margin: 5px;
+  padding: 2px 40px;
+  background: var(--main-color);
+  border: 2px solid var(--color-1);
+  border-radius: 25px;
+  font-size: 1rem;
+  color: var(--color-1);
+}
+
+.navbar .navbar-shop {
+  margin: 5px;
+  padding: 2px 40px;
+  background: var(--main-color);
+  border: 2px solid var(--color-1);
+  border-radius: 25px;
+  font-size: 1rem;
+  color: var(--color-1);
+}
+
+.navbar .navbar-shop i {
+  margin-right: 5px;
+}
+
+.navbar .navbar-profil .border-profil {
+  margin: 0px 5px;
+  border: 2px solid var(--color-1);
+}
+
+/*----------------
+Sidebar Nav
+---------------*/
+.sidebar-nav {
+  height: 100vh;
+  width: 275px;
+  background-color: var(--main-color);
+  margin-top: 60px;
+  position: fixed;
+}
+
+/*----------------
+Main Content
+---------------*/
+.page-wrapper {
+  margin-left: 275px;
+  margin-top: 60px;
+}
+
+.page-wrapper .white-box {
+  min-height: 150px;
+  background-color: var(--main-color);
+  margin: 30px 10px;
+  box-shadow: var(--shadow-white-box);
+  border-radius: 25px;
+  padding: 20px;
+}
+
+.page-wrapper .white-box .box-title {
+  font-weight: 700;
+}
