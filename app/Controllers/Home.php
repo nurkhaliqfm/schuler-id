@@ -18,7 +18,7 @@ class Home extends BaseController
     public function super_camp_utbk()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Super Camp UTBK Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
@@ -29,7 +29,7 @@ class Home extends BaseController
     public function kerjakan_latihan()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Kerjakan Latihan Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
@@ -38,7 +38,7 @@ class Home extends BaseController
     public function hasil_latihan()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Hasil Latihan Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
@@ -49,7 +49,7 @@ class Home extends BaseController
     public function simulasi_gratis()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Simulasi Gratis Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
@@ -58,7 +58,7 @@ class Home extends BaseController
     public function simulasi_premium()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Simulasi Premium Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
@@ -67,7 +67,7 @@ class Home extends BaseController
     public function hasil_simulasi()
     {
         $data = [
-            'title' => 'Dasboard Schuler.id',
+            'title' => 'Hasil Simulasi Schuler.id',
             'user_name' => 'codefm.my.id'
         ];
 
