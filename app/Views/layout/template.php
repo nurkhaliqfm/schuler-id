@@ -18,8 +18,10 @@
 </head>
 
 <body>
-    <?= $this->include('layout/navbar'); ?>
-    <?= $this->renderSection('content'); ?>
+    <div id="main-wrapper">
+        <?= $this->include('layout/navbar'); ?>
+        <?= $this->renderSection('content'); ?>
+    </div>
 
     <!-- jQuery -->
     <script src="<?php echo base_url('assets/js/jquery.min.js') ?>"></script>
