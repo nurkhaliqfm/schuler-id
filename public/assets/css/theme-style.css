@@ -131,10 +131,13 @@ Sidebar Nav
 
 .sidebar-nav.full {
   z-index: 100;
+  transition: all 0.5s ease-in-out;
+  transform: translateX(0px);
 }
 
 .sidebar-nav.hide {
-  display: none;
+  transform: translateX(-275px);
+  transition: all 0.5s ease-in-out;
 }
 
 .sidebar-item .sidebar-link .fa-angle-right {
@@ -147,10 +150,21 @@ Sidebar Nav
   transform: rotate(90deg);
 }
 
+.sidebar-nav li .nav-treeview span {
+  word-wrap: break-word;
+  padding-left: 1.2rem;
+}
+
 .hide-menu .fa-angle-right {
   position: absolute;
   right: 0;
   margin-right: 5px;
+}
+
+.sidebar-nav .nav-treeview {
+  list-style-type: none;
+  padding: 0px;
+  margin-top: 0px;
 }
 
 .sidebar-nav .sidebarnav-list {
@@ -173,28 +187,32 @@ Sidebar Nav
 
 .sidebarnav-list .sidebar-item {
   background-color: var(--main-color);
-  padding: 12px 18px;
   font-weight: 200;
   font-size: 0.9rem;
 }
 
-.sidebarnav-list .sidebar-item:hover {
+.sidebarnav-list .sidebar-link:hover {
   background: var(--color-side-active);
   cursor: pointer;
 }
 
-.sidebarnav-list .sidebar-item.active {
+.sidebarnav-list .sidebar-link {
+  width: 100%;
+  padding: 12px 18px;
+}
+
+.sidebarnav-list .sidebar-link.active {
   background: var(--color-side-active);
   border-left: 3px solid var(--color-1);
   font-weight: 500;
 }
 
-.sidebarnav-list .sidebar-item.last-btn {
-  border-bottom: 1px solid var(--color-3);
+.nav-treeview.collapse.in {
+  display: block;
 }
 
-.sidebar-nav .sidebar-bottom.hidden {
-  display: none;
+.sidebarnav-list .sidebar-item.last-btn {
+  border-bottom: 1px solid var(--color-3);
 }
 
 .sidebar-nav .sidebar-link {
@@ -204,14 +222,18 @@ Sidebar Nav
 }
 
 .sidebar-nav .sidebar-link i {
-  padding-right: 8px;
-  font-size: 1.15rem;
+  padding-right: 6px;
+  font-size: 1rem;
   vertical-align: baseline;
 }
 .sidebar-nav .sidebar-link span {
   padding-right: 8px;
   font-size: 0.9rem;
   vertical-align: baseline;
+}
+
+.sidebar-nav .sidebar-bottom {
+  display: none;
 }
 
 .sidebar-bottom .sidebar-profil-container {
@@ -260,12 +282,12 @@ Sidebar Nav
 /*----------------
 Main Content
 ---------------*/
-.page-wrapper {
+.page-container {
   margin-left: 275px;
   margin-top: var(--navbar-height);
 }
 
-.page-wrapper .white-box {
+.page-container .white-box {
   min-height: 150px;
   background-color: var(--main-color);
   margin: 30px 10px;
@@ -274,7 +296,7 @@ Main Content
   padding: 20px;
 }
 
-.page-wrapper .white-box .box-title {
+.page-container .white-box .box-title {
   font-weight: 700;
 }
 
@@ -306,14 +328,14 @@ Responsive
     position: relative;
     justify-content: center;
     align-items: center;
-    height: 40px;
-    width: 40px;
+    height: 35px;
+    width: 35px;
     cursor: pointer;
     transition: all 0.5s ease-in-out;
   }
 
   .menu-btn__burger {
-    width: 30px;
+    width: 25px;
     height: 4px;
     background: var(--color-1);
     border-radius: 5px;
@@ -325,7 +347,7 @@ Responsive
   .menu-btn__burger::after {
     content: "";
     position: absolute;
-    width: 30px;
+    width: 25px;
     height: 4px;
     background: var(--color-1);
     border-radius: 5px;
@@ -334,11 +356,11 @@ Responsive
   }
 
   .menu-btn__burger::before {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 
   .menu-btn__burger::after {
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 
   .menu-btn.open .menu-btn__burger {
@@ -356,9 +378,13 @@ Responsive
   }
 
   /* Sidebar Nav */
+  .sidebar-nav .sidebar-bottom {
+    display: block;
+    padding: 12px 15px;
+  }
 
   /* Main Content */
-  .page-wrapper {
+  .page-container {
     margin-left: 0px;
     margin-top: var(--navbar-height);
   }

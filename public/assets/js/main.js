@@ -19,4 +19,19 @@ $(window).on("load", function () {
       sidebarnav.classList.add("hide");
     }
   });
+
+  /*----------- Sidebar Responsive ------------*/
+  var setsidebartype = function () {
+    var width = window.innerWidth > 0 ? window.innerWidth : this.screen.width;
+    if (width < 992) {
+      menuBtn.classList.remove("open");
+      menuOpen = false;
+      sidebarnav.classList.add("hide");
+    } else {
+      sidebarnav.classList.remove("hide");
+      sidebarnav.classList.remove("full");
+    }
+  };
+  $(window).ready(setsidebartype);
+  $(window).on("resize", setsidebartype);
 });

@@ -28,6 +28,8 @@
     <!-- Bootstrap 5 -->
     <script src="<?php echo base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
     <!-- Main Js -->
+    <script src="<?php echo base_url('assets/js/sidebarmenu.js') ?>"></script>
+    <!-- Main Js -->
     <script src="<?php echo base_url('assets/js/main.js') ?>"></script>
 </body>
 
