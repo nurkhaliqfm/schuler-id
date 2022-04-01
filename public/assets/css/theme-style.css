@@ -427,6 +427,11 @@ Responsive
     padding-left: 0px;
   }
 
+  .sidebar-nav .sidebar-bottom.half {
+    display: block;
+    margin: 0px 15px;
+  }
+
   /* Main Content */
   .page-container {
     margin-left: 90px;
@@ -461,5 +466,10 @@ Responsive
 
   .sidebar-nav .sidebar-link i {
     font-size: 1rem;
+  }
+
+  .sidebar-nav .sidebar-bottom {
+    display: block;
+    margin: 0px 15px;
   }
 }

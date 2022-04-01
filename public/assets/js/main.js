@@ -17,6 +17,8 @@ $(window).on("load", function () {
       $(".sidebarnav-list .sidebar-item-title").removeClass("half");
       $(".sidebar-item .sidebar-link").removeClass("half");
       $(".sidebar-nav li .nav-treeview").removeClass("half");
+      $(".sidebar-nav .sidebar-bottom").removeClass("half");
+
       sidebarnav.classList.remove("hide");
       sidebarnav.classList.remove("half");
       sidebarnav.classList.remove("full");
@@ -28,6 +30,8 @@ $(window).on("load", function () {
       $(".sidebarnav-list .sidebar-item-title").removeClass("half");
       $(".sidebar-item .sidebar-link").removeClass("half");
       $(".sidebar-nav li .nav-treeview").removeClass("half");
+      $(".sidebar-nav .sidebar-bottom").removeClass("half");
+
       menuBtn.classList.remove("open");
       sidebarnav.classList.add("half");
       sidebarnav.classList.remove("hide");
@@ -43,6 +47,7 @@ $(window).on("load", function () {
           $(".sidebarnav-list .sidebar-item-title").addClass("half");
           $(".sidebar-item .sidebar-link").addClass("half");
           $(".sidebar-nav li .nav-treeview").addClass("half");
+          $(".sidebar-nav .sidebar-bottom").addClass("half");
         } else {
           menuBtn.classList.remove("open");
           menuOpen = false;
@@ -53,6 +58,7 @@ $(window).on("load", function () {
           $(".sidebarnav-list .sidebar-item-title").removeClass("half");
           $(".sidebar-item .sidebar-link").removeClass("half");
           $(".sidebar-nav li .nav-treeview").removeClass("half");
+          $(".sidebar-nav .sidebar-bottom").removeClass("half");
         }
       });
 
@@ -64,6 +70,8 @@ $(window).on("load", function () {
       $(".sidebarnav-list .sidebar-item-title").removeClass("half");
       $(".sidebar-item .sidebar-link").removeClass("half");
       $(".sidebar-nav li .nav-treeview").removeClass("half");
+      $(".sidebar-nav .sidebar-bottom").removeClass("half");
+
       menuBtn.classList.remove("open");
       sidebarnav.classList.add("hide");
       sidebarnav.classList.remove("half");
