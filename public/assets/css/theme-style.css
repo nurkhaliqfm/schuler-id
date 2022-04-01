@@ -319,6 +319,10 @@ Sidebar Nav
   padding-left: 2.2rem;
 }
 
+.sidebar-nav .sidebar-link.half i {
+  margin-left: 0px;
+}
+
 /*----------------
 Main Content
 ---------------*/
@@ -466,10 +470,16 @@ Responsive
 
   .sidebar-nav .sidebar-link i {
     font-size: 1rem;
+    margin-left: 0px;
   }
 
   .sidebar-nav .sidebar-bottom {
     display: block;
     margin: 0px 15px;
+  }
+
+  .sidebar-nav li .nav-treeview i {
+    font-size: 1rem;
+    padding-left: 2.2rem;
   }
 }
