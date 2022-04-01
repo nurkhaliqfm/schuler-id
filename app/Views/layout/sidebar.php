@@ -45,16 +45,16 @@
                 <ul class="nav-treeview collapse">
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="<?= base_url('home/kerjakan_latihan'); ?>" aria-expanded="false">
+                            <i class="fa-solid fa-file-pen"></i>
                             <span class="hide-menu">
-                                <i class="fa-solid fa-file-pen"></i>
                                 Kerjakan Latihan
                             </span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="<?= base_url('home/hasil_latihan'); ?>" aria-expanded="false">
+                            <i class="fa-solid fa-file-circle-check"></i>
                             <span class="hide-menu">
-                                <i class="fa-solid fa-file-circle-check"></i>
                                 Hasil Latihan
                             </span>
                         </a>
@@ -72,24 +72,24 @@
                 <ul class="nav-treeview collapse">
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="<?= base_url('home/simulasi_gratis'); ?>" aria-expanded="false">
+                            <i class="fa-solid fa-file-pen"></i>
                             <span class="hide-menu">
-                                <i class="fa-solid fa-file-pen"></i>
                                 Simulasi Gratis
                             </span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="<?= base_url('home/simulasi_premium'); ?>" aria-expanded="false">
+                            <i class="fa-solid fa-file-pen"></i>
                             <span class="hide-menu">
-                                <i class="fa-solid fa-file-pen"></i>
                                 Simulasi Premium
                             </span>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="<?= base_url('home/hasil_simulasi'); ?>" aria-expanded="false">
+                            <i class="fa-solid fa-file-circle-check"></i>
                             <span class="hide-menu">
-                                <i class="fa-solid fa-file-circle-check"></i>
                                 Hasil Simulasi
                             </span>
                         </a>
@@ -123,7 +123,7 @@
         </ul>
     </div>
     <div class="sidebar-bottom">
-        <div class="sidebar-profil-container text-center">
+        <div class="sidebar-profil-container">
             <div class="profil-container">
                 <img class="profil-sidebar" alt="img" src="<?= base_url('assets/img/codebreak.png'); ?>">
             </div>

@@ -74,9 +74,17 @@ Navbar
   width: 250px;
 }
 
+.navbar .navbar-brand.half-navbar-brand {
+  width: 60px;
+}
+
 .navbar .navbar-brand img {
   display: block;
   margin: auto;
+}
+
+.navbar .navbar-brand .half-logo {
+  width: 60px;
 }
 
 .navbar .navbar-username {
@@ -106,6 +114,10 @@ Navbar
   margin-right: 5px;
 }
 
+.navbar .navbar-profil {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .navbar .navbar-profil .border-profil {
   margin: 0px 5px;
   border: 2px solid var(--color-1);
@@ -118,8 +130,9 @@ Navbar
 /*----------------
 Sidebar Nav
 ---------------*/
+
 .sidebar-nav {
-  height: 100vh;
+  height: 90vh;
   width: 275px;
   padding-bottom: 100px;
   background-color: var(--main-color);
@@ -133,6 +146,13 @@ Sidebar Nav
   z-index: 100;
   transition: all 0.5s ease-in-out;
   transform: translateX(0px);
+}
+
+.sidebar-nav.half {
+  z-index: 100;
+  width: 86px;
+  transform: translateX(0px);
+  transition: all 0.5s ease-in-out;
 }
 
 .sidebar-nav.hide {
@@ -150,9 +170,9 @@ Sidebar Nav
   transform: rotate(90deg);
 }
 
-.sidebar-nav li .nav-treeview span {
+.sidebar-nav li .nav-treeview i {
   word-wrap: break-word;
-  padding-left: 1.2rem;
+  padding-left: 2.2rem;
 }
 
 .hide-menu .fa-angle-right {
@@ -239,13 +259,13 @@ Sidebar Nav
 .sidebar-bottom .sidebar-profil-container {
   background-color: var(--color-4);
   border-radius: 8px;
-  padding: 8px;
+  display: flex;
+  padding-left: 5px;
 }
 
 .sidebar-profil-container .profil-container {
-  max-width: 70px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 60px;
+  margin: 8px;
 }
 
 .profil-sidebar {
@@ -255,7 +275,9 @@ Sidebar Nav
 
 .user-name-container {
   padding: 0px;
-  margin-top: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 5px;
 }
 
 .user-name-container .user-name {
@@ -264,8 +286,6 @@ Sidebar Nav
 
 .user-name-container .sidebar-shop {
   max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
   padding: 2px 10px;
   background: var(--main-color);
   border: 1px solid rgb(0, 0, 0);
@@ -277,6 +297,26 @@ Sidebar Nav
 
 .user-name-container .sidebar-shop i {
   margin-right: 5px;
+}
+
+.sidebar-item .sidebar-link.half .fa-angle-right {
+  display: inline;
+}
+
+.sidebarnav-list .sidebar-item-title.half {
+  display: block;
+}
+
+.sidebarnav-list .sidebar-link.half .hide-menu {
+  display: inline;
+}
+
+.sidebar-nav .sidebar-link.half i {
+  font-size: 1rem;
+}
+
+.sidebar-nav li .nav-treeview.half i {
+  padding-left: 2.2rem;
 }
 
 /*----------------
@@ -303,26 +343,12 @@ Main Content
 /*----------------
 Responsive
 ---------------*/
-@media (max-width: 600px) {
+
+@media (max-width: 992px) {
 }
 
 @media (max-width: 768px) {
-}
-
-@media (max-width: 992px) {
   /* Navbar */
-  .navbar .navbar-username {
-    display: none;
-  }
-
-  .navbar .navbar-shop {
-    display: none;
-  }
-
-  .navbar .navbar-profil .border-profil {
-    display: none;
-  }
-
   .menu-btn {
     display: flex;
     position: relative;
@@ -378,14 +404,62 @@ Responsive
   }
 
   /* Sidebar Nav */
-  .sidebar-nav .sidebar-bottom {
-    display: block;
-    padding: 12px 15px;
+  .sidebar-item .sidebar-link .fa-angle-right {
+    display: none;
+  }
+
+  .sidebarnav-list .sidebar-item-title {
+    display: none;
+  }
+
+  .sidebarnav-list .sidebar-link .hide-menu {
+    display: none;
+  }
+
+  .sidebar-nav .sidebar-link i {
+    font-size: 1.3rem;
+    margin-right: 0;
+    margin-left: 12px;
+  }
+
+  .sidebar-nav li .nav-treeview i {
+    font-size: 1.3rem;
+    padding-left: 0px;
   }
 
   /* Main Content */
   .page-container {
+    margin-left: 90px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Navbar */
+  .navbar .navbar-username {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  /* Main Content */
+  .page-container {
     margin-left: 0px;
-    margin-top: var(--navbar-height);
+  }
+
+  /* Sidebar Nav */
+  .sidebar-item .sidebar-link .fa-angle-right {
+    display: inline;
+  }
+
+  .sidebarnav-list .sidebar-item-title {
+    display: block;
+  }
+
+  .sidebarnav-list .sidebar-link .hide-menu {
+    display: inline;
+  }
+
+  .sidebar-nav .sidebar-link i {
+    font-size: 1rem;
   }
 }

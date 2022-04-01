@@ -13,7 +13,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?php echo base_url('assets/css/theme-style.css') ?>">
     <!-- Fav Icon -->
-    <link rel="icon" type="image/x-icon" href="<?php echo base_url('assets/img/codebreak.png') ?>">
+    <link rel="icon" type="image/x-icon" href="<?php echo base_url('assets/img/favicon.png') ?>">
 
 </head>
 
