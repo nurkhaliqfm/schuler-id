@@ -1,8 +1,10 @@
+<?php $uri = current_url(true)->getSegment(2); ?>
+
 <nav class="sidebar-nav full">
     <div class="sidebar-body">
         <ul id="sidebarnav" class="sidebarnav-list">
             <li class="sidebar-item last-btn">
-                <a class="sidebar-link" href="<?= base_url('home/index'); ?>" aria-expanded="false">
+                <a class="sidebar-link <?= $uri == 'index' || $uri == '' ? 'active' : ''; ?>" href=" <?= base_url('/'); ?>" aria-expanded="false">
                     <i class="fa-solid fa-house"></i>
                     <span class="hide-menu">Beranda</span>
                 </a>
