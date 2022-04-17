@@ -14,6 +14,9 @@ Global Css
   --color-4: #f0f0f0;
   --color-side-active: #f4f7fa;
   --color-bg: #e1dede;
+  --color-facebook: #0997ff;
+  --color-whatsapp: #05b84d;
+  --color-instagram: #ff098e;
   --navbar-height: 70px;
   --shadow-navbar: 0px 2px 7px rgba(0, 0, 0, 0.25);
   --shadow-white-box: 0px 1px 4px rgba(0, 0, 0, 0.25);
@@ -72,10 +75,11 @@ Navbar
 
 .navbar .navbar-brand {
   width: 250px;
+  margin-right: 12px;
 }
 
 .navbar .navbar-brand.half-navbar-brand {
-  width: 60px;
+  width: 50px;
 }
 
 .navbar .navbar-brand img {
@@ -84,7 +88,7 @@ Navbar
 }
 
 .navbar .navbar-brand .half-logo {
-  width: 60px;
+  width: 50px;
 }
 
 .navbar .navbar-username {
@@ -150,7 +154,7 @@ Sidebar Nav
 
 .sidebar-nav.half {
   z-index: 100;
-  width: 86px;
+  width: 75px;
   transform: translateX(0px);
   transition: all 0.5s ease-in-out;
 }
@@ -326,15 +330,19 @@ Sidebar Nav
 /*----------------
 Main Content
 ---------------*/
+/* Default */
 .page-container {
   margin-left: 275px;
   margin-top: var(--navbar-height);
 }
 
+.page-container .container-fluid {
+  padding-top: 20px;
+}
+
 .page-container .white-box {
-  min-height: 150px;
   background-color: var(--main-color);
-  margin: 30px 10px;
+  margin: 10px 10px;
   box-shadow: var(--shadow-white-box);
   border-radius: 25px;
   padding: 20px;
@@ -342,13 +350,195 @@ Main Content
 
 .page-container .white-box .box-title {
   font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* Beranda */
+.container-head-dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  align-content: center;
+}
+
+.container-head-dashboard .head-content {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+
+.container-head-dashboard .line-separator.left,
+.container-head-dashboard .line-separator.right {
+  display: flex;
+  align-self: stretch;
+  content: "";
+  border-radius: 5px;
+  border: 1px solid var(--color-3);
+}
+
+.container-head-dashboard .head-content .content-img {
+  border: 1px solid var(--color-1);
+  background-color: var(--color-side-active);
+  border-radius: 100%;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-head-dashboard .head-content .content-name {
+  line-height: 1.1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0px 12px;
+}
+
+.container-head-dashboard .head-content .content-value {
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.container-sosmed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sosmed-facebook {
+  background-color: var(--color-facebook);
+  max-width: 400px;
+  border-radius: 100px;
+  padding: 2px 20px;
+  margin: 0px 10px;
+  color: var(--main-color);
+  font-weight: 500;
+  box-shadow: var(--shadow-white-box);
+}
+
+.sosmed-whatsapp {
+  background-color: var(--color-whatsapp);
+  max-width: 400px;
+  border-radius: 100px;
+  padding: 2px 20px;
+  margin: 0px 10px;
+  color: var(--main-color);
+  font-weight: 500;
+  box-shadow: var(--shadow-white-box);
+}
+
+.sosmed-instagram {
+  background-color: var(--color-instagram);
+  max-width: 400px;
+  border-radius: 100px;
+  padding: 2px 20px;
+  margin: 0px 10px;
+  color: var(--main-color);
+  font-weight: 500;
+  box-shadow: var(--shadow-white-box);
+}
+
+.sosmed-facebook:hover {
+  background-color: var(--main-color);
+  border: 1px solid var(--color-facebook);
+  box-shadow: 0px 3px 1px var(--color-facebook);
+  color: var(--color-facebook);
+}
+
+.sosmed-whatsapp:hover {
+  background-color: var(--main-color);
+  border: 1px solid var(--color-whatsapp);
+  box-shadow: 0px 3px 1px var(--color-whatsapp);
+  color: var(--color-whatsapp);
+}
+
+.sosmed-instagram:hover {
+  background-color: var(--main-color);
+  border: 1px solid var(--color-instagram);
+  box-shadow: 0px 3px 1px var(--color-instagram);
+  color: var(--color-instagram);
 }
 
 /*----------------
 Responsive
 ---------------*/
 
-@media (max-width: 992px) {
+@media (max-width: 1020px) {
+  /* Main Conten */
+  /* Beranda */
+  .container-head-dashboard .head-content {
+    padding: 10px;
+  }
+
+  .container-head-dashboard .head-content .content-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .container-head-dashboard .head-content .content-img img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .container-head-dashboard .head-content .content-name {
+    font-size: 0.8rem;
+  }
+
+  .container-head-dashboard .head-content .content-value {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 932px) {
+  /* Main Conten */
+  /* Beranda */
+  .container-head-dashboard .head-content {
+    padding: 5px;
+  }
+
+  .container-head-dashboard .head-content .content-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .container-head-dashboard .head-content .content-img img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .container-head-dashboard .head-content .content-name {
+    font-size: 0.7rem;
+  }
+
+  .container-head-dashboard .head-content .content-value {
+    font-size: 1.9rem;
+  }
+}
+
+@media (max-width: 840px) {
+  /* Main Conten */
+  /* Beranda */
+  .container-head-dashboard .head-content .content-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .container-head-dashboard .head-content .content-img img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .container-head-dashboard .head-content .content-name {
+    font-size: 0.65rem;
+    margin: 0px 8px;
+  }
+
+  .container-head-dashboard .head-content .content-value {
+    font-size: 1.8rem;
+  }
 }
 
 @media (max-width: 768px) {
@@ -423,7 +613,7 @@ Responsive
   .sidebar-nav .sidebar-link i {
     font-size: 1.3rem;
     margin-right: 0;
-    margin-left: 12px;
+    margin-left: 7px;
   }
 
   .sidebar-nav li .nav-treeview i {
@@ -438,7 +628,47 @@ Responsive
 
   /* Main Content */
   .page-container {
-    margin-left: 90px;
+    margin-left: 75px;
+  }
+}
+
+@media (max-width: 620px) {
+  /* Main Content */
+  /* Beranda */
+  .container-head-dashboard {
+    flex-direction: column;
+  }
+
+  .container-head-dashboard .head-content {
+    width: 210px;
+  }
+
+  .container-head-dashboard .head-content .content-img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .container-head-dashboard .head-content .content-img img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .container-head-dashboard .head-content .content-name {
+    font-size: 0.95rem;
+    margin: 0px 12px;
+  }
+
+  .container-head-dashboard .head-content .content-value {
+    font-size: 2.2rem;
+    right: 0;
+  }
+
+  .container-head-dashboard .line-separator.left,
+  .container-head-dashboard .line-separator.right {
+  }
+
+  .container-sosmed {
+    flex-direction: column;
   }
 }
 
@@ -446,6 +676,28 @@ Responsive
   /* Navbar */
   .navbar .navbar-username {
     display: none;
+  }
+
+  /* Main Content */
+  /* Beranda */
+  .container-head-dashboard {
+    flex-direction: column;
+  }
+
+  .container-sosmed {
+    flex-direction: column;
+  }
+
+  .container-sosmed .sosmed-facebook {
+    margin: 5px 0px;
+  }
+
+  .container-sosmed .sosmed-whatsapp {
+    margin: 5px 0px;
+  }
+
+  .container-sosmed .sosmed-instagram {
+    margin: 5px 0px;
   }
 }
 
