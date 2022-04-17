@@ -25,30 +25,12 @@
 
     <!-- jQuery -->
     <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-    <!-- CKEditor -->
-    <script src="<?= base_url('ckeditor/ckeditor.js') ?>"></script>
     <!-- Bootstrap 5 -->
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/sidebarmenu.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
-
-    <style>
-        .ck-editor__editable_inline {
-            min-height: 200px;
-        }
-    </style>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#editorQuestion'))
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
 </body>
 
 </html>

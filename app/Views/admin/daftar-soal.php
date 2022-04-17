@@ -10,10 +10,7 @@
                     <form>
                         <!-- Pertanyaan -->
                         <div class="mb-3">
-                            <textarea rows="10" name="editorQuestion" type="text" class="form-control" id="editorQuestion"></textarea>
-                            <script>
-                                CKEDITOR.replace('editorQuestion');
-                            </script>
+                            <textarea rows="10" type="text" class="form-control" id="editorQuestion"></textarea>
                         </div>
 
                         <!-- Option -->
