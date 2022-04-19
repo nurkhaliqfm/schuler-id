@@ -6,17 +6,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    <h3 class="box-title">Input Soal</h3>
                     <form action="<?= base_url('admin/question'); ?>" method="POST">
                         <!-- Pertanyaan -->
+                        <h3 class="custom-box-title">Input Soal</h3>
                         <div class="mb-3">
                             <textarea rows="10" name="editorQuestion" type="text" class="form-control" id="editorQuestion"></textarea>
                         </div>
 
                         <!-- Option -->
-                        <div class="input-group mb-3">
+                        <h3 class="custom-box-title">Input Option</h3>
+                        <div class="input-group mb-3" id="optionEditor">
                             <span class="input-group-text" id="basic-addon1">A</span>
-                            <input type="text" class="form-control" id="option_a" placeholder="Option A">
+                            <textarea rows="1" type="text" class="form-control" id="option_a" placeholder="Option A"></textarea>
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text" id="basic-addon1">B</span>
@@ -36,14 +37,22 @@
                         </div>
 
                         <!-- Pertanyaan -->
+                        <h3 class="custom-box-title">Input Nilai</h3>
                         <div class="mb-3">
-                            <label for="quetion" class="form-label">Point</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></input>
+                            <select class="form-select" aria-label="Default select example">
+                                <option disabled selected>Pilih Nilai</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
                         </div>
 
+
                         <!-- Pembahasaan -->
+                        <h3 class="custom-box-title">Input Pembahasan</h3>
                         <div class="mb-3">
-                            <label for="quetion" class="form-label">Pembahasan</label>
                             <textarea rows="10" type="text" class="form-control" id="editorExplanation"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Simpan</button>

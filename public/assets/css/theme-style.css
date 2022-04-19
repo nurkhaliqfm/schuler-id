@@ -13,6 +13,8 @@ Global Css
   --color-3: #dedede;
   --color-4: #f0f0f0;
   --color-side-active: #f4f7fa;
+  --color-side-active-2: #0045a1;
+  --color-side-hover-2: #0c55b8;
   --color-bg: #e1dede;
   --color-facebook: #0997ff;
   --color-whatsapp: #05b84d;
@@ -134,12 +136,22 @@ Navbar
 /*----------------
 Sidebar Nav
 ---------------*/
-
 .sidebar-nav {
   height: 90vh;
   width: 275px;
   padding-bottom: 100px;
   background-color: var(--main-color);
+  position: fixed;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+
+.sidebar-nav.admin-style {
+  height: 90vh;
+  width: 275px;
+  padding-bottom: 100px;
+  background-color: var(--color-1);
   position: fixed;
   overflow-y: auto;
   overflow-x: hidden;
@@ -215,8 +227,19 @@ Sidebar Nav
   font-size: 0.9rem;
 }
 
+.sidebarnav-list .sidebar-item.admin-style {
+  background-color: var(--color-1);
+  font-weight: 200;
+  font-size: 0.9rem;
+}
+
 .sidebarnav-list .sidebar-link:hover {
   background: var(--color-side-active);
+  cursor: pointer;
+}
+
+.sidebarnav-list .sidebar-link.admin-style:hover {
+  background: var(--color-side-hover-2);
   cursor: pointer;
 }
 
@@ -231,6 +254,12 @@ Sidebar Nav
   font-weight: 500;
 }
 
+.sidebarnav-list .sidebar-link.admin-style.active {
+  background: var(--color-side-active-2);
+  border-left: 3px solid var(--main-color);
+  font-weight: 500;
+}
+
 .nav-treeview.collapse.in {
   display: block;
 }
@@ -241,6 +270,13 @@ Sidebar Nav
 
 .sidebar-nav .sidebar-link {
   color: black;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.sidebar-nav .sidebar-link.admin-style {
+  color: var(--main-color);
+  background-color: var(--color-1);
   text-decoration: none;
   display: inline-block;
 }
@@ -460,6 +496,23 @@ Main Content
   border: 1px solid var(--color-instagram);
   box-shadow: 0px 3px 1px var(--color-instagram);
   color: var(--color-instagram);
+}
+
+/* ---------------
+Admin Section
+----------------*/
+/* Bank Soal-Input Part */
+.fr-element.fr-view {
+  height: 200px;
+}
+
+.custom-box-title {
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--color-2);
+  width: fit-content;
+  padding: 8px;
+  border-radius: 12px;
 }
 
 /*----------------

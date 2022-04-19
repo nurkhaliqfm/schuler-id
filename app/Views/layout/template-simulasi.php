@@ -19,13 +19,13 @@
     <!-- Wiris -->
     <link href="<?= base_url('node_modules/@wiris/mathtype-froala3/icon/css/wirisplugin.css') ?>" rel="stylesheet" type="text/css" />
     <!-- Theme style -->
-    <link rel="stylesheet" href="<?= base_url('assets/css/theme-style.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/theme-style-simulation.css') ?>">
 
 </head>
 
 <body>
     <div id="main-wrapper">
-        <?= $this->include('layout/navbar'); ?>
+        <?= $this->include('layout/navbar-simulasi'); ?>
         <?= $this->renderSection('content'); ?>
     </div>
 

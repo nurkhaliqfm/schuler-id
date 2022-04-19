@@ -1,0 +1,424 @@
+/*----------------
+Fonts
+---------------*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+/*----------------
+Global Css
+---------------*/
+:root {
+  --main-color: #ffffff;
+  --color-1: #004aad;
+  --color-2: #cfe3f2;
+  --color-3: #dedede;
+  --color-4: #f0f0f0;
+  --color-danger: rgb(253, 82, 82);
+  --color-side-active: #f4f7fa;
+  --color-side-active-2: #0045a1;
+  --color-side-hover-2: #0c55b8;
+  --color-bg: #e1dede;
+  --color-facebook: #0997ff;
+  --color-whatsapp: #05b84d;
+  --color-instagram: #ff098e;
+  --navbar-height: 90px;
+  --shadow-navbar: 0px 2px 7px rgba(0, 0, 0, 0.25);
+  --shadow-white-box: 0px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  line-height: 1.5;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-1) var(--main-color);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-1);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1470e9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none !important;
+}
+
+/*----------------
+Navbar
+---------------*/
+.navbar {
+  height: var(--navbar-height);
+  background-color: var(--main-color);
+  padding: 10px 0;
+  box-shadow: var(--shadow-navbar);
+}
+
+.navbar .navbar-brand {
+  width: 250px;
+  margin-right: 12px;
+}
+
+.navbar .navbar-brand.half-navbar-brand {
+  width: 50px;
+}
+
+.navbar .navbar-brand img {
+  display: block;
+  margin: auto;
+}
+
+.navbar .navbar-brand .half-logo {
+  width: 50px;
+}
+
+.navbar .navbar-username {
+  margin: 5px;
+  padding: 2px 10px;
+  background: var(--main-color);
+  border: 2px solid var(--color-1);
+  border-radius: 25px;
+  font-size: 0.85rem;
+  color: var(--color-1);
+  text-align: center;
+  font-style: italic;
+}
+
+.navbar .navbar-shop {
+  margin: 5px;
+  padding: 2px 10px;
+  background: var(--main-color);
+  border: 2px solid var(--color-1);
+  border-radius: 25px;
+  font-size: 0.85rem;
+  color: var(--color-1);
+  text-align: center;
+}
+
+.navbar .navbar-shop i {
+  margin-right: 5px;
+}
+
+.navbar .navbar-profil {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.navbar .navbar-profil .border-profil {
+  margin: 0px 5px;
+  border: 2px solid var(--color-1);
+}
+
+.navbar-title-container {
+  display: flex;
+  flex-direction: column;
+  border-left: 4px solid black;
+  padding-left: 10px;
+}
+
+.navbar-title-container .navbar-title {
+  font-weight: 800;
+  font-size: 1.2rem;
+}
+
+.navbar-title-container .navbar-subtitle {
+  background-color: var(--color-2);
+  padding: 2px 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.navbar-title-container .navbar-subtitle span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/*----------------
+Sidebar Nav
+---------------*/
+/* .sidebar-nav {
+  min-height: 200px;
+  width: 275px;
+  background-color: var(--main-color);
+  position: fixed;
+  right: 10px;
+} */
+
+.sidebar-nav.admin-style {
+  min-height: 200px;
+  width: 275px;
+  background-color: var(--main-color);
+  position: fixed;
+  right: 0px;
+  margin: 0px 10px 0px 10px;
+  border-radius: 0px 0px 10px 10px;
+  box-shadow: var(--shadow-white-box);
+  padding: 20px;
+}
+
+.sidebar-nav.full {
+  z-index: 100;
+  transition: all 0.5s ease-in-out;
+  transform: translateX(0px);
+}
+
+.sidebar-nav.half {
+  z-index: 100;
+  width: 75px;
+  transform: translateX(0px);
+  transition: all 0.5s ease-in-out;
+}
+
+.sidebar-nav.hide {
+  transform: translateX(-275px);
+  transition: all 0.5s ease-in-out;
+}
+
+.sidebar-item .sidebar-link .fa-angle-right {
+  right: 0px;
+  cursor: pointer;
+  transition: transform 0.5s;
+}
+
+.sidebar-item .sidebar-link .rotate {
+  transform: rotate(90deg);
+}
+
+.sidebar-nav li .nav-treeview i {
+  word-wrap: break-word;
+  padding-left: 2.2rem;
+}
+
+.hide-menu .fa-angle-right {
+  position: absolute;
+  right: 0;
+  margin-right: 5px;
+}
+
+.sidebar-nav .nav-treeview {
+  list-style-type: none;
+  padding: 0px;
+  margin-top: 0px;
+}
+
+.sidebar-nav .sidebarnav-list {
+  list-style-type: none;
+  padding: 0px;
+  margin-top: 0px;
+}
+
+.sidebarnav-list .sidebar-item-title {
+  background-color: var(--main-color);
+  padding: 8px 18px;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.sidebarnav-list .sidebar-item .title-sidebar-item {
+  background-color: var(--main-color);
+  padding: 10px 0px;
+}
+
+.sidebarnav-list .sidebar-item {
+  background-color: var(--main-color);
+  font-weight: 200;
+  font-size: 0.9rem;
+}
+
+.sidebarnav-list .sidebar-item.admin-style {
+  background-color: var(--color-1);
+  font-weight: 200;
+  font-size: 0.9rem;
+}
+
+.sidebarnav-list .sidebar-link:hover {
+  background: var(--color-side-active);
+  cursor: pointer;
+}
+
+.sidebarnav-list .sidebar-link.admin-style:hover {
+  background: var(--color-side-hover-2);
+  cursor: pointer;
+}
+
+.sidebarnav-list .sidebar-link {
+  width: 100%;
+  padding: 12px 18px;
+}
+
+.sidebarnav-list .sidebar-link.active {
+  background: var(--color-side-active);
+  border-left: 3px solid var(--color-1);
+  font-weight: 500;
+}
+
+.sidebarnav-list .sidebar-link.admin-style.active {
+  background: var(--color-side-active-2);
+  border-left: 3px solid var(--main-color);
+  font-weight: 500;
+}
+
+.nav-treeview.collapse.in {
+  display: block;
+}
+
+.sidebarnav-list .sidebar-item.last-btn {
+  border-bottom: 1px solid var(--color-3);
+}
+
+.sidebar-nav .sidebar-link {
+  color: black;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.sidebar-nav .sidebar-link.admin-style {
+  color: var(--main-color);
+  background-color: var(--color-1);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.sidebar-nav .sidebar-link i {
+  padding-right: 6px;
+  font-size: 1rem;
+  vertical-align: baseline;
+}
+.sidebar-nav .sidebar-link span {
+  padding-right: 8px;
+  font-size: 0.9rem;
+  vertical-align: baseline;
+}
+
+/*----------------
+Main Content
+---------------*/
+/* Default */
+.page-container {
+  margin-right: 285px;
+  margin-top: var(--navbar-height);
+}
+
+.page-container .white-box {
+  background-color: var(--main-color);
+  margin: 0px 10px 10px 10px;
+  box-shadow: var(--shadow-white-box);
+  border-radius: 0px 0px 10px 10px;
+  padding: 20px;
+}
+
+.page-container .white-box .box-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.page-container .simulasi-header-container {
+  text-align: center;
+  margin: 10px 10px;
+}
+
+.simulasi-header-container .item_timer {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.simulasi-header-container .title_simulation_test {
+  align-items: center;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  border: 2px solid var(--color-1);
+  color: var(--color-1);
+  font-weight: 700;
+  width: fit-content;
+  padding: 2px 10px;
+}
+
+.question-container .question_header .quest__number {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.question-container .question_header .quest__subject {
+  border-left: 3px solid black;
+  padding-left: 5px;
+  font-size: 1.2rem;
+  color: var(--color-1);
+  font-weight: 700;
+  margin-left: 5px;
+}
+
+.question-container .question_header .quest__report {
+  background-color: var(--color-danger);
+  padding: 0px 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: fit-content;
+}
+
+.question-container .quest__report span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ---------------
+Admin Section
+----------------*/
+/* Bank Soal-Input Part */
+.fr-element.fr-view {
+  height: 200px;
+}
+
+.custom-box-title {
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: var(--color-2);
+  width: fit-content;
+  padding: 8px;
+  border-radius: 12px;
+}
+
+/*----------------
+Responsive
+---------------*/
+
+@media (max-width: 1020px) {
+}
+
+@media (max-width: 932px) {
+}
+
+@media (max-width: 840px) {
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 620px) {
+}
+
+@media (max-width: 480px) {
+}
+
+@media (max-width: 420px) {
+}

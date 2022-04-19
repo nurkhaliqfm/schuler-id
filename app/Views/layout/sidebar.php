@@ -1,6 +1,6 @@
 <?php $uri = current_url(true)->getSegment(2); ?>
 
-<nav class="sidebar-nav full">
+<nav class="sidebar-nav full <?= $uri != 'admin' ? '' : 'admin-style'; ?>">
     <div class="sidebar-body">
         <?php if ($uri != 'admin') { ?>
             <ul id="sidebarnav" class="sidebarnav-list">
@@ -126,29 +126,34 @@
             </ul>
         <?php } else {; ?>
             <ul id="sidebarnav" class="sidebarnav-list">
-                <li class="sidebar-item last-btn">
-                    <a class="sidebar-link <?= $uri == 'index' || $uri == '' ? 'active' : ''; ?>" href=" <?= base_url('admin/'); ?>" aria-expanded="false">
+                <li class="sidebar-item admin-style">
+                    <a class="sidebar-link admin-style <?= $uri == 'index' || $uri == '' ? 'active' : ''; ?>" href=" <?= base_url('admin/'); ?>" aria-expanded="false">
                         <i class="fa-solid fa-house"></i>
                         <span class="hide-menu">Beranda</span>
                     </a>
                 </li>
-                <li class="sidebar-item-title">
-                    <span class="title-sidebar-item">INPUT SOAL</span>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                <li class="sidebar-item admin-style">
+                    <a class="sidebar-link admin-style" href="#" aria-expanded="false">
                         <i class="fa-solid fa-laptop-file"></i>
                         <span class="hide-menu">
-                            Latihan UTBK
+                            Input Soal
                             <i class="fas fa-angle-right"></i>
                         </span>
                     </a>
                     <ul class="nav-treeview collapse">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="<?= base_url('admin/daftar_soal'); ?>" aria-expanded="false">
+                            <a class="sidebar-link admin-style" href="<?= base_url('admin/daftar_soal'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
-                                    Daftar Soal
+                                    Bank Soal
+                                </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link admin-style" href="#" aria-expanded="false">
+                                <i class="fa-solid fa-file-pen"></i>
+                                <span class="hide-menu">
+                                    Kuis
                                 </span>
                             </a>
                         </li>

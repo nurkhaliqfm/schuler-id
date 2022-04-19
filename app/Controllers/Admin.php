@@ -2,9 +2,6 @@
 
 namespace App\Controllers;
 
-use Exception;
-use FroalaEditor\Image;
-
 class Admin extends BaseController
 {
     public function index()
