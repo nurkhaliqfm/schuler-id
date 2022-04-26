@@ -21,6 +21,10 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('assets/css/theme-style.css') ?>">
 
+    <!-- jQuery -->
+    <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
+    <!-- Bootstrap 5 -->
+    <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 </head>
 
 <body>
@@ -29,10 +33,6 @@
         <?= $this->renderSection('content'); ?>
     </div>
 
-    <!-- jQuery -->
-    <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-    <!-- Bootstrap 5 -->
-    <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/sidebarmenu.js') ?>"></script>
     <!-- Main Js -->

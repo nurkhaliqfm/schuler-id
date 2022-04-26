@@ -2,8 +2,20 @@
 
 namespace App\Controllers;
 
+use App\Models\TypeSoalModel;
+use App\Models\BankSoalModel;
+
 class Home extends BaseController
 {
+    protected $typeSoalModel;
+    protected $bankSoalModel;
+
+    public function __construct()
+    {
+        $this->typeSoalModel = new TypeSoalModel();
+        $this->bankSoalModel = new BankSoalModel();
+    }
+
     public function index()
     {
         $data = [
@@ -53,8 +65,49 @@ class Home extends BaseController
             'user_name' => 'codefm.my.id'
         ];
 
-        return view('home/menu-utbk/simulasi-utbk/simulasi-gratis', $data);
+        return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-home', $data);
     }
+
+    public function simulasi_gratis_guide()
+    {
+        $data = [
+            'title' => 'Petunjuk Simulasi Schuler.id',
+            'user_name' => 'codefm.my.id'
+        ];
+
+        return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-guide', $data);
+    }
+
+    public function simulasi_gratis_main()
+    {
+        $bankSoalModel = $this->bankSoalModel->where([
+            'type_soal' => '22b9f14e-867a-41d0-a758-55070c6bd603'
+        ])->findAll();
+
+        // $bankSoalModel->save([
+        //     'type_soal' => $menuSoal,
+        //     'sub_type_soal' => $submenuSoal,
+        //     'id_soal' => Uuid::uuid4(),
+        //     'soal' => $getBankSoal['soal'],
+        //     'option_a' => $getBankSoal['option_a'],
+        //     'option_b' => $getBankSoal['option_b'],
+        //     'option_c' => $getBankSoal['option_c'],
+        //     'option_d' => $getBankSoal['option_d'],
+        //     'option_e' => $getBankSoal['option_e'],
+        //     'jawaban' => $getBankSoal['jawaban'],
+        //     'pembahasan' => $getBankSoal['pembahasan'],
+        //     'value' => $getBankSoal['value']
+        // ]);
+
+        $data = [
+            'bank_soal' => $bankSoalModel,
+            'title' => 'Simulasi Schuler.id',
+            'user_name' => 'codefm.my.id'
+        ];
+
+        return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-main', $data);
+    }
+
     public function simulasi_premium()
     {
         $data = [

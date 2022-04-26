@@ -12,9 +12,14 @@ Global Css
   --color-2: #cfe3f2;
   --color-3: #dedede;
   --color-4: #f0f0f0;
+  --color-5: #13a1dd;
   --color-side-active: #f4f7fa;
   --color-side-active-2: #0045a1;
   --color-side-hover-2: #0c55b8;
+  --color-danger-border: rgb(255, 0, 0);
+  --color-danger: rgb(250, 178, 178);
+  --color-warning-border: rgb(255, 208, 0);
+  --color-warning: rgb(250, 231, 178);
   --color-bg: #e1dede;
   --color-facebook: #0997ff;
   --color-whatsapp: #05b84d;
@@ -63,6 +68,21 @@ body {
   margin: 0;
   padding: 0;
   outline: none !important;
+}
+
+.alert__box {
+  font-size: 0.8rem;
+  background-color: var(--color-2);
+  padding: 0px 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: fit-content;
+  font-weight: 400;
+  margin-top: 5px;
+}
+
+.alert__box span {
+  font-weight: 600;
 }
 
 /*----------------
@@ -498,9 +518,232 @@ Main Content
   color: var(--color-instagram);
 }
 
+/* MENU UTBK */
+/* Simulasi UTBK Gratis */
+.head__simulationfree .box-title.simulation {
+  margin-bottom: 0px;
+}
+
+.head__simulationfree .box-title.simulation span {
+  color: var(--color-5);
+}
+
+.head__simulationfree .box__subtitle {
+  font-size: 0.8rem;
+  margin-bottom: 0px;
+}
+
+.head__simulationfree .button__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.head__simulationfree .button__container .simftype__Btn {
+  padding: 5px;
+  border: 1px solid var(--color-5);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-5);
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.head__simulationfree .button__container .simftype__Btn.active {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.head__simulationfree .button__container .simftype__Btn:hover {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.head__simulationfree .button__container .soshum-button {
+  margin-left: 10px;
+}
+
+.container__body.simulation__free {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.jenis__simulasi__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 275px;
+  width: 200px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-white-box);
+  margin: 10px 20px;
+}
+
+.jenis__simulasi__container .jenis__simulasi__head {
+  text-align: center;
+  font-weight: 600;
+  padding: 5px;
+  font-size: 1.2rem;
+  color: var(--color-5);
+  border-bottom: 2px solid rgba(235, 235, 235, 0.774);
+}
+
+.jenis__simulasi__container .jenis__simulasi__body {
+  margin: 15px 15px 0px 15px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.jenis__simulasi__container .jenis__simulasi__body .jenis__simulasi__desk {
+  margin-top: 5px;
+  color: var(--color-1);
+  font-weight: 400;
+}
+
+.jenis__simulasi__container .jenis__simulasi__foot {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 0px 15px 15px 15px;
+  cursor: pointer;
+}
+
+.jenis__simulasi__container .jenis__simulasi__foot .jenis__simulasi_Btn {
+  border: 1px solid var(--color-5);
+  margin: 2px 0px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.jenis__simulasi__container
+  .jenis__simulasi__foot
+  .jenis__simulasi_Btn.selected {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.jenis__simulasi__container .jenis__simulasi__foot .jenis__simulasi_Btn span {
+  margin-left: 5px;
+}
+
+/* Simulasi UTBK Guide */
+.footer__simulationfree .button__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.button__container .start__simulation__Btn,
+.button__container .close__simulation__Btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: black;
+  font-weight: 400;
+  margin-top: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.button__container .start__simulation__Btn {
+  background-color: var(--color-2);
+}
+
+.button__container .start__simulation__Btn:hover {
+  border: 1px solid var(--color-1);
+}
+
+.button__container .start__simulation__Btn span {
+  margin-left: 5px;
+}
+
+.button__container .close__simulation__Btn {
+  background-color: var(--color-danger);
+  margin-left: 10px;
+}
+
+.button__container .close__simulation__Btn:hover {
+  border: 1px solid var(--color-danger-border);
+}
+
+.button__container .close__simulation__Btn span {
+  margin-left: 5px;
+}
+
+.button__container .close__simulation__Btn i {
+  color: var(--color-danger-border);
+}
+
 /* ---------------
 Admin Section
 ----------------*/
+/* default */
+
+.bank__soalBtn {
+  padding: 2px 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--main-color);
+  background-color: var(--color-5);
+  border: 0px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.bank__soalBtn:hover {
+  border: 2px solid var(--color-5);
+  color: var(--color-5);
+  background-color: var(--main-color);
+}
+
+/* Bank Soal Home Part*/
+.bank__soal__body {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.delete__btn {
+  background-color: var(--color-danger-border);
+}
+
+.delete__btn:hover {
+  background-color: var(--main-color);
+  color: var(--color-danger-border);
+  border: 2px solid var(--color-danger-border);
+}
+
+.bank__soal__body .soal__type {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 10px 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 200px;
+  min-height: 200px;
+  padding: 10px 10px;
+  box-shadow: var(--shadow-white-box);
+}
+
+.soal__type .soal__type__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.soal__type .soal__type__number {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
 /* Bank Soal-Input Part */
 .fr-element.fr-view {
   height: 200px;
@@ -513,6 +756,81 @@ Admin Section
   width: fit-content;
   padding: 8px;
   border-radius: 12px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+  grid-gap: 0px;
+}
+
+.grid-container.option__style .input__form {
+  border-radius: 0px;
+  border-left: 0px;
+  height: 40px;
+  transition: all 0.2s;
+}
+
+.grid-container.option__style .input__form:focus {
+  box-shadow: none;
+}
+
+.grid-container.option__style .input__form.checked {
+  background: var(--color-2);
+  border: 2px solid var(--color-5);
+  border-left: 0px;
+  color: black;
+  font-weight: 600;
+}
+
+.box {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background: var(--color-3);
+  border: 1px solid #d1d1d1;
+  color: rgb(63, 63, 63);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: all 0.6s;
+}
+
+.checkbox {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  font-weight: 400;
+}
+
+.checkbox input {
+  position: absolute;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.box p {
+  transition: all 0.2s;
+}
+
+.checkbox input:checked ~ .box {
+  background: var(--color-2);
+  border: 2px solid var(--color-5);
+  color: black;
+  font-weight: 600;
+}
+
+/* Bank Soal - Daftar soal part */
+.container__title__box.daftar__soal {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 /*----------------

@@ -142,7 +142,7 @@
                     </a>
                     <ul class="nav-treeview collapse">
                         <li class="sidebar-item">
-                            <a class="sidebar-link admin-style" href="<?= base_url('admin/daftar_soal'); ?>" aria-expanded="false">
+                            <a class="sidebar-link admin-style" href="<?= base_url('admin/bank_soal'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
                                     Bank Soal
