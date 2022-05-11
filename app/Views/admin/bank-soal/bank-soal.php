@@ -10,6 +10,7 @@
                     <div class="bank__soal__body">
                         <?php foreach ($type_soal as $ts) : ?>
                             <form action="<?= base_url('admin/jenis_bank_soal'); ?>" method="POST">
+                                <?= csrf_field(); ?>
                                 <input hidden type="text" name="MenuSoal" value="<?= $ts['id_main_type_soal']; ?>">
                                 <div class="soal__type">
                                     <div class="soal__type__title"><?= $ts['main_type_soal']; ?></div>

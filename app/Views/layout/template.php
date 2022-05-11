@@ -33,7 +33,7 @@
         <?= $this->renderSection('content'); ?>
     </div>
 
-    <!-- Main Js -->
+    <!-- Sidebarmenu Js -->
     <script src="<?= base_url('assets/js/sidebarmenu.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/main.js') ?>"></script>

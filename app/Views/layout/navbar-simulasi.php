@@ -31,7 +31,7 @@
             };
 
             this.interval = null;
-            this.remainingSeconds = 1 * 60 + 30;
+            this.remainingSeconds = 190;
             this.updateInterfaceTime();
 
             if (this.interval === null) {

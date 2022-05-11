@@ -12,6 +12,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <form action="<?= base_url('admin/update_soal'); ?>" method="POST">
+                        <?= csrf_field(); ?>
                         <input hidden type="text" name="id" value="<?= $bank_soal['id']; ?>">
                         <input hidden type="text" name="MenuSoal" value="<?= $menu_soal; ?>">
                         <input hidden type="text" name="SubmenuSoal" value="<?= $submenu_soal; ?>">

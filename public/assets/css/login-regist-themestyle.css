@@ -1,0 +1,224 @@
+/*----------------
+Fonts
+---------------*/
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap");
+
+/*----------------
+Global Css
+---------------*/
+:root {
+  --main-color: #ffffff;
+  --color-1: #004aad;
+  --color-2: #cfe3f2;
+  --color-3: #dedede;
+  --color-4: #f0f0f0;
+  --color-5: #13a1dd;
+  --color-side-active: #f4f7fa;
+  --color-side-active-2: #0045a1;
+  --color-side-hover-2: #0c55b8;
+  --color-danger-border: rgb(255, 0, 0);
+  --color-danger: rgb(250, 178, 178);
+  --color-warning-border: rgb(255, 208, 0);
+  --color-warning: rgb(250, 231, 178);
+  --color-bg: #e1dede;
+  --color-gradient-icon: linear-gradient(
+    180deg,
+    #02f0fe 21.36%,
+    #24d3fe 62.91%,
+    #4daffe 100%
+  );
+  --navbar-height: 70px;
+  --shadow-navbar: 0px 2px 7px rgba(0, 0, 0, 0.25);
+  --shadow-white-box: 0px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 100;
+  overflow-x: hidden;
+  background-color: #ffffff;
+  line-height: 1.5;
+  display: flex;
+  justify-content: center;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+  background-color: var(--color-bg);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-1) var(--main-color);
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-1);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #1470e9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  outline: none !important;
+}
+
+.white-box {
+  width: fit-content;
+  background-color: var(--main-color);
+  margin: 10px;
+  box-shadow: var(--shadow-white-box);
+  border-radius: 15px;
+  padding: 0px 30px;
+}
+
+.login__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login__container .head__login {
+  margin: 35px 0px;
+}
+
+.body__login .form__menu a {
+  text-decoration: none;
+}
+
+.body__login .form__menu.flex__2r {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  justify-items: center;
+}
+
+.body__login .form__menu .form__submenu {
+  margin: 0px 10px;
+}
+
+.custom-box-title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 0fr 1fr;
+  grid-gap: 0px;
+}
+
+.grid-container.option__style .input__form {
+  border-radius: 0px;
+  border-left: 0px;
+  height: 40px;
+}
+
+.grid-container.option__style .input__form:focus {
+  box-shadow: none;
+}
+
+.grid-container.option__style .input__form.checked {
+  background: var(--color-2);
+  border: 1px solid var(--color-2);
+  border-left: 0px;
+  color: black;
+  font-weight: 400;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.form__icon__box {
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+
+.form__icon {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background: var(--color-3);
+  border: 1px solid var(--color-2);
+  border-radius: 5px 0px 0px 5px;
+  background-color: var(--main-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  font-size: 1.4rem;
+}
+
+.form__icon i {
+  color: transparent;
+  background-clip: text;
+  background-image: var(--color-gradient-icon);
+}
+
+.footer__login {
+  margin: 20px 0px;
+}
+
+.submit__login-btn {
+  color: var(--main-color);
+  border: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  background-color: var(--color-1);
+  padding: 2px 20px;
+  border-radius: 15px;
+}
+
+.submit__login-btn:hover {
+  border: 1px solid var(--color-1);
+  background-color: var(--main-color);
+  color: var(--color-1);
+}
+
+/*----------------
+Responsive
+---------------*/
+
+@media (max-width: 1020px) {
+}
+
+@media (max-width: 932px) {
+}
+
+@media (max-width: 840px) {
+  .body__login .form__menu.flex__2r {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+}
+
+@media (max-width: 620px) {
+}
+
+@media (max-width: 480px) {
+}
+
+@media (max-width: 420px) {
+}

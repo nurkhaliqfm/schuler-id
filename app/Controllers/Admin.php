@@ -2,8 +2,6 @@
 
 namespace App\Controllers;
 
-use Ramsey\Uuid\Uuid;
-
 use App\Models\TypeSoalModel;
 use App\Models\BankSoalModel;
 
@@ -28,6 +26,7 @@ class Admin extends BaseController
         return view('admin/dashboard', $data);
     }
 
+    // BANK SOAL SECTION
     public function bank_soal()
     {
         $typeSoalModel = $this->typeSoalModel->findAll();
@@ -117,6 +116,9 @@ class Admin extends BaseController
         $menuSoal = $this->request->getVar('MenuSoal');
         $submenuSoal = $this->request->getVar('SubmenuSoal');
 
+        $soal  = $this->request->getVar('editorQuestion');
+        $soal = str_replace("Love", "Sarange", $soal);
+
         if (!$this->validate([
             'editorQuestion' => [
                 'rules' => 'required',
@@ -182,7 +184,7 @@ class Admin extends BaseController
         $bankSoalModel->save([
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal,
-            'id_soal' => Uuid::uuid4(),
+            'id_soal' => uniqid(),
             'soal' => $this->request->getVar('editorQuestion'),
             'option_a' => $this->request->getVar('option_a'),
             'option_b' => $this->request->getVar('option_b'),
@@ -192,6 +194,21 @@ class Admin extends BaseController
             'jawaban' => md5($questionAns[0]),
             'pembahasan' => $this->request->getVar('editorExplanation'),
             'value' => $this->request->getVar('questionValue')
+        ]);
+
+        $TypeSoalModel = $this->typeSoalModel;
+        $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
+        $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
+        $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
+        $arrayLong = sizeof($valueSoal);
+        for ($i = 0; $i < $arrayLong; $i++) {
+            if ($typeSoalId[$i] == $submenuSoal) {
+                $valueSoal[$i] = $valueSoal[$i] + 1;
+            }
+        };
+
+        $TypeSoalModel->update($getTypeSoal['id'], [
+            'list_type_soal_jumlah' => join(",", $valueSoal)
         ]);
 
         session()->setFlashdata('success', "Soal Berhasil Ditambahkan.");
@@ -212,7 +229,7 @@ class Admin extends BaseController
         $bankSoalModel->save([
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal,
-            'id_soal' => Uuid::uuid4(),
+            'id_soal' => uniqid(),
             'soal' => $getBankSoal['soal'],
             'option_a' => $getBankSoal['option_a'],
             'option_b' => $getBankSoal['option_b'],
@@ -342,7 +359,8 @@ class Admin extends BaseController
             $fileupload_name = sha1(microtime()) . "." . $extension;
             move_uploaded_file($_FILES["file"]["tmp_name"], getcwd() . "/assets/upload_image/" . $fileupload_name);
 
-            $response = ["link" => $protocol . $_SERVER["HTTP_HOST"] . "/assets/upload_image/" . $fileupload_name];
+            // $response = ["link" => $protocol . $_SERVER["HTTP_HOST"] . "/assets/upload_image/" . $fileupload_name];
+            $response = ["link" =>  "/assets/upload_image/" . $fileupload_name];
             return $this->response->setJSON($response);
         }
     }
@@ -356,58 +374,27 @@ class Admin extends BaseController
         }
     }
 
-    public function generate_id()
+    // QUIZ SECTION
+    public function daftar_quiz()
     {
-        $id_main_type_soal_tps = Uuid::uuid4();
-        $id_main_type_soal_saintek = Uuid::uuid4();
-        $id_main_type_soal_soshum = Uuid::uuid4();
-        $id_main_type_soal_bing = Uuid::uuid4();
-
-        $id_type_soal_tps_1 = Uuid::uuid4();
-        $id_type_soal_tps_2 = Uuid::uuid4();
-        $id_type_soal_tps_3 = Uuid::uuid4();
-        $id_type_soal_tps_4 = Uuid::uuid4();
-
-        $id_type_soal_soshum_1 = Uuid::uuid4();
-        $id_type_soal_soshum_2 = Uuid::uuid4();
-        $id_type_soal_soshum_3 = Uuid::uuid4();
-        $id_type_soal_soshum_4 = Uuid::uuid4();
-
-        $id_type_soal_saintek_1 = Uuid::uuid4();
-        $id_type_soal_saintek_2 = Uuid::uuid4();
-        $id_type_soal_saintek_3 = Uuid::uuid4();
-        $id_type_soal_saintek_4 = Uuid::uuid4();
-
-        $id_type_soal_bing = Uuid::uuid4();
-
         $data = [
-            'id_main_type_soal_tps' => [
-                'id' => "$id_main_type_soal_tps",
-                'id_1' => "$id_type_soal_tps_1",
-                'id_2' => "$id_type_soal_tps_2",
-                'id_3' => "$id_type_soal_tps_3",
-                'id_4' => "$id_type_soal_tps_4"
-            ],
-            'id_main_type_soal_saintek' => [
-                'id' => "$id_main_type_soal_saintek",
-                'id_1' => "$id_type_soal_saintek_1",
-                'id_2' => "$id_type_soal_saintek_2",
-                'id_3' => "$id_type_soal_saintek_3",
-                'id_4' => "$id_type_soal_saintek_4"
-            ],
-            'id_main_type_soal_soshum' => [
-                'id' => "$id_main_type_soal_soshum",
-                'id_1' => "$id_type_soal_soshum_1",
-                'id_2' => "$id_type_soal_soshum_2",
-                'id_3' => "$id_type_soal_soshum_3",
-                'id_4' => "$id_type_soal_soshum_4"
-            ],
-            'id_main_type_soal_bing' => [
-                'id' => "$id_main_type_soal_bing",
-                'id_1' => "$id_type_soal_bing",
-            ],
+            'title' => 'Daftar Quiz Schuler.id',
+            'user_name' => 'codefm.my.id'
         ];
 
-        dd($data);
+        return view('admin/input-quiz/quiz', $data);
+    }
+
+    public function input_quiz()
+    {
+        $data = [
+            'title' => 'Daftar Soal Schuler.id',
+            'user_name' => 'codefm.my.id',
+            // 'menu_soal' => $id,
+            // 'submenu_soal' => $type,
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('admin/input-quiz/input-quiz', $data);
     }
 }

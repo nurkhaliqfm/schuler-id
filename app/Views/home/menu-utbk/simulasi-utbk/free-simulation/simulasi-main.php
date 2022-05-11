@@ -16,31 +16,31 @@
                             <div id="question__part" class="question__part"></div>
                             <div class="question__answer__part">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="optionA">
+                                    <input value="option_a" <?= old('flexRadioDefault') == 'option_a' ? "checked" : ""; ?> class="form-check-input" type="radio" name="flexRadioDefault" id="optionA">
                                     <label class="form-check-label" for="optionA">
                                         A. <span id="option_a"></span>
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="optionB">
+                                    <input value="option_b" <?= old('flexRadioDefault') == 'option_b' ? "checked" : ""; ?> class="form-check-input" type="radio" name="flexRadioDefault" id="optionB">
                                     <label class="form-check-label" for="optionB">
                                         B. <span id="option_b"></span>
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="optionC">
+                                    <input value="option_c" <?= old('flexRadioDefault') == 'option_c' ? "checked" : ""; ?> class="form-check-input" type="radio" name="flexRadioDefault" id="optionC">
                                     <label class="form-check-label" for="optionC">
                                         C. <span id="option_c"></span>
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="optionD">
+                                    <input value="option_d" <?= old('flexRadioDefault') == 'option_d' ? "checked" : ""; ?> class="form-check-input" type="radio" name="flexRadioDefault" id="optionD">
                                     <label class="form-check-label" for="optionD">
                                         D. <span id="option_d"></span>
                                     </label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="optionE">
+                                    <input value="option_e" <?= old('flexRadioDefault') == 'option_e' ? "checked" : ""; ?> class="form-check-input" type="radio" name="flexRadioDefault" id="optionE">
                                     <label class="form-check-label" for="optionE">
                                         E. <span id="option_e"></span>
                                     </label>
@@ -61,7 +61,8 @@
     const list_element = document.getElementById('question__part'),
         pagination_element = document.getElementById('pagination'),
         prev_button = document.getElementById('item_prev'),
-        next_button = document.getElementById('item_next');
+        next_button = document.getElementById('item_next'),
+        question_num_btn = document.getElementById('question__number_side');
 
     let dataItems = <?= json_encode($bank_soal); ?>;
     let current_page = 1;
@@ -85,21 +86,37 @@
         }
     }
 
-    // function paginationList(items, row_per_page){
-    //     let page
-    // }
+    function PaginationListNumber(items, row_per_page) {
+        let page_count = Math.ceil(items.length / row_per_page);
+        for (let i = 1; i < page_count + 1; i++) {
+            let btn = BtnNumberPagination(i, items);
+            question_num_btn.appendChild(btn);
+        }
+    }
 
-    function buttonPagination(page, items) {
+    function BtnNumberPagination(page, items) {
+        let btn__side = document.createElement("div");
+        btn__side.className = "question__number";
+        btn__side.innerHTML = page;
+
+        if (current_page == page) btn__side.classList.add('active');
+
+        return btn__side;
+    }
+
+    function ButtonPagination(items) {
         next_button.addEventListener('click', () => {
             current_page = current_page + 1;
             DisplayList(items, rows, current_page)
             NavBtnControl(current_page);
+            console.log(current_page);
         })
 
         prev_button.addEventListener('click', () => {
             current_page = current_page - 1;
             DisplayList(items, rows, current_page)
             NavBtnControl(current_page);
+            console.log(current_page);
         })
     }
 
@@ -120,6 +137,7 @@
 
     DisplayList(dataItems, rows, current_page)
     NavBtnControl(current_page)
-    buttonPagination(current_page, dataItems)
+    ButtonPagination(dataItems)
+    PaginationListNumber(dataItems, rows)
 </script>
 <?= $this->endSection(); ?>

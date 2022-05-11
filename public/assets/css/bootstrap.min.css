@@ -2377,8 +2377,8 @@ textarea.form-control-lg {
 .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n + 3),
 .input-group:not(.has-validation)
   > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+  /* border-top-right-radius: 0; */
+  /* border-bottom-right-radius: 0; */
 }
 .input-group.has-validation > .dropdown-toggle:nth-last-child(n + 4),
 .input-group.has-validation

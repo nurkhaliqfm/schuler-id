@@ -84,21 +84,6 @@ class Home extends BaseController
             'type_soal' => '22b9f14e-867a-41d0-a758-55070c6bd603'
         ])->findAll();
 
-        // $bankSoalModel->save([
-        //     'type_soal' => $menuSoal,
-        //     'sub_type_soal' => $submenuSoal,
-        //     'id_soal' => Uuid::uuid4(),
-        //     'soal' => $getBankSoal['soal'],
-        //     'option_a' => $getBankSoal['option_a'],
-        //     'option_b' => $getBankSoal['option_b'],
-        //     'option_c' => $getBankSoal['option_c'],
-        //     'option_d' => $getBankSoal['option_d'],
-        //     'option_e' => $getBankSoal['option_e'],
-        //     'jawaban' => $getBankSoal['jawaban'],
-        //     'pembahasan' => $getBankSoal['pembahasan'],
-        //     'value' => $getBankSoal['value']
-        // ]);
-
         $data = [
             'bank_soal' => $bankSoalModel,
             'title' => 'Simulasi Schuler.id',
