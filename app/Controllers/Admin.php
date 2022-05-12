@@ -387,14 +387,40 @@ class Admin extends BaseController
 
     public function input_quiz()
     {
+        $getBankSoal = $this->bankSoalModel->findAll();
+        $getBankSoalSubject = $this->bankSoalModel->groupBy('type_soal')->findAll();
+
+        for ($j = 0; $j < count($getBankSoalSubject); $j++) {
+            $getTypeSoal = $this->typeSoalModel->where([
+                'id_main_type_soal' => $getBankSoalSubject[$j]['type_soal']
+            ])->first();
+
+            $subTypeListId = explode(',', $getTypeSoal['list_type_soal_id']);
+            $subTypeListName = explode(',', $getTypeSoal['list_type_soal']);
+
+            $subjectName[] = [
+                'type_soal_id' => $getBankSoalSubject[$j]['type_soal'],
+                'type_soal_name' => $getTypeSoal['main_type_soal'],
+            ];
+
+            for ($i = 0; $i < count($subTypeListId); $i++) {
+                $subjectName[$j][$subTypeListId[$i]] = $subTypeListName[$i];
+            }
+        }
+
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => 'codefm.my.id',
-            // 'menu_soal' => $id,
-            // 'submenu_soal' => $type,
+            'soal_subject' => $subjectName,
+            'bank_soal' => $getBankSoal,
             'validation' => \Config\Services::validation()
         ];
 
         return view('admin/input-quiz/input-quiz', $data);
+    }
+
+    public function save_quiz()
+    {
+        dd($this->request->getVar('quiz_list_question'));
     }
 }

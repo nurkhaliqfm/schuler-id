@@ -833,6 +833,45 @@ Admin Section
   justify-content: space-between;
 }
 
+.tabs {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  background: var(--main-color);
+  border-bottom: 2px solid var(--color-3);
+}
+
+.tabs li {
+  display: inline-block;
+  margin: 0;
+  padding: 10px 20px 5px 20px;
+  cursor: pointer;
+  font-size: 1em;
+  color: black;
+  font-weight: 600;
+}
+
+.tabs li:hover {
+  background: var(--color-5);
+  color: var(--main-color);
+}
+
+.tabs li.current {
+  background: var(--color-5);
+  color: var(--main-color);
+}
+
+.tab-content {
+  display: none;
+  background: var(--main-color);
+  padding: 15px;
+  line-height: 1.4;
+}
+
+.tab-content.current {
+  display: inherit;
+}
+
 /*----------------
 Responsive
 ---------------*/
