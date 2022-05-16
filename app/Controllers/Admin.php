@@ -4,16 +4,21 @@ namespace App\Controllers;
 
 use App\Models\TypeSoalModel;
 use App\Models\BankSoalModel;
+use App\Models\BankQuizModel;
+
+use Ramsey\Uuid\Uuid;
 
 class Admin extends BaseController
 {
     protected $typeSoalModel;
     protected $bankSoalModel;
+    protected $bankQuizModel;
 
     public function __construct()
     {
         $this->typeSoalModel = new TypeSoalModel();
         $this->bankSoalModel = new BankSoalModel();
+        $this->bankQuizModel = new BankQuizModel();
     }
 
     public function index()
@@ -377,9 +382,11 @@ class Admin extends BaseController
     // QUIZ SECTION
     public function daftar_quiz()
     {
+        $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->findAll();
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => 'codefm.my.id',
+            'bankQuiz' => $quizListQuestion
         ];
 
         return view('admin/input-quiz/quiz', $data);
@@ -421,6 +428,39 @@ class Admin extends BaseController
 
     public function save_quiz()
     {
-        dd($this->request->getVar('quiz_list_question'));
+        $quizListQuestion = $this->request->getVar('quiz_list_question');
+        $quizName = $this->request->getVar('QuizName');
+        $quizSubject = $this->request->getVar('quiz_subject');
+        $quizSubSubject = $this->request->getVar('quiz_sub_subject');
+        $quizId = Uuid::uuid4();
+
+        if (!$this->validate([
+            'QuizName' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Nama Quiz Harus Diisi',
+                ]
+            ]
+        ])) {
+            session()->setFlashdata('failed', "Quiz Gagal Ditambahkan.");
+            return redirect()->to(base_url('admin/input_quiz'))->withInput();
+        }
+
+        if (!$quizListQuestion) {
+            session()->setFlashdata('failed', "Quiz Gagal Ditambahkan.");
+            return redirect()->to(base_url('admin/input_quiz'))->withInput();
+        }
+
+        foreach ($quizListQuestion as $qLQ) {
+            $this->bankQuizModel->save([
+                'quiz_id' => $quizId,
+                'quiz_name' => $quizName,
+                'quiz_subject' => $quizSubject,
+                'quiz_sub_subject' => $quizSubSubject,
+                'quiz_question' => $qLQ
+            ]);
+        }
+
+        return redirect()->to(base_url('admin/daftar_quiz'))->withInput();
     }
 }

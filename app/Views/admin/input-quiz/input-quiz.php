@@ -34,7 +34,7 @@
                         <?php $j = 0; ?>
                         <?php foreach ($soal_subject as $ss) : ?>
                             <div id="<?= 'tab-' . $j; ?>" class="tab-content <?= $j == 0 ? "current" : ""; ?>">
-                                <table>
+                                <table class="table">
                                     <tr>
                                         <td></td>
                                         <td>Id Soal</td>
