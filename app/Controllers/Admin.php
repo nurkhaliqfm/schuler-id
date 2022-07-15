@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\TypeSoalModel;
 use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
+use App\Models\CategoryQuizModel;
+use App\Models\QuizModel;
 
 use Ramsey\Uuid\Uuid;
 
@@ -13,12 +15,16 @@ class Admin extends BaseController
     protected $typeSoalModel;
     protected $bankSoalModel;
     protected $bankQuizModel;
+    protected $categoryQuizModel;
+    protected $quizModel;
 
     public function __construct()
     {
         $this->typeSoalModel = new TypeSoalModel();
         $this->bankSoalModel = new BankSoalModel();
         $this->bankQuizModel = new BankQuizModel();
+        $this->categoryQuizModel = new CategoryQuizModel();
+        $this->quizModel = new QuizModel();
     }
 
     public function index()
@@ -380,34 +386,52 @@ class Admin extends BaseController
     }
 
     // QUIZ SECTION
+    public function quiz()
+    {
+        $quiz = $this->quizModel->findAll();
+        $category = $this->categoryQuizModel->findAll();
+        $data = [
+            'title' => 'Quiz Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'quiz_type' => $quiz,
+            'category_quiz' =>  $category
+        ];
+
+        return view('admin/input-quiz/quiz', $data);
+    }
+
     public function daftar_quiz()
     {
-        $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->findAll();
+        $slug = $this->request->getVar('slug');
+        $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->findAll();
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
             'user_name' => 'codefm.my.id',
             'bankQuiz' => $quizListQuestion
         ];
 
-        return view('admin/input-quiz/quiz', $data);
+        return view('admin/input-quiz/daftar-quiz', $data);
     }
 
     public function input_quiz()
     {
+        $slug = $this->request->getVar('slug');
         $getBankSoal = $this->bankSoalModel->findAll();
-        $getBankSoalSubject = $this->bankSoalModel->groupBy('type_soal')->findAll();
+        $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
+        if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
 
+        $getBankSoalSubject = explode(',', $getBankSoalSubject['category_item']);
         for ($j = 0; $j < count($getBankSoalSubject); $j++) {
             $getTypeSoal = $this->typeSoalModel->where([
-                'id_main_type_soal' => $getBankSoalSubject[$j]['type_soal']
+                'id_main_type_soal' => $getBankSoalSubject[$j]
             ])->first();
 
             $subTypeListId = explode(',', $getTypeSoal['list_type_soal_id']);
             $subTypeListName = explode(',', $getTypeSoal['list_type_soal']);
 
             $subjectName[] = [
-                'type_soal_id' => $getBankSoalSubject[$j]['type_soal'],
-                'type_soal_name' => $getTypeSoal['main_type_soal'],
+                'type_soal_id' => $getBankSoalSubject[$j],
+                'type_soal_name' => $getTypeSoal['slug'],
             ];
 
             for ($i = 0; $i < count($subTypeListId); $i++) {
@@ -428,10 +452,10 @@ class Admin extends BaseController
 
     public function save_quiz()
     {
+        $uri = current_url(true)->getSegment(4);
+        $quizType = $this->request->getVar('slug');
         $quizListQuestion = $this->request->getVar('quiz_list_question');
         $quizName = $this->request->getVar('QuizName');
-        $quizSubject = $this->request->getVar('quiz_subject');
-        $quizSubSubject = $this->request->getVar('quiz_sub_subject');
         $quizId = Uuid::uuid4();
 
         if (!$this->validate([
@@ -452,15 +476,17 @@ class Admin extends BaseController
         }
 
         foreach ($quizListQuestion as $qLQ) {
+            $bankSoalData = $this->bankSoalModel->where(['id_soal' => $qLQ])->first();
             $this->bankQuizModel->save([
                 'quiz_id' => $quizId,
                 'quiz_name' => $quizName,
-                'quiz_subject' => $quizSubject,
-                'quiz_sub_subject' => $quizSubSubject,
-                'quiz_question' => $qLQ
+                'quiz_subject' => $bankSoalData['type_soal'],
+                'quiz_sub_subject' => $bankSoalData['sub_type_soal'],
+                'quiz_question' => $qLQ,
+                'quiz_type' => $quizType,
             ]);
         }
 
-        return redirect()->to(base_url('admin/daftar_quiz'))->withInput();
+        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $quizType))->withInput();
     }
 }

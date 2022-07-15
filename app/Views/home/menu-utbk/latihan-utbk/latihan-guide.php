@@ -13,38 +13,33 @@
                     <div class="body__simulationfree">
                         <table class="table">
                             <tr>
-                                <td></td>
-                                <td></td>
+                                <td width="250"></td>
+                                <td width="10"></td>
                                 <td></td>
                             </tr>
                             <tr>
                                 <td>Jenis Latihan</td>
                                 <td>:</td>
-                                <td>Saintek 1</td>
+                                <td><?= $nama_quiz; ?></td>
                             </tr>
                             <tr>
                                 <td>Jumlah Soal</td>
                                 <td>:</td>
-                                <td>135 Nomor</td>
+                                <td><?= $jumlah_soal; ?> Nomor</td>
                             </tr>
                             <tr>
                                 <td>Waktu Mengerjakan</td>
                                 <td>:</td>
-                                <td>170 Menit</td>
-                            </tr>
-                            <tr>
-                                <td>PTN Pilihan</td>
-                                <td>:</td>
-                                <td>UNIVERSITAS HASANUDDIN</td>
+                                <td><?= $jumlah_soal; ?> Menit</td>
                             </tr>
                         </table>
                     </div>
                     <div class="footer__simulationfree">
                         <div class="button__container">
-                            <a href="<?= base_url('home/simulasi_gratis_main'); ?>" class="start__simulation__Btn">
+                            <a href="<?= base_url('home/kerjakan_latihan/?id=' . $_GET['id'] . '&query=' . $_GET['query']); ?>" class="start__simulation__Btn">
                                 <i class="fa-solid fa-play"></i><span>Kerjakan</span>
                             </a>
-                            <a href="<?= base_url('home/simulasi_gratis'); ?>" class="close__simulation__Btn">
+                            <a href="<?= base_url('home/daftar_latihan'); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>
                             </a>
                         </div>

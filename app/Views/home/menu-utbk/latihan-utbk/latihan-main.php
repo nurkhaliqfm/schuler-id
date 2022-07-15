@@ -9,7 +9,7 @@
                     <div class="question-container">
                         <div class="d-flex mb-3 align-items-center question_header">
                             <div class="quest__number">SOAL NOMOR <span id="question__number"></span></div>
-                            <div class="quest__subject">SKOLASTIK</div>
+                            <div class="quest__subject"><span id="question__subject"></span></div>
                             <div class="ms-auto quest__report alert__box"><i class="fa-solid fa-circle-info"></i><span> Laporkan Soal</span></div>
                         </div>
                         <div class="question_main">
@@ -33,16 +33,6 @@
     </div>
 </div>
 <script>
-    const list_element = document.getElementById('question__part'),
-        pagination_element = document.getElementById('pagination'),
-        prev_button = document.getElementById('item_prev'),
-        next_button = document.getElementById('item_next'),
-        question_num_btn = document.getElementById('question__number_side');
-
-    let dataItems = <?= json_encode($bank_soal); ?>;
-    let current_page = 1;
-    let rows = 1;
-
     function CreateOption(question_id, id, value, name, label_option) {
         var radiobox = document.createElement('input');
         radiobox.type = 'radio';
@@ -70,6 +60,19 @@
         container.appendChild(newline);
     }
 
+    const list_element = document.getElementById('question__part'),
+        pagination_element = document.getElementById('pagination'),
+        prev_button = document.getElementById('item_prev'),
+        next_button = document.getElementById('item_next'),
+        question_num_btn = document.getElementById('question__number_side');
+
+    let dataItems = <?= json_encode($bank_soal); ?>;
+    let dataQuiz = <?= json_encode($quiz_data); ?>;
+    let typeSoal = <?= json_encode($type_soal); ?>;
+    let navbarTitle = <?= json_encode($navbar_title); ?>;
+    let current_page = 1;
+    let rows = 1;
+
     function DisplayList(items, rows_per_page, page) {
         page--;
         let start = rows_per_page * page;
@@ -80,6 +83,18 @@
             let item = paginatedItems[i];
             var labelPage = page + 1;
 
+            let dataSoal = dataItems.find(({
+                id_soal
+            }) => id_soal === item.quiz_question);
+
+            let qSubject = typeSoal.find(({
+                id_main_type_soal
+            }) => id_main_type_soal === item.quiz_subject);
+
+            let subjectListID = qSubject.list_type_soal_id.split(',');
+            let subjectListName = qSubject.list_type_soal.split(',');
+            let getId = subjectListID.findIndex(index => index === item.quiz_sub_subject);
+
             document.getElementById('optionA').setAttribute('name', 'Q_' + labelPage);
             document.getElementById('optionB').setAttribute('name', 'Q_' + labelPage);
             document.getElementById('optionC').setAttribute('name', 'Q_' + labelPage);
@@ -87,13 +102,17 @@
             document.getElementById('optionE').setAttribute('name', 'Q_' + labelPage);
 
             document.getElementById('question__number').innerHTML = labelPage;
-            document.getElementById('question__part').innerHTML = item.soal;
+            document.getElementById('question__subject').innerHTML = subjectListName[getId];
+            document.getElementById('question__part').innerHTML = dataSoal.soal;
+            document.getElementById('simulation__title').innerHTML = navbarTitle;
+            document.getElementById('simulation__subtitle').innerHTML = qSubject.main_type_soal;
+            if (document.querySelector('p[data-f-id="pbf"]')) document.querySelector('p[data-f-id="pbf"]').setAttribute('style', 'display:none');
 
-            document.getElementById('option_a').innerHTML = item.option_a;
-            document.getElementById('option_b').innerHTML = item.option_b;
-            document.getElementById('option_c').innerHTML = item.option_c;
-            document.getElementById('option_d').innerHTML = item.option_d;
-            document.getElementById('option_e').innerHTML = item.option_e;
+            document.getElementById('option_a').innerHTML = dataSoal.option_a;
+            document.getElementById('option_b').innerHTML = dataSoal.option_b;
+            document.getElementById('option_c').innerHTML = dataSoal.option_c;
+            document.getElementById('option_d').innerHTML = dataSoal.option_d;
+            document.getElementById('option_e').innerHTML = dataSoal.option_e;
 
             document.querySelectorAll('[name="Q_' + labelPage + '"]').forEach(itemOption => {
                 itemOption.checked = false;
@@ -156,7 +175,7 @@
             prev_button.removeAttribute('disabled', '')
         }
 
-        if (current_page == dataItems.length) {
+        if (current_page == dataQuiz.length) {
             next_button.setAttribute('disabled', '')
         } else {
             next_button.removeAttribute('disabled', '')
@@ -171,9 +190,9 @@
     CreateOption('option_4', 'optionD', 'option_d', 'flexRadioDefault', 'D');
     CreateOption('option_5', 'optionE', 'option_e', 'flexRadioDefault', 'E');
 
-    DisplayList(dataItems, rows, current_page)
+    DisplayList(dataQuiz, rows, current_page)
     NavBtnControl(current_page)
-    PaginationListNumber(dataItems, rows)
-    ButtonPagination(dataItems);
+    PaginationListNumber(dataQuiz, rows)
+    ButtonPagination(dataQuiz);
 </script>
 <?= $this->endSection(); ?>

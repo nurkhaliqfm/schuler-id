@@ -85,6 +85,111 @@ body {
   font-weight: 600;
 }
 
+/* RE-USE TEMPLATE */
+/* Template Header Start*/
+.container_header_1 .box-title {
+  margin-bottom: 0px;
+}
+
+.container_header_1 .box-title span {
+  color: var(--color-5);
+}
+
+.container_header_1 .box__subtitle {
+  font-size: 0.8rem;
+  margin-bottom: 0px;
+}
+
+.container_header_1 .button__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.container_header_1 .button__container .tab_button_style {
+  padding: 5px;
+  border: 1px solid var(--color-5);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-5);
+  margin-top: 15px;
+  margin-right: 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.container_header_1 .button__container .tab_button_style.active {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.container_header_1 .button__container .tab_button_style:hover {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+/* Template Header End*/
+
+/* Template Box Item Start */
+.box_item__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
+  width: 200px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-white-box);
+  margin: 10px 20px;
+}
+
+.box_item__container .box_item__header {
+  text-align: center;
+  font-weight: 600;
+  padding: 5px;
+  font-size: 1.2rem;
+  color: var(--color-5);
+  border-bottom: 2px solid rgba(235, 235, 235, 0.774);
+}
+
+.box_item__container .box_item__body {
+  margin: 15px 10px 15px 10px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.box_item__container .box_item__body .box_body__desc {
+  margin-top: 5px;
+  color: var(--color-1);
+  font-weight: 400;
+}
+
+.box_item__container .box_item__footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 0px 15px 15px 15px;
+  cursor: pointer;
+}
+
+.box_item__container .box_item__footer .box_item__Btn {
+  border: 1px solid var(--color-5);
+  margin: 2px 0px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 400;
+}
+
+.box_item__container .box_item__footer .box_item__Btn.selected {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.box_item__container .box_item__footer .box_item__Btn span {
+  margin-left: 5px;
+}
+/* Template Box Item End */
+
 /*----------------
 Navbar
 ---------------*/
@@ -520,49 +625,6 @@ Main Content
 
 /* MENU UTBK */
 /* Simulasi UTBK Gratis */
-.head__simulationfree .box-title.simulation {
-  margin-bottom: 0px;
-}
-
-.head__simulationfree .box-title.simulation span {
-  color: var(--color-5);
-}
-
-.head__simulationfree .box__subtitle {
-  font-size: 0.8rem;
-  margin-bottom: 0px;
-}
-
-.head__simulationfree .button__container {
-  display: flex;
-  flex-direction: row;
-}
-
-.head__simulationfree .button__container .simftype__Btn {
-  padding: 5px;
-  border: 1px solid var(--color-5);
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--color-5);
-  margin-top: 15px;
-  cursor: pointer;
-}
-
-.head__simulationfree .button__container .simftype__Btn.active {
-  color: var(--main-color);
-  background-color: var(--color-5);
-}
-
-.head__simulationfree .button__container .simftype__Btn:hover {
-  color: var(--main-color);
-  background-color: var(--color-5);
-}
-
-.head__simulationfree .button__container .soshum-button {
-  margin-left: 10px;
-}
-
 .container__body.simulation__free {
   display: flex;
   flex-direction: row;
@@ -571,64 +633,7 @@ Main Content
 }
 
 .jenis__simulasi__container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   min-height: 275px;
-  width: 200px;
-  border-radius: 20px;
-  box-shadow: var(--shadow-white-box);
-  margin: 10px 20px;
-}
-
-.jenis__simulasi__container .jenis__simulasi__head {
-  text-align: center;
-  font-weight: 600;
-  padding: 5px;
-  font-size: 1.2rem;
-  color: var(--color-5);
-  border-bottom: 2px solid rgba(235, 235, 235, 0.774);
-}
-
-.jenis__simulasi__container .jenis__simulasi__body {
-  margin: 15px 15px 0px 15px;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-.jenis__simulasi__container .jenis__simulasi__body .jenis__simulasi__desk {
-  margin-top: 5px;
-  color: var(--color-1);
-  font-weight: 400;
-}
-
-.jenis__simulasi__container .jenis__simulasi__foot {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  font-size: 0.9rem;
-  margin: 0px 15px 15px 15px;
-  cursor: pointer;
-}
-
-.jenis__simulasi__container .jenis__simulasi__foot .jenis__simulasi_Btn {
-  border: 1px solid var(--color-5);
-  margin: 2px 0px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 400;
-}
-
-.jenis__simulasi__container
-  .jenis__simulasi__foot
-  .jenis__simulasi_Btn.selected {
-  color: var(--main-color);
-  background-color: var(--color-5);
-}
-
-.jenis__simulasi__container .jenis__simulasi__foot .jenis__simulasi_Btn span {
-  margin-left: 5px;
 }
 
 /* Simulasi UTBK Guide */
@@ -681,8 +686,7 @@ Main Content
 /* ---------------
 Admin Section
 ----------------*/
-/* default */
-
+/* Default */
 .bank__soalBtn {
   padding: 2px 20px;
   font-size: 0.9rem;
@@ -701,7 +705,7 @@ Admin Section
   background-color: var(--main-color);
 }
 
-/* Bank Soal Home Part*/
+/* Bank Soal - Home Part*/
 .bank__soal__body {
   display: flex;
   flex-direction: row;
@@ -744,7 +748,7 @@ Admin Section
   font-weight: 900;
 }
 
-/* Bank Soal-Input Part */
+/* Bank Soal - Input Part */
 .fr-element.fr-view {
   height: 200px;
 }
@@ -872,10 +876,19 @@ Admin Section
   display: inherit;
 }
 
+/* Quiz - Quiz Part*/
+.box_item__footer.quiz_footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.box_item__footer .list_quiz_button {
+  padding: 5px 10px;
+}
+
 /*----------------
 Responsive
 ---------------*/
-
 @media (max-width: 1020px) {
   /* Main Conten */
   /* Beranda */

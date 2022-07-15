@@ -4,16 +4,25 @@ namespace App\Controllers;
 
 use App\Models\TypeSoalModel;
 use App\Models\BankSoalModel;
+use App\Models\BankQuizModel;
+use App\Models\QuizModel;
+use App\Models\CategoryQuizModel;
 
 class Home extends BaseController
 {
     protected $typeSoalModel;
     protected $bankSoalModel;
+    protected $bankQuizModel;
+    protected $quizModel;
+    protected $categoryQuizModel;
 
     public function __construct()
     {
         $this->typeSoalModel = new TypeSoalModel();
         $this->bankSoalModel = new BankSoalModel();
+        $this->bankQuizModel = new BankQuizModel();
+        $this->quizModel = new QuizModel();
+        $this->categoryQuizModel = new CategoryQuizModel();
     }
 
     public function index()
@@ -38,15 +47,93 @@ class Home extends BaseController
     }
 
     // MENU UTBK LATIHAN
-    public function kerjakan_latihan()
+    public function daftar_latihan()
     {
+        $categoryQuiz = $this->categoryQuizModel->where(['group' => '0'])->findAll();
         $data = [
-            'title' => 'Kerjakan Latihan Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'title' => 'Daftar Latihan Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'data_type' => $categoryQuiz
         ];
 
-        return view('home/menu-utbk/latihan-utbk/kerjakan-latihan', $data);
+        return view('home/menu-utbk/latihan-utbk/latihan-list', $data);
     }
+
+    public function latihan_home($slug = "")
+    {
+        $cekCategoryQuiz = $this->categoryQuizModel->where([
+            'slug' => $slug,
+            'group' => '0'
+        ])->first();
+        if (!$cekCategoryQuiz) return redirect()->to(base_url('home/daftar_latihan'));
+        $idCategoryQuiz = explode(',', $cekCategoryQuiz['category_item']);
+
+        foreach ($idCategoryQuiz as $id) {
+            $getTypeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $id])->first();
+            $typeSoal[] = [
+                'id' => $id,
+                'name' => $getTypeSoal['main_type_soal'],
+                'slug' => $getTypeSoal['slug'],
+            ];
+        }
+
+        if (!$cekCategoryQuiz) {
+            return redirect()->to(base_url('home/daftar_latihan'));
+        }
+
+        $filterCategory = $this->categoryQuizModel->where(['slug' => $slug])->first();
+
+        $data = [
+            'title' => 'Daftar Latihan Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'quiz_group' => $slug,
+            'type_soal' => $typeSoal,
+            'bank_quiz' => $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_type' => 'practice'])->groupBy(['quiz_id'])->findAll(),
+            'filter_category' => $filterCategory['category_item']
+        ];
+
+        return view('home/menu-utbk/latihan-utbk/latihan-home', $data);
+    }
+
+    public function latihan_guide()
+    {
+        $query = $this->request->getVar('query');
+
+        $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
+        $data = [
+            'title' => 'Petunjuk Latihan Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'nama_quiz' => $dataQuiz[0]['quiz_name'],
+            'jumlah_soal' => count($dataQuiz)
+        ];
+
+        return view('home/menu-utbk/latihan-utbk/latihan-guide', $data);
+    }
+
+    public function kerjakan_latihan()
+    {
+        $query = $this->request->getVar('query');
+
+        $quizData = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->findAll();
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = "Latihan " . $quizData[0]['quiz_name'];
+
+        $data = [
+            'title' => 'Kerjakan Latihan Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'type_soal' => $typeSoal,
+            'navbar_title' => $navbarTitle
+        ];
+
+        return view('home/menu-utbk/latihan-utbk/latihan-main', $data);
+    }
+
     public function hasil_latihan()
     {
         $data = [
@@ -85,9 +172,9 @@ class Home extends BaseController
         ])->findAll();
 
         $data = [
-            'bank_soal' => $bankSoalModel,
             'title' => 'Simulasi Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => 'codefm.my.id',
+            'bank_soal' => $bankSoalModel
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-main', $data);

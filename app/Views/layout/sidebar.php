@@ -47,7 +47,7 @@
                     </a>
                     <ul class="nav-treeview collapse">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="<?= base_url('home/kerjakan_latihan'); ?>" aria-expanded="false">
+                            <a class="sidebar-link" href="<?= base_url('home/daftar_latihan'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
                                     Kerjakan Latihan
@@ -150,7 +150,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link admin-style" href="<?= base_url('admin/daftar_quiz'); ?>" aria-expanded="false">
+                            <a class="sidebar-link admin-style" href="<?= base_url('admin/quiz'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
                                     Kuis

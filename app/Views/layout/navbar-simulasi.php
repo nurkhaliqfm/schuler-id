@@ -5,8 +5,8 @@
         </a>
         <div class="navbar-title-container">
             <div class="navbar-title">
-                <div class="navbar__title">Simulasi Saintek 1</div>
-                <div class="title_simulation_test">Test Kemampuan Akademik</div>
+                <div id="simulation__title" class="navbar__title"></div>
+                <div id="simulation__subtitle" class="title_simulation_test">Test Kemampuan Akademik</div>
             </div>
             <div class="navbar-subtitle alert__box"><i class="fa-solid fa-circle-info"></i><span> Panduan</span></div>
         </div>
@@ -30,8 +30,17 @@
                 seconds: root.querySelector(".timer__countdown__second"),
             };
 
+            let getCurrentTime = localStorage.getItem('timerValue');
+
+            if (getCurrentTime == null) {
+                this.setTimer = 190;
+            } else {
+                this.setTimer = getCurrentTime
+            }
+
+            // console.log(this.setTimer);
             this.interval = null;
-            this.remainingSeconds = 190;
+            this.remainingSeconds = this.setTimer;
             this.updateInterfaceTime();
 
             if (this.interval === null) {
@@ -56,8 +65,11 @@
                 this.remainingSeconds--;
                 this.updateInterfaceTime();
 
+                let setCurrentTime = localStorage.setItem('timerValue', this.remainingSeconds);
+
                 if (this.remainingSeconds === 0) {
                     this.stop();
+                    localStorage.removeItem('timerValue');
                 }
             }, 1000);
 
@@ -68,7 +80,7 @@
 
             this.interval = null;
 
-            console.log("selesai")
+            // console.log("selesai")
         }
 
         static getHTML() {

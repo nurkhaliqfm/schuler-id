@@ -1,5 +1,7 @@
 <?= $this->extend('layout/template'); ?>
 
+<?php $uri = current_url(true)->getSegment(4); ?>
+
 <?= $this->section('content'); ?>
 <div class="page-container">
     <div class=" container-fluid">
@@ -11,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    <form action="<?= base_url('admin/save_quiz'); ?>" method="POST">
+                    <form action="<?= base_url('admin/save_quiz/' . $uri . '/?slug=' . $_GET['slug']); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <!-- Nama Quiz -->
                         <h3 class="custom-box-title">Nama Quiz</h3>
@@ -27,7 +29,7 @@
                         <?php $i = 0; ?>
                         <ul class="tabs">
                             <?php foreach ($soal_subject as $ss) : ?>
-                                <li class="tab <?= $i == 0 ? "current" : ""; ?>" data-tab="<?= 'tab-' . $i; ?>"><?= $ss['type_soal_name']; ?></li>
+                                <li class="tab <?= $i == 0 ? "current" : ""; ?>" data-tab="<?= 'tab-' . $i; ?>"><?= strtoupper($ss['type_soal_name']); ?></li>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
                         </ul>
@@ -45,8 +47,6 @@
                                             <tr>
                                                 <td>
                                                     <input class="custom-control-input" type="checkbox" value="<?= $bs['id_soal']; ?>" name="quiz_list_question[]">
-                                                    <input type="hidden" name="quiz_subject" value="<?= $bs['type_soal']; ?>">
-                                                    <input type="hidden" name="quiz_sub_subject" value="<?= $bs['sub_type_soal']; ?>">
                                                 </td>
                                                 <td><?= $bs['id_soal']; ?></td>
                                                 <td><?= $ss[$bs['sub_type_soal']]; ?></td>
