@@ -190,6 +190,45 @@ body {
 }
 /* Template Box Item End */
 
+/* Popup Modal */
+.modal-header {
+  border-bottom: none;
+  padding: 0px;
+  margin-top: 10px;
+}
+
+.modal-header.format-logo {
+  justify-content: center;
+}
+
+.modal-header.format-title {
+  justify-content: flex-start;
+}
+
+.modal-header .modal-logo {
+  font-size: 3rem;
+  color: var(--color-3);
+}
+
+.modal-header .modal-title {
+  padding: 1rem 0 0 1rem;
+  font-size: 1rem;
+}
+
+.modal-body ol {
+  font-size: 0.9rem;
+}
+
+.modal-footer {
+  border-top: none;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.modal-footer .button__container .modal-style {
+  font-size: 0.9rem;
+}
+
 /*----------------
 Navbar
 ---------------*/
@@ -652,6 +691,7 @@ Main Content
   margin-top: 15px;
   cursor: pointer;
   text-decoration: none;
+  box-shadow: none;
 }
 
 .button__container .start__simulation__Btn {
@@ -884,6 +924,10 @@ Admin Section
 
 .box_item__footer .list_quiz_button {
   padding: 5px 10px;
+}
+
+.box_item__footer .list_quiz_button-normal {
+  padding: 0px 0px;
 }
 
 /*----------------

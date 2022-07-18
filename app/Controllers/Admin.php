@@ -484,6 +484,7 @@ class Admin extends BaseController
                 'quiz_sub_subject' => $bankSoalData['sub_type_soal'],
                 'quiz_question' => $qLQ,
                 'quiz_type' => $quizType,
+                'quiz_category' => $uri,
             ]);
         }
 

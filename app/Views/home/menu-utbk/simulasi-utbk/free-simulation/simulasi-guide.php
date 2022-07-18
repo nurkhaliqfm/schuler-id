@@ -20,17 +20,17 @@
                             <tr>
                                 <td>Jenis Latihan</td>
                                 <td>:</td>
-                                <td>Saintek 1</td>
+                                <td><?= strtoupper($nama_quiz); ?></td>
                             </tr>
                             <tr>
                                 <td>Jumlah Soal</td>
                                 <td>:</td>
-                                <td>135 Nomor</td>
+                                <td><?= $jumlah_soal; ?> Nomor</td>
                             </tr>
                             <tr>
                                 <td>Waktu Mengerjakan</td>
                                 <td>:</td>
-                                <td>170 Menit</td>
+                                <td><?= ($timer / 60) * 8; ?> Menit</td>
                             </tr>
                             <tr>
                                 <td>PTN Pilihan</td>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="footer__simulationfree">
                         <div class="button__container">
-                            <a href="<?= base_url('home/simulasi_gratis_main'); ?>" class="start__simulation__Btn">
+                            <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
                                 <i class="fa-solid fa-play"></i><span>Kerjakan</span>
                             </a>
                             <a href="<?= base_url('home/simulasi_gratis'); ?>" class="close__simulation__Btn">
@@ -54,5 +54,39 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalGuide" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header format-logo">
+                <h5 class="modal-logo"><i class="fa-solid fa-circle-info"></i></h5>
+            </div>
+            <div class="modal-body">
+                <ol>
+                    <li>Pastikan koneksi internet anda stabil</li>
+                    <li>Gunakan browser google chrome versi terbaru</li>
+                    <li>Pastikan tidak ada aktivitas login anda pada perangkat lain saat sedang mengerjakan soal</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <div class="button__container">
+                    <a id="start_btn" href="<?= base_url('home/kerjakan_simulasi_geratis/?id=' . $_GET['id'] . '&query=' . $_GET['query']); ?>" class="modal-style start__simulation__Btn">
+                        <i class="fa-solid fa-play"></i><span>Mulai</span>
+                    </a>
+                    <a class="modal-style close__simulation__Btn" data-bs-dismiss="modal"><i class="fa-solid fa-times-circle"></i><span>Batal</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const mulaiBtn = document.getElementById('start_btn');
+    let sessionID = <?= json_encode($session_id); ?>;
+
+    mulaiBtn.addEventListener('click', () => {
+        localStorage.removeItem(sessionID);
+    })
+</script>
 
 <?= $this->endSection(); ?>

@@ -7,6 +7,7 @@ use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
 use App\Models\QuizModel;
 use App\Models\CategoryQuizModel;
+use App\Models\UsersModel;
 
 class Home extends BaseController
 {
@@ -15,6 +16,7 @@ class Home extends BaseController
     protected $bankQuizModel;
     protected $quizModel;
     protected $categoryQuizModel;
+    protected $usersModel;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class Home extends BaseController
         $this->bankQuizModel = new BankQuizModel();
         $this->quizModel = new QuizModel();
         $this->categoryQuizModel = new CategoryQuizModel();
+        $this->usersModel = new UsersModel();
     }
 
     public function index()
@@ -82,13 +85,25 @@ class Home extends BaseController
         }
 
         $filterCategory = $this->categoryQuizModel->where(['slug' => $slug])->first();
+        $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'practice'])->groupBy(['quiz_id'])->findAll();
+        foreach ($bankQuiz as  $bq) {
+            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
+            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
+            $remakeBankQuiz[] = array(
+                'quiz_id' => $bq['quiz_id'],
+                'quiz_subject' => $bq['quiz_subject'],
+                'quiz_name' => $bq['quiz_name'],
+                'total_soal' => count($count),
+                'timer' => $timer['quiz_timer'] / 60
+            );
+        }
 
         $data = [
             'title' => 'Daftar Latihan Schuler.id',
             'user_name' => 'codefm.my.id',
             'quiz_group' => $slug,
             'type_soal' => $typeSoal,
-            'bank_quiz' => $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_type' => 'practice'])->groupBy(['quiz_id'])->findAll(),
+            'bank_quiz' => $remakeBankQuiz,
             'filter_category' => $filterCategory['category_item']
         ];
 
@@ -98,13 +113,17 @@ class Home extends BaseController
     public function latihan_guide()
     {
         $query = $this->request->getVar('query');
-
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $timer = $this->quizModel->where(['slug' => $dataQuiz[0]['quiz_category']])->first();
+
         $data = [
             'title' => 'Petunjuk Latihan Schuler.id',
             'user_name' => 'codefm.my.id',
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
-            'jumlah_soal' => count($dataQuiz)
+            'jumlah_soal' => count($dataQuiz),
+            'session_id' => $users['slug'],
+            'timer' => $timer['quiz_timer']
         ];
 
         return view('home/menu-utbk/latihan-utbk/latihan-guide', $data);
@@ -121,6 +140,8 @@ class Home extends BaseController
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
         $navbarTitle = "Latihan " . $quizData[0]['quiz_name'];
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
 
         $data = [
             'title' => 'Kerjakan Latihan Schuler.id',
@@ -128,7 +149,9 @@ class Home extends BaseController
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
             'type_soal' => $typeSoal,
-            'navbar_title' => $navbarTitle
+            'navbar_title' => $navbarTitle,
+            'session_id' => $users['slug'],
+            'timer' => $timer['quiz_timer']
         ];
 
         return view('home/menu-utbk/latihan-utbk/latihan-main', $data);
@@ -147,9 +170,30 @@ class Home extends BaseController
     // MENU UTBK SIMULASI
     public function simulasi_gratis()
     {
+        $cekCategoryQuiz = $this->categoryQuizModel->where([
+            'group' => '0'
+        ])->findAll();
+
+        $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'free_simulation'])->groupBy(['quiz_id'])->findAll();
+        foreach ($bankQuiz as  $bq) {
+            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
+            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
+            $remakeBankQuiz[] = array(
+                'quiz_id' => $bq['quiz_id'],
+                'quiz_subject' => $bq['quiz_subject'],
+                'quiz_name' => $bq['quiz_name'],
+                'total_soal' => count($count),
+                'timer' => ($timer['quiz_timer'] / 60) * 8,
+                'quiz_type' => $bq['quiz_type']
+            );
+        }
+
         $data = [
             'title' => 'Simulasi Gratis Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => 'codefm.my.id',
+            'type_soal' => $cekCategoryQuiz,
+            'bank_quiz' => $remakeBankQuiz,
+            'filter_category' => $this->categoryQuizModel->where(['group' => '0'])->findAll()
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-home', $data);
@@ -157,24 +201,46 @@ class Home extends BaseController
 
     public function simulasi_gratis_guide()
     {
+        $query = $this->request->getVar('query');
+        $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $timer = $this->quizModel->where(['slug' => $dataQuiz[0]['quiz_category']])->first();
+
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => 'codefm.my.id',
+            'nama_quiz' => $dataQuiz[0]['quiz_name'],
+            'jumlah_soal' => count($dataQuiz),
+            'session_id' => $users['slug'],
+            'timer' => $timer['quiz_timer']
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-guide', $data);
     }
 
-    public function simulasi_gratis_main()
+    public function kerjakan_simulasi_geratis()
     {
-        $bankSoalModel = $this->bankSoalModel->where([
-            'type_soal' => '22b9f14e-867a-41d0-a758-55070c6bd603'
+        $query = $this->request->getVar('query');
+
+        $quizData = $this->bankQuizModel->where([
+            'quiz_id' => $query
         ])->findAll();
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = "Simulasi " . strtoupper($quizData[0]['quiz_name']);
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
 
         $data = [
             'title' => 'Simulasi Schuler.id',
             'user_name' => 'codefm.my.id',
-            'bank_soal' => $bankSoalModel
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'type_soal' => $typeSoal,
+            'navbar_title' => $navbarTitle,
+            'session_id' => $users['slug'],
+            'timer' => $timer['quiz_timer']
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-main', $data);
