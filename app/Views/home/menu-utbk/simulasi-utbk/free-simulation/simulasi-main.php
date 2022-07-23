@@ -34,7 +34,7 @@
     </div>
 </div>
 
-<script src="<?= base_url('assets/js/prevent-access.js') ?>"></script>
+<!-- <script src="<?= base_url('assets/js/prevent-access.js') ?>"></script> -->
 <script src="<?= base_url('assets/js/simulasi-control.js') ?>"></script>
 <script>
     let dataItems = <?= json_encode($bank_soal); ?>;

@@ -31,7 +31,7 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
       boxBodyDesc.className = "box_body__desc";
       boxBodyDesc.innerHTML = "Matematika, Fisika, Kimia, Biologi";
-      boxFooter.className = "box_item__footer";
+      boxFooter.className = "box_item__footer simulasi_box_footer";
       boxFooterBtn.className = "box_item__Btn list_quiz_button-normal selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
       boxFooterBtn.setAttribute("data-bs-toggle", "modal");

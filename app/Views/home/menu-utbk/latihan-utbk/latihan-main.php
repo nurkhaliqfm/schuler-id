@@ -5,7 +5,7 @@
     <div class=" container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="white-box fr-view">
+                <div class="white-box">
                     <div class="question-container">
                         <div class="d-flex mb-3 align-items-center question_header">
                             <div class="quest__number">SOAL NOMOR <span id="question__number"></span></div>
@@ -45,14 +45,18 @@
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let sessionID = <?= json_encode($session_id); ?>;
     let query = <?= json_encode($_GET['query']); ?>;
-    let urlDone = '<?= base_url('home/hasil_latihan'); ?>';
+    let urlRedirect = "<?= base_url('home/hasil_latihan'); ?>";
+    let urlDone = "<?= base_url('home/save_hasil_latihan') ?>";
     let current_page = 1;
     let rows = 1;
 
-    DisplayList(dataQuiz, rows, current_page)
+    var csrfName = document.getElementById('txt_csrfname').getAttribute('name');
+    var csrfHash = document.getElementById('txt_csrfname').value;
+
+    DisplayList(dataQuiz, rows, current_page, query, csrfName, csrfHash)
     NavBtnControl(current_page)
     PaginationListNumber(dataQuiz, rows)
-    ButtonPagination(dataQuiz, query, urlDone);
+    ButtonPagination(dataQuiz, urlDone, urlRedirect);
 
     new Timer(
         document.querySelector(".timer__countdown"), <?= $timer ?>

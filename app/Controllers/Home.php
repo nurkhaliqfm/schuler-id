@@ -8,6 +8,8 @@ use App\Models\BankQuizModel;
 use App\Models\QuizModel;
 use App\Models\CategoryQuizModel;
 use App\Models\UsersModel;
+use App\Models\UserHistoryModel;
+use stdClass;
 
 class Home extends BaseController
 {
@@ -17,6 +19,7 @@ class Home extends BaseController
     protected $quizModel;
     protected $categoryQuizModel;
     protected $usersModel;
+    protected $userHistoryModel;
 
     public function __construct()
     {
@@ -26,6 +29,7 @@ class Home extends BaseController
         $this->quizModel = new QuizModel();
         $this->categoryQuizModel = new CategoryQuizModel();
         $this->usersModel = new UsersModel();
+        $this->userHistoryModel  = new UserHistoryModel();
     }
 
     public function index()
@@ -157,11 +161,116 @@ class Home extends BaseController
         return view('home/menu-utbk/latihan-utbk/latihan-main', $data);
     }
 
+    public function save_hasil_latihan()
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $quizData = $this->bankQuizModel->where([
+            'quiz_id' => $data['quiz_id']
+        ])->findAll();
+
+
+        foreach ($quizData as $qd) {
+            if (array_key_exists($qd['quiz_question'], $data)) {
+                $id_soal[] =  $qd['quiz_question'];
+                $answare[] = $data[$qd['quiz_question']];
+            } else {
+                $id_soal[] =  $qd['quiz_question'];
+                $answare[] = '0';
+            }
+        }
+
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $cekHistory = $this->userHistoryModel->where([
+            'user_id' => $users['slug'],
+            'quiz_id' => $quizData[0]['quiz_id'],
+        ])->first();
+
+        if ($cekHistory) {
+            $this->userHistoryModel->update($cekHistory['id'], [
+                'answare' => join(',', $answare)
+            ]);
+        } else {
+            $this->userHistoryModel->save([
+                'user_id' => $users['slug'],
+                'quiz_id' => $quizData[0]['quiz_id'],
+                'id_soal' => join(',', $id_soal),
+                'quiz_type' => $quizData[0]['quiz_type'],
+                'quiz_category' => $quizData[0]['quiz_category'],
+                'answare' => join(',', $answare)
+            ]);
+        }
+
+
+        $response = array();
+        $response['token'] = csrf_token();
+        $response['status'] = "Success";
+        $response['quiz_id'] = $data['quiz_id'];
+
+        return $this->response->setJSON($response);
+    }
+
+    public function list_hasil_latihan()
+    {
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $userHistory = $this->userHistoryModel->where([
+            'user_id' => $users['slug'],
+        ])->findAll();
+
+        foreach ($userHistory as $history) {
+            $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $history['quiz_id']])->first();
+            $typeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $bankQuiz['quiz_subject']])->first();
+            $dataUser[] = array(
+                'quiz_id' => $bankQuiz['quiz_id'],
+                'quiz_name' => $bankQuiz['quiz_name'],
+                'type' => join(' ', explode('_', $typeSoal['slug'])),
+                'category' => $typeSoal['list_type_soal']
+            );
+        };
+
+        $data = [
+            'title' => 'Daftar Hasil Latihan Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'data_user' => $dataUser
+        ];
+
+        return view('home/menu-utbk/latihan-utbk/hasil-latihan-list', $data);
+    }
+
     public function hasil_latihan()
     {
+        $query = $this->request->getVar('query');
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $userHistory = $this->userHistoryModel->where([
+            'user_id' => $users['slug'],
+            'quiz_id' => $query
+        ])->first();
+
+        $idSoal = explode(',', $userHistory['id_soal']);
+        $userAns = explode(',', $userHistory['answare']);
+        $userAnsware = new stdClass;
+        for ($i = 0; $i < count($idSoal); $i++) {
+            $userAnsware->{$idSoal[$i]} = $userAns[$i];
+        }
+
+        $quizData = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->findAll();
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = "Hasil & Jawaban " . $quizData[0]['quiz_name'];
+
         $data = [
             'title' => 'Hasil Latihan Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => 'codefm.my.id',
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'type_soal' => $typeSoal,
+            'navbar_title' => $navbarTitle,
+            'user_answare' => $userAnsware
         ];
 
         return view('home/menu-utbk/latihan-utbk/hasil-latihan', $data);
@@ -183,7 +292,7 @@ class Home extends BaseController
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
                 'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * 8,
+                'timer' => ($timer['quiz_timer'] / 60) * 9,
                 'quiz_type' => $bq['quiz_type']
             );
         }

@@ -30,7 +30,7 @@
                             <tr>
                                 <td>Waktu Mengerjakan</td>
                                 <td>:</td>
-                                <td><?= ($timer / 60) * 8; ?> Menit</td>
+                                <td><?= ($timer / 60) * 9; ?> Menit</td>
                             </tr>
                             <tr>
                                 <td>PTN Pilihan</td>

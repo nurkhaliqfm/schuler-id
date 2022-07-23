@@ -55,7 +55,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="<?= base_url('home/hasil_latihan'); ?>" aria-expanded="false">
+                            <a class="sidebar-link" href="<?= base_url('home/list_hasil_latihan'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-circle-check"></i>
                                 <span class="hide-menu">
                                     Hasil Latihan

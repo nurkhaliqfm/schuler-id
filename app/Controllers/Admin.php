@@ -203,6 +203,7 @@ class Admin extends BaseController
             'option_d' => $this->request->getVar('option_d'),
             'option_e' => $this->request->getVar('option_e'),
             'jawaban' => md5($questionAns[0]),
+            'ans_id' => $questionAns[0],
             'pembahasan' => $this->request->getVar('editorExplanation'),
             'value' => $this->request->getVar('questionValue')
         ]);
@@ -248,6 +249,7 @@ class Admin extends BaseController
             'option_d' => $getBankSoal['option_d'],
             'option_e' => $getBankSoal['option_e'],
             'jawaban' => $getBankSoal['jawaban'],
+            'ans_id' => $getBankSoal['jawaban'],
             'pembahasan' => $getBankSoal['pembahasan'],
             'value' => $getBankSoal['value']
         ]);
@@ -346,6 +348,7 @@ class Admin extends BaseController
             'option_d' => $this->request->getVar('option_d'),
             'option_e' => $this->request->getVar('option_e'),
             'jawaban' => md5($questionAns[0]),
+            'ans_id' => $questionAns[0],
             'pembahasan' => $this->request->getVar('editorExplanation'),
             'value' => $this->request->getVar('questionValue')
         ]);
@@ -360,11 +363,11 @@ class Admin extends BaseController
         $temp = explode(".", $_FILES["file"]["name"]);
         $extension = end($temp);
 
-        if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "off") {
-            $protocol = "https://";
-        } else {
-            $protocol = "http://";
-        }
+        // if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "off") {
+        //     $protocol = "https://";
+        // } else {
+        //     $protocol = "http://";
+        // }
 
         if (in_array($extension, $allowExt)) {
             $fileupload_name = sha1(microtime()) . "." . $extension;

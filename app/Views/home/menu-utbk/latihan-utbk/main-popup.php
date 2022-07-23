@@ -11,6 +11,7 @@
             </div>
             <div class="modal-footer">
                 <div class="button__container">
+                    <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                     <a id="notif_btn" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modalDoneNotif" class="modal-style start__simulation__Btn">
                         <i class="fa-solid fa-play"></i><span>Submit</span>
                     </a>
@@ -28,7 +29,7 @@
                 <h5 class="modal-logo notif-style"><i class="fa-solid fa-check-circle"></i></h5>
             </div>
             <div class="modal-body notif-style">
-                <span class="text-notif">Terimakasih telah mealkakuan latihan soal di schuler.id...</span>
+                <span class="text-notif">Terimakasih telah melakakuan latihan soal di schuler.id...</span>
             </div>
             <div class="modal-footer">
                 <a style="display: none;" class="modal-style close__simulation__Btn" data-bs-dismiss="modal"><i class="fa-solid fa-times-circle"></i><span>Batal</span></a>
