@@ -3,6 +3,7 @@ const list_element = document.getElementById("question__part"),
   prev_button = document.getElementById("item_prev"),
   next_button = document.getElementById("item_next"),
   finish_button = document.getElementById("item_selesai"),
+  notif_button = document.getElementById("notif_btn"),
   question_num_btn = document.getElementById("question__number_side");
 
 function CreateOption(question_id, id, value, label_option) {
@@ -32,19 +33,17 @@ function CreateOption(question_id, id, value, label_option) {
   container.appendChild(newline);
 }
 
-function SaveAnsware(query) {
+function SaveAnsware() {
   var UserQuizStorage = localStorage.getItem(sessionID);
   UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
 
   document.querySelectorAll("input.form-check-input").forEach((itemOption) => {
     if (itemOption.checked) {
-      var quiz_id = query;
       var new_data = itemOption.value;
       var id_soal = document
         .getElementById("question__part")
         .getAttribute("id-soal");
 
-      UserQuizStorage["quiz_id"] = quiz_id;
       UserQuizStorage[id_soal] = new_data;
 
       localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
@@ -52,13 +51,16 @@ function SaveAnsware(query) {
   });
 }
 
-function DisplayList(items, rows_per_page, page) {
+function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
   page--;
   let start = rows_per_page * page;
   let end = start + rows_per_page;
   let paginatedItems = items.slice(start, end);
   var UserQuizStorage = localStorage.getItem(sessionID);
   UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+
+  UserQuizStorage[csrfName] = csrfHash;
+  localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
 
   for (let i = 0; i < paginatedItems.length; i++) {
     let item = paginatedItems[i];
@@ -131,55 +133,81 @@ function BtnNumberPagination(page) {
   btn__side.innerHTML = page;
 
   if (current_page == page) {
-    btn__side.classList.add("active");
+    btn__side.classList.add("warning");
   }
 
   return btn__side;
 }
 
-function ButtonPagination(items, query) {
+function SidebarStatus(current_page) {
+  let selectedQuestion = document.querySelector(
+    '.question__number[id-question="' + current_page + '"]'
+  );
+  selectedQuestion.classList.add("warning");
+
+  document.querySelectorAll("input.form-check-input").forEach((itemOption) => {
+    if (itemOption.checked) {
+      selectedQuestion.classList.remove("warning");
+      selectedQuestion.classList.add("active");
+    }
+  });
+}
+
+function ButtonPagination(items, url, urlRedirect) {
+  SidebarStatus(current_page);
   document.querySelectorAll("input.form-check-input").forEach((itemOption) => {
     itemOption.addEventListener("click", () => {
-      SaveAnsware(query);
+      SaveAnsware();
+      let selectedQuestion = document.querySelector(
+        '.question__number[id-question="' + current_page + '"]'
+      );
+      selectedQuestion.classList.remove("warning");
+      selectedQuestion.classList.add("active");
     });
   });
 
   next_button.addEventListener("click", () => {
-    var itemOption = document.querySelectorAll("input.form-check-input");
-    var emptyOption = [].filter.call(itemOption, (el) => {
-      return !el.checked;
-    });
-
-    if (itemOption.length != emptyOption.length) {
-      current_page = current_page + 1;
-      DisplayList(items, rows, current_page);
-      NavBtnControl(current_page);
-      let selectedQuestion = document.querySelector(
-        '.question__number[id-question="' + current_page + '"]'
-      );
-      selectedQuestion.classList.add("active");
-    }
+    current_page = current_page + 1;
+    DisplayList(items, rows, current_page);
+    NavBtnControl(current_page, items);
+    SidebarStatus(current_page);
   });
 
   prev_button.addEventListener("click", () => {
     current_page = current_page - 1;
     DisplayList(items, rows, current_page);
-    NavBtnControl(current_page);
+    NavBtnControl(current_page, items);
   });
 
-  // finish_button.addEventListener('click', () => {
-  //     location.href = '<?= base_url('home/hasil_latihan'); ?>'
-  // })
+  notif_button.addEventListener("click", () => {
+    var UserQuizStorage = localStorage.getItem(sessionID);
+    UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", url, true);
+    xhttp.onreadystatechange = () => {
+      if (xhttp.readyState == 4 && xhttp.status == 200) {
+        var response = JSON.parse(xhttp.responseText);
+        $(".txt_csrfname").val(response.token);
+        setTimeout(() => {
+          window.location.replace(urlRedirect + "/?query=" + response.quiz_id);
+        }, 3000);
+      }
+    };
+    xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+    xhttp.setRequestHeader("Content-Type", "application/json");
+    xhttp.send(JSON.stringify(UserQuizStorage));
+  });
 }
 
-function NavBtnControl(current_page) {
+function NavBtnControl(current_page, items) {
   if (current_page == 1) {
     prev_button.setAttribute("disabled", "");
   } else {
     prev_button.removeAttribute("disabled", "");
   }
 
-  if (current_page == dataQuiz.length) {
+  if (current_page == items.length) {
     next_button.setAttribute("disabled", "");
     next_button.setAttribute("style", "display:none");
     finish_button.setAttribute("style", "display:");

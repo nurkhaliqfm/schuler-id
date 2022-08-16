@@ -335,8 +335,11 @@ class Home extends BaseController
             'quiz_id' => $query
         ])->findAll();
 
+        dd($quizData);
+
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
+        $categoryQuiz = $this->categoryQuizModel->findAll();
         $navbarTitle = "Simulasi " . strtoupper($quizData[0]['quiz_name']);
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
@@ -349,7 +352,8 @@ class Home extends BaseController
             'type_soal' => $typeSoal,
             'navbar_title' => $navbarTitle,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer']
+            'timer' => $timer['quiz_timer'],
+            'category_quiz' => $categoryQuiz
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-main', $data);

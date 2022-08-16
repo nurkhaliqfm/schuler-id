@@ -93,6 +93,11 @@ a {
 }
 
 /* RE-USE TEMPLATE */
+.modal-header .custom_modal_closs {
+  margin-right: 10px;
+  display: block;
+  margin-top: 4px;
+}
 /* Template Header Start*/
 .container_header_1 .box-title {
   margin-bottom: 0px;
@@ -104,7 +109,14 @@ a {
 
 .container_header_1 .box__subtitle {
   font-size: 0.8rem;
-  margin-bottom: 0px;
+  margin-bottom: 5px;
+}
+
+.container_header_1 .header_edit {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .container_header_1 .button__container {
@@ -119,7 +131,6 @@ a {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--color-5);
-  margin-top: 15px;
   margin-right: 10px;
   cursor: pointer;
   text-decoration: none;
@@ -178,7 +189,7 @@ a {
   cursor: pointer;
 }
 
-.box_item__container .box_item__footer .box_item__Btn {
+.box_item__Btn {
   border: 1px solid var(--color-5);
   margin: 2px 0px;
   border-radius: 8px;
@@ -186,14 +197,44 @@ a {
   font-weight: 400;
 }
 
-.box_item__container .box_item__footer .box_item__Btn.selected {
+.box_item__Btn span {
+  margin-left: 5px;
+}
+.box_item__Btn.selected {
   color: var(--main-color);
   background-color: var(--color-5);
 }
 
-.box_item__container .box_item__footer .box_item__Btn span {
-  margin-left: 5px;
+.box_item__Btn.selected:hover {
+  border: 1px solid var(--color-5);
+  color: var(--color-5);
+  background-color: var(--main-color);
 }
+
+.box_item__Btn.delete__btn {
+  color: var(--main-color);
+  background-color: var(--color-danger-border);
+  border: 1px solid var(--color-danger-border);
+}
+
+.box_item__Btn.delete__btn:hover {
+  background-color: var(--main-color);
+  color: var(--color-danger-border);
+  border: 1px solid var(--color-danger-border);
+}
+
+.box_item__Btn.edit__btn {
+  color: var(--main-color);
+  background-color: var(--color-warning-border);
+  border: 1px solid var(--color-warning-border);
+}
+
+.box_item__Btn.edit__btn:hover {
+  background-color: var(--main-color);
+  color: var(--color-warning-border);
+  border: 1px solid var(--color-warning-border);
+}
+
 /* Template Box Item End */
 
 /* Popup Modal Template Start */
@@ -228,6 +269,12 @@ a {
 .modal-footer {
   border-top: none;
   justify-content: center;
+  margin-bottom: 10px;
+}
+
+.modal-footer.side-position {
+  border-top: none;
+  justify-content: end;
   margin-bottom: 10px;
 }
 
@@ -846,11 +893,6 @@ Main Content
   color: var(--color-6);
 }
 
-.container_header_1 .button__container .tab_button_style {
-  margin-right: 10px;
-  margin-top: 8px;
-}
-
 .container_result.small-box .box_item__header {
   text-align: start;
   font-size: 1.2rem;
@@ -1032,16 +1074,6 @@ Admin Section
   text-align: center;
 }
 
-.delete__btn {
-  background-color: var(--color-danger-border);
-}
-
-.delete__btn:hover {
-  background-color: var(--main-color);
-  color: var(--color-danger-border);
-  border: 2px solid var(--color-danger-border);
-}
-
 .bank__soal__body .soal__type {
   display: flex;
   flex-direction: column;
@@ -1152,6 +1184,8 @@ Admin Section
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .tabs {
@@ -1203,11 +1237,11 @@ Admin Section
   flex-direction: row;
 }
 
-.box_item__footer .list_quiz_button {
+.list_quiz_button {
   padding: 5px 10px;
 }
 
-.box_item__footer .list_quiz_button-normal {
+.list_quiz_button-normal {
   padding: 0px 0px;
 }
 

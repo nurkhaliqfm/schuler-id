@@ -88,7 +88,7 @@ function DefaultTabButton(typeItems, categoryItems, base_url) {
           "href",
           base_url +
             "/?id=" +
-            typeItems[0].id +
+            typeItems[0].category_id +
             "&query=" +
             item.getAttribute("data-button")
         );
@@ -116,7 +116,7 @@ function TabButtonControl(typeItems, categoryItems, base_url) {
               "href",
               base_url +
                 "/?id=" +
-                el.target.id +
+                el.target.category_id +
                 "&query=" +
                 item.getAttribute("data-button")
             );

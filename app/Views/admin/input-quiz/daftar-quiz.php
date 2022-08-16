@@ -10,23 +10,30 @@
                 <div class="white-box">
                     <div class="container__title__box daftar__soal">
                         <h3 class="box-title">Daftar Quiz</h3>
-                        <a href="<?= base_url('admin/input_quiz/' . $uri . '/?slug=' . $_GET['slug']); ?>" class="bank__soalBtn">Tambahkan Quiz</a>
+                        <a href="<?= base_url('admin/input_quiz/' . $uri . '/?slug=' . $_GET['slug']); ?>" class="box_item__Btn list_quiz_button selected">Tambahkan Quiz</a>
                     </div>
 
                     <table class="table">
                         <tr>
-                            <td>No</td>
-                            <td>Nama Quiz</td>
-                            <td>Jumlah Soal</td>
-                            <td>Action</td>
+                            <td class="text-center">No</td>
+                            <td class="text-center">Nama Quiz</td>
+                            <td class="text-center">Jumlah Soal</td>
+                            <td class="text-center">Action</td>
                         </tr>
                         <?php $i = 1; ?>
                         <?php foreach ($bankQuiz as $bQ) : ?>
+                            <?php $index = $i - 1; ?>
                             <tr>
-                                <td><?= $i++; ?></td>
-                                <td><?= $bQ['quiz_name']; ?></td>
-                                <td>20</td>
-                                <td>Action</td>
+                                <td class="text-center"><?= $i++; ?></td>
+                                <td class="text-center"><?= $bQ['quiz_name']; ?></td>
+                                <td class="text-center"><?= $quiz_number[$index]; ?></td>
+                                <td class="text-center">
+                                    <form action="<?= base_url("admin/deleted_quiz/" . $bQ['quiz_id'] . '/?slug=' . $_GET['slug'] . '&u=' . $uri); ?>" method="post" class="d-inline">
+                                        <?= csrf_field(); ?>
+                                        <button type="submit" type="submit" class="box_item__Btn list_quiz_button delete__btn"><i class="fa-solid fa-trash-alt"></i></button>
+                                        <a href="<?= base_url('admin/detail_quiz/' . $bQ['quiz_id'] . '/?slug=' . $_GET['slug'] . '&u=' . $uri); ?>" class="box_item__Btn list_quiz_button edit__btn"><i class="fa-solid fa-pen-alt"></i></a>
+                                    </form>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </table>

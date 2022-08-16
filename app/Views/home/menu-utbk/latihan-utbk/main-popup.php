@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalDoneNotif" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="modalDoneNotif" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header format-logo">

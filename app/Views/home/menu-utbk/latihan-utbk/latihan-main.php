@@ -53,7 +53,7 @@
     var csrfName = document.getElementById('txt_csrfname').getAttribute('name');
     var csrfHash = document.getElementById('txt_csrfname').value;
 
-    DisplayList(dataQuiz, rows, current_page, query, csrfName, csrfHash)
+    DisplayList(dataQuiz, rows, current_page, csrfName, csrfHash)
     NavBtnControl(current_page)
     PaginationListNumber(dataQuiz, rows)
     ButtonPagination(dataQuiz, urlDone, urlRedirect);

@@ -34,6 +34,8 @@
     </div>
 </div>
 
+<?= $this->include('home/menu-utbk/latihan-utbk/main-popup'); ?>
+
 <!-- <script src="<?= base_url('assets/js/prevent-access.js') ?>"></script> -->
 <script src="<?= base_url('assets/js/simulasi-control.js') ?>"></script>
 <script>
@@ -42,12 +44,15 @@
     let typeSoal = <?= json_encode($type_soal); ?>;
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let sessionID = <?= json_encode($session_id); ?>;
+    let id = <?= json_encode($_GET['id']); ?>;
     let query = <?= json_encode($_GET['query']); ?>;
+    let urlRedirect = "<?= base_url('home/hasil_latihan'); ?>";
+    let urlDone = "<?= base_url('home/save_hasil_latihan') ?>";
     let current_page = 1;
     let rows = 1;
 
     DisplayList(dataQuiz, rows, current_page)
-    NavBtnControl(current_page)
+    NavBtnControl(current_page, query)
     PaginationListNumber(dataQuiz, rows)
     ButtonPagination(dataQuiz, query);
 

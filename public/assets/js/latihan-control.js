@@ -51,7 +51,7 @@ function SaveAnsware() {
   });
 }
 
-function DisplayList(items, rows_per_page, page, query, csrfName, csrfHash) {
+function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
   page--;
   let start = rows_per_page * page;
   let end = start + rows_per_page;

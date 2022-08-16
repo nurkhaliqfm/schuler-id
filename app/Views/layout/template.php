@@ -23,10 +23,15 @@
 
     <!-- jQuery -->
     <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-    <!--  -->
+    <!-- MD5 Script -->
     <script src="<?= base_url('assets/js/md5.js') ?>"></script>
     <!-- Bootstrap 5 -->
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+    <!-- Froala -->
+    <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/froala_editor.pkgd.min.js') ?>"></script>
+    <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/plugins/image.min.js') ?>"></script>
+    <!-- Wiris -->
+    <script type="text/javascript" src="<?= base_url('node_modules/@wiris/mathtype-froala3/wiris.js'); ?>"></script>
 </head>
 
 <body>
@@ -39,143 +44,6 @@
     <script src="<?= base_url('assets/js/sidebarmenu.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
-    <!-- Froala -->
-    <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/froala_editor.pkgd.min.js') ?>"></script>
-    <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/plugins/image.min.js') ?>"></script>
-    <!-- Wiris -->
-    <script type="text/javascript" src="<?= base_url('node_modules/@wiris/mathtype-froala3/wiris.js'); ?>"></script>
-    <script>
-        new FroalaEditor('#editorQuestion', {
-            toolbarButtons: {
-                moreText: {
-                    buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-                moreParagraph: {
-                    buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-
-                moreRich: {
-                    buttons: ['insertImage', 'insertTable', 'specialCharacters'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-
-                more: {
-                    buttons: ['wirisEditor', 'wirisChemistry'],
-                    align: 'left',
-                    buttonVisible: 3
-                },
-
-                moreMisc: {
-                    buttons: ['undo', 'redo'],
-                    align: 'right',
-                    buttonsVisible: 2
-                }
-            },
-
-            imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
-            imageUploadURL: '<?= base_url('admin/upload_image') ?>',
-            imageUploadParams: {
-                id: 'my_editor',
-            },
-            imageUploadMethod: 'POST',
-            imageMaxSize: 5 * 1024 * 1024,
-            imageAllowedTypes: ['jpeg', 'jpg', 'png'],
-
-
-            events: {
-                'image.beforeUpload': function(images) {
-                    // Return false if you want to stop the image upload.
-                },
-                'image.uploaded': function(response) {
-                    // Image was uploaded to the server.
-                },
-                'image.inserted': function($img, response) {
-                    // Image was inserted in the editor.
-                },
-                'image.replaced': function($img, response) {
-                    // Image was replaced in the editor.
-                },
-                'image.error': function(error, response) {
-                    if (error.code == 1) {
-                        console.log(error);
-                    } else if (error.code == 2) {
-                        console.log(error);
-                    } else if (error.code == 3) {
-                        console.log(error);
-                    } else if (error.code == 4) {
-                        console.log(error);
-                    } else if (error.code == 5) {
-                        console.log(error);
-                    } else if (error.code == 6) {
-                        console.log(error);
-                    } else if (error.code == 7) {
-                        console.log(error);
-                    }
-                },
-
-                'image.removed': function($img) {
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.onreadystatechange = function() {
-                        if (this.readyState == 4 && this.status == 200) {
-                            console.log('Image Was Deleted');
-                        }
-                    };
-
-                    xhttp.open("POST", "<?= base_url('admin/deleted_image') ?>", true);
-                    xhttp.send(JSON.stringify({
-                        src: $img.attr('src')
-                    }));
-                }
-            },
-
-            htmlAllowedTags: ['.*'],
-            htmlAllowedAttrs: ['.*'],
-            htmlAllowedEmptyTags: ['mprescripts', 'none'],
-        })
-
-        new FroalaEditor('#editorExplanation', {
-            toolbarButtons: {
-                moreText: {
-                    buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-                moreParagraph: {
-                    buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-
-                moreRich: {
-                    buttons: ['insertImage', 'insertTable', 'specialCharacters'],
-                    align: 'left',
-                    buttonsVisible: 3
-                },
-
-                more: {
-                    buttons: ['wirisEditor', 'wirisChemistry'],
-                    align: 'left',
-                    buttonVisible: 3
-                },
-
-                moreMisc: {
-                    buttons: ['undo', 'redo'],
-                    align: 'right',
-                    buttonsVisible: 2
-                }
-            },
-
-            imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
-            htmlAllowedTags: ['.*'],
-            htmlAllowedAttrs: ['.*'],
-            htmlAllowedEmptyTags: ['mprescripts', 'none'],
-        })
-    </script>
 </body>
 
 </html>

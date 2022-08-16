@@ -7,7 +7,7 @@ use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
 use App\Models\CategoryQuizModel;
 use App\Models\QuizModel;
-
+use Exception;
 use Ramsey\Uuid\Uuid;
 
 class Admin extends BaseController
@@ -41,10 +41,29 @@ class Admin extends BaseController
     public function bank_soal()
     {
         $typeSoalModel = $this->typeSoalModel->findAll();
+
+        $data = [];
+        foreach ($typeSoalModel as $ts) {
+            $dataId = explode(',', $ts['list_type_soal_id']);
+            $dataName = explode(',', $ts['list_type_soal']);
+            $dataNumb = explode(',', $ts['list_type_soal_jumlah']);
+
+            for ($i = 0; $i < count($dataId); $i++) {
+                $item = [
+                    'dataId' => $dataId[$i],
+                    'dataName' => $dataName[$i],
+                    'dataNumb' => $dataNumb[$i],
+                    'slug' => $ts['slug']
+                ];
+                array_push($data, $item);
+            }
+        }
+
         $data = [
             'title' => 'Bank Soal Schuler.id',
             'user_name' => 'codefm.my.id',
-            'type_soal' => $typeSoalModel
+            'type_soal' => $typeSoalModel,
+            'data_category' => $data
         ];
 
         return view('admin/bank-soal/bank-soal', $data);
@@ -52,7 +71,7 @@ class Admin extends BaseController
 
     public function jenis_bank_soal()
     {
-        $menuSoal = $this->request->getVar('MenuSoal');
+        $menuSoal = $this->request->getVar('query');
         $typeSoalModel = $this->typeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
 
         $data = [
@@ -70,7 +89,6 @@ class Admin extends BaseController
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal
         ])->findAll();
-
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
@@ -229,10 +247,136 @@ class Admin extends BaseController
 
     public function duplicat_soal($idSoal)
     {
-
         $getBankSoal = $this->bankSoalModel->where([
             'id_soal' => $idSoal
         ])->first();
+
+        $new_image_soal = [];
+        $old_image_soal = [];
+        $new_image_pembahasan = [];
+        $old_image_pembahasan = [];
+        $new_image_optionA = [];
+        $old_image_optionA = [];
+        $new_image_optionB = [];
+        $old_image_optionB = [];
+        $new_image_optionC = [];
+        $old_image_optionC = [];
+        $new_image_optionD = [];
+        $old_image_optionD = [];
+        $new_image_optionE = [];
+        $old_image_optionE = [];
+        $explodeSoal = explode('/assets/upload_image/', $getBankSoal['soal']);
+        $explodePembahasan = explode('/assets/upload_image/', $getBankSoal['pembahasan']);
+        $explodeoptionA = explode('/assets/upload_image/', $getBankSoal['option_a']);
+        $explodeoptionB = explode('/assets/upload_image/', $getBankSoal['option_b']);
+        $explodeoptionC = explode('/assets/upload_image/', $getBankSoal['option_c']);
+        $explodeoptionD = explode('/assets/upload_image/', $getBankSoal['option_d']);
+        $explodeoptionE = explode('/assets/upload_image/', $getBankSoal['option_e']);
+        $new_soal = $getBankSoal['soal'];
+        $new_pembahasan = $getBankSoal['pembahasan'];
+        $new_option_a = $getBankSoal['option_a'];
+        $new_option_b = $getBankSoal['option_b'];
+        $new_option_c = $getBankSoal['option_c'];
+        $new_option_d = $getBankSoal['option_d'];
+        $new_option_e = $getBankSoal['option_e'];
+        foreach ($explodeSoal as $es) {
+            $cekExplode = explode('"', $es);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_soal, $img_name);
+                array_push($old_image_soal, $oldImg);
+            }
+        }
+
+        foreach ($explodePembahasan as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_pembahasan, $img_name);
+                array_push($old_image_pembahasan, $oldImg);
+            }
+        }
+
+        foreach ($explodeoptionA as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_optionA, $img_name);
+                array_push($old_image_optionA, $oldImg);
+            }
+        }
+
+        foreach ($explodeoptionB as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_optionB, $img_name);
+                array_push($old_image_optionB, $oldImg);
+            }
+        }
+
+        foreach ($explodeoptionC as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_optionC, $img_name);
+                array_push($old_image_optionC, $oldImg);
+            }
+        }
+
+        foreach ($explodeoptionD as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_optionD, $img_name);
+                array_push($old_image_optionD, $oldImg);
+            }
+        }
+
+        foreach ($explodeoptionE as $ep) {
+            $cekExplode = explode('"', $ep);
+            if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                $oldImg = $cekExplode[0];
+                $img = explode('.', $cekExplode[0]);
+                $img_name = sha1(microtime()) . "." . $img[1];
+                copy(getcwd() . '/assets/upload_image/' . $oldImg, getcwd() . '/assets/upload_image/' . $img_name);
+
+                array_push($new_image_optionE, $img_name);
+                array_push($old_image_optionE, $oldImg);
+            }
+        }
+
+        $new_soal = str_replace($old_image_soal, $new_image_soal, $getBankSoal['soal']);
+        $new_pembahasan = str_replace($old_image_pembahasan, $new_image_pembahasan, $getBankSoal['pembahasan']);
+        $new_option_a = str_replace($old_image_optionA, $new_image_optionA, $getBankSoal['option_a']);
+        $new_option_b = str_replace($old_image_optionB, $new_image_optionB, $getBankSoal['option_b']);
+        $new_option_c = str_replace($old_image_optionC, $new_image_optionC, $getBankSoal['option_c']);
+        $new_option_d = str_replace($old_image_optionD, $new_image_optionD, $getBankSoal['option_d']);
+        $new_option_e = str_replace($old_image_optionE, $new_image_optionE, $getBankSoal['option_e']);
 
         $menuSoal = $getBankSoal['type_soal'];
         $submenuSoal = $getBankSoal['sub_type_soal'];
@@ -242,15 +386,15 @@ class Admin extends BaseController
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal,
             'id_soal' => uniqid(),
-            'soal' => $getBankSoal['soal'],
-            'option_a' => $getBankSoal['option_a'],
-            'option_b' => $getBankSoal['option_b'],
-            'option_c' => $getBankSoal['option_c'],
-            'option_d' => $getBankSoal['option_d'],
-            'option_e' => $getBankSoal['option_e'],
+            'soal' => $new_soal,
+            'option_a' => $new_option_a,
+            'option_b' => $new_option_b,
+            'option_c' => $new_option_c,
+            'option_d' => $new_option_d,
+            'option_e' => $new_option_e,
             'jawaban' => $getBankSoal['jawaban'],
             'ans_id' => $getBankSoal['jawaban'],
-            'pembahasan' => $getBankSoal['pembahasan'],
+            'pembahasan' => $new_pembahasan,
             'value' => $getBankSoal['value']
         ]);
 
@@ -269,7 +413,7 @@ class Admin extends BaseController
             'list_type_soal_jumlah' => join(",", $valueSoal)
         ]);
 
-        session()->setFlashdata('success', "Soal Berhasil Ditambahkan.");
+        session()->setFlashdata('success', "Soal Berhasil Diduplikat.");
         return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
     }
 
@@ -359,33 +503,160 @@ class Admin extends BaseController
 
     public function upload_image()
     {
-        $allowExt = array("gif", "jpeg", "jpg", "png");
-        $temp = explode(".", $_FILES["file"]["name"]);
-        $extension = end($temp);
+        try {
+            $allowExt = array("gif", "jpeg", "jpg", "png");
+            $temp = explode(".", $_FILES["file"]["name"]);
+            $extension = end($temp);
 
-        // if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] != "off") {
-        //     $protocol = "https://";
-        // } else {
-        //     $protocol = "http://";
-        // }
+            if (in_array($extension, $allowExt)) {
+                $fileupload_name = sha1(microtime()) . "." . $extension;
+                move_uploaded_file($_FILES["file"]["tmp_name"], getcwd() . "/assets/upload_image/" . $fileupload_name);
 
-        if (in_array($extension, $allowExt)) {
-            $fileupload_name = sha1(microtime()) . "." . $extension;
-            move_uploaded_file($_FILES["file"]["tmp_name"], getcwd() . "/assets/upload_image/" . $fileupload_name);
-
-            // $response = ["link" => $protocol . $_SERVER["HTTP_HOST"] . "/assets/upload_image/" . $fileupload_name];
-            $response = ["link" =>  "/assets/upload_image/" . $fileupload_name];
-            return $this->response->setJSON($response);
+                $response = array();
+                $response['tokenName'] = csrf_token();
+                $response['tokenValue'] = csrf_hash();
+                $response["link"] = "/assets/upload_image/" . $fileupload_name;
+                return $this->response->setJSON($response);
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            http_response_code(404);
         }
     }
 
     public function deleted_image()
     {
-        $src = $this->request->getJsonVar('src');
-        $src = str_replace(base_url('/'), "", $src);
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $src = str_replace(base_url('/'), "", $data['src']);
         if (file_exists(getcwd() . $src)) {
             unlink(getcwd() . $src);
         }
+
+        $response = array();
+        $response['tokenName'] = csrf_token();
+        $response['tokenValue'] = csrf_hash();
+        return $this->response->setJSON($response);
+    }
+
+    public function deleted_soal($id_soal)
+    {
+        $bank_soal = $this->bankSoalModel;
+        $selectedSoal = $bank_soal->where(['id_soal' => $id_soal])->first();
+        $cekInQuiz = $this->bankQuizModel->where(['quiz_question' => $id_soal])->first();
+        $explodeSoal = explode('/assets/upload_image/', $selectedSoal['soal']);
+        $explodePembahasan = explode('/assets/upload_image/', $selectedSoal['pembahasan']);
+        $explodeoptionA = explode('/assets/upload_image/', $selectedSoal['option_a']);
+        $explodeoptionB = explode('/assets/upload_image/', $selectedSoal['option_b']);
+        $explodeoptionC = explode('/assets/upload_image/', $selectedSoal['option_c']);
+        $explodeoptionD = explode('/assets/upload_image/', $selectedSoal['option_d']);
+        $explodeoptionE = explode('/assets/upload_image/', $selectedSoal['option_e']);
+
+        $menuSoal = $selectedSoal['type_soal'];
+        $submenuSoal = $selectedSoal['sub_type_soal'];
+
+        if (!$cekInQuiz) {
+            if ($selectedSoal) {
+                foreach ($explodeSoal as $es) {
+                    $cekExplode = explode('"', $es);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodePembahasan as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodeoptionA as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodeoptionB as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodeoptionC as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodeoptionD as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                foreach ($explodeoptionE as $ep) {
+                    $cekExplode = explode('"', $ep);
+                    if (str_contains($cekExplode[0], ".jpg") || str_contains($cekExplode[0], ".png") || str_contains($cekExplode[0], ".jpeg")) {
+                        $oldImg = $cekExplode[0];
+                        $src = "/assets/upload_image/" . $oldImg;
+                        if (file_exists($src)) {
+                            unlink(getcwd() . $src);
+                        }
+                    }
+                }
+
+                $TypeSoalModel = $this->typeSoalModel;
+                $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
+                $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
+                $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
+                $arrayLong = sizeof($valueSoal);
+                for ($i = 0; $i < $arrayLong; $i++) {
+                    if ($typeSoalId[$i] == $submenuSoal) {
+                        $valueSoal[$i] = $valueSoal[$i] - 1;
+                    }
+                };
+
+                $TypeSoalModel->update($getTypeSoal['id'], [
+                    'list_type_soal_jumlah' => join(",", $valueSoal)
+                ]);
+
+                $bank_soal->delete($selectedSoal['id']);
+                session()->setFlashdata('success', "Soal Berhasil Di Hapus");
+            }
+        } else {
+            session()->setFlashdata('failed', "Soal gagal dihapus karena terdaftar dalam quiz " . $cekInQuiz['quiz_name']);
+        }
+        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
     }
 
     // QUIZ SECTION
@@ -407,10 +678,17 @@ class Admin extends BaseController
     {
         $slug = $this->request->getVar('slug');
         $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->findAll();
+        $number_soal = [];
+        foreach ($quizListQuestion as $qlQ) {
+            $data_number = $this->bankQuizModel->where(['quiz_id' => $qlQ['quiz_id']])->countAllResults();
+            array_push($number_soal, $data_number);
+        }
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
             'user_name' => 'codefm.my.id',
-            'bankQuiz' => $quizListQuestion
+            'bankQuiz' => $quizListQuestion,
+            'quiz_number' => $number_soal
+
         ];
 
         return view('admin/input-quiz/daftar-quiz', $data);
@@ -419,7 +697,7 @@ class Admin extends BaseController
     public function input_quiz()
     {
         $slug = $this->request->getVar('slug');
-        $getBankSoal = $this->bankSoalModel->findAll();
+        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
         $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
         if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
 
@@ -457,8 +735,8 @@ class Admin extends BaseController
     {
         $uri = current_url(true)->getSegment(4);
         $quizType = $this->request->getVar('slug');
-        $quizListQuestion = $this->request->getVar('quiz_list_question');
         $quizName = $this->request->getVar('QuizName');
+        $quizListQuestion = $this->request->getVar('quiz_list_question');
         $quizId = Uuid::uuid4();
 
         if (!$this->validate([
@@ -492,5 +770,127 @@ class Admin extends BaseController
         }
 
         return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $quizType))->withInput();
+    }
+
+    public function detail_quiz($quiz_id)
+    {
+        $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
+        $slug = $this->request->getVar('slug');
+        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
+        $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
+        if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
+        $quiz_name = $bankQuiz[0]['quiz_name'];
+        $bank_quiz_soal = [];
+        $bankSoal = [];
+        $bankSoalOption = [];
+        foreach ($bankQuiz as $bq) {
+            array_push($bank_quiz_soal, $bq['quiz_question']);
+        }
+
+        foreach ($getBankSoal as $gBs) {
+            if (in_array($gBs['id_soal'], $bank_quiz_soal)) {
+                array_push($bankSoal, $gBs);
+            } else {
+                array_push($bankSoalOption, $gBs);
+            }
+        }
+
+        $getBankSoalSubject = explode(',', $getBankSoalSubject['category_item']);
+        for ($j = 0; $j < count($getBankSoalSubject); $j++) {
+            $getTypeSoal = $this->typeSoalModel->where([
+                'id_main_type_soal' => $getBankSoalSubject[$j]
+            ])->first();
+
+            $subTypeListId = explode(',', $getTypeSoal['list_type_soal_id']);
+            $subTypeListName = explode(',', $getTypeSoal['list_type_soal']);
+
+            $subjectName[] = [
+                'type_soal_id' => $getBankSoalSubject[$j],
+                'type_soal_name' => $getTypeSoal['slug'],
+            ];
+
+            for ($i = 0; $i < count($subTypeListId); $i++) {
+                $subjectName[$j][$subTypeListId[$i]] = $subTypeListName[$i];
+            }
+        }
+
+        $data = [
+            'title' => 'Daftar Soal Schuler.id',
+            'user_name' => 'codefm.my.id',
+            'soal_subject' => $subjectName,
+            'bank_soal' => $bankSoal,
+            'bank_soal_option' => $bankSoalOption,
+            'quiz_name' => $quiz_name,
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('admin/input-quiz/detail-quiz', $data);
+    }
+
+    public function delete_soal_quiz()
+    {
+        $quiz_id = $this->request->getVar('quiz_id');
+        $soal_id = $this->request->getVar('id_soal');
+        $slug = $this->request->getVar('slug');
+        $u = $this->request->getVar('u');
+
+        $bankQuiz = $this->bankQuizModel->where([
+            'quiz_id' => $quiz_id,
+            'quiz_question' => $soal_id
+        ])->first();
+
+        if ($bankQuiz) {
+            $this->bankQuizModel->delete($bankQuiz['id']);
+            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u));
+        } else {
+            return redirect()->to(base_url('admin/quiz'));
+        }
+    }
+
+    public function save_soal_quiz()
+    {
+        $quiz_id = $this->request->getVar('quiz_id');
+        $slug = $this->request->getVar('slug');
+        $u = $this->request->getVar('u');
+
+        $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->first();
+        $quizName = $bankQuiz['quiz_name'];
+        $quizListQuestion = $this->request->getVar('quiz_list_question');
+
+        if (!$quizListQuestion) {
+            session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
+            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u))->withInput();
+        }
+
+        foreach ($quizListQuestion as $qLQ) {
+            $bankSoalData = $this->bankSoalModel->where(['id_soal' => $qLQ])->first();
+            $this->bankQuizModel->save([
+                'quiz_id' => $quiz_id,
+                'quiz_name' => $quizName,
+                'quiz_subject' => $bankSoalData['type_soal'],
+                'quiz_sub_subject' => $bankSoalData['sub_type_soal'],
+                'quiz_question' => $qLQ,
+                'quiz_type' => $slug,
+                'quiz_category' => $u,
+            ]);
+        }
+
+        return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u));
+    }
+
+    public function update_quiz()
+    {
+        dd("updated");
+    }
+
+    public function deleted_quiz($quiz_id)
+    {
+        $uri = $this->request->getVar('u');
+        $slug = $this->request->getVar('slug');
+        $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
+        foreach ($bankQuiz as $bq) {
+            $this->bankQuizModel->delete($bq['id']);
+        }
+        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $slug));
     }
 }
