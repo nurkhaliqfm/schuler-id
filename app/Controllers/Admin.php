@@ -29,9 +29,14 @@ class Admin extends BaseController
 
     public function index()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $data = [
             'title' => 'Dasboard Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => $user['username']
         ];
 
         return view('admin/dashboard', $data);
@@ -40,6 +45,11 @@ class Admin extends BaseController
     // BANK SOAL SECTION
     public function bank_soal()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $typeSoalModel = $this->typeSoalModel->findAll();
 
         $data = [];
@@ -61,7 +71,7 @@ class Admin extends BaseController
 
         $data = [
             'title' => 'Bank Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'type_soal' => $typeSoalModel,
             'data_category' => $data
         ];
@@ -71,12 +81,17 @@ class Admin extends BaseController
 
     public function jenis_bank_soal()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $menuSoal = $this->request->getVar('query');
         $typeSoalModel = $this->typeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
 
         $data = [
             'title' => 'Bank Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'type_soal' => $typeSoalModel
         ];
 
@@ -85,6 +100,11 @@ class Admin extends BaseController
 
     public function daftar_soal($menuSoal, $submenuSoal)
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $bankSoalModel = $this->bankSoalModel->where([
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal
@@ -92,7 +112,7 @@ class Admin extends BaseController
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'bank_soal' => $bankSoalModel,
             'menu_soal' => $menuSoal,
             'submenu_soal' => $submenuSoal
@@ -103,9 +123,14 @@ class Admin extends BaseController
 
     public function input_soal($id, $type)
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $data = [
             'title' => 'Daftar Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'menu_soal' => $id,
             'submenu_soal' => $type,
             'validation' => \Config\Services::validation()
@@ -116,6 +141,11 @@ class Admin extends BaseController
 
     public function edit_soal($idSoal)
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $bankSoalModel = $this->bankSoalModel->where([
             'id_soal' => $idSoal
         ])->first();
@@ -129,7 +159,7 @@ class Admin extends BaseController
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'menu_soal' => $bankSoalModel['type_soal'],
             'submenu_soal' => $bankSoalModel['sub_type_soal'],
             'bank_soal' => $bankSoalModel,
@@ -142,6 +172,10 @@ class Admin extends BaseController
 
     public function save_soal()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $menuSoal = $this->request->getVar('MenuSoal');
         $submenuSoal = $this->request->getVar('SubmenuSoal');
 
@@ -247,6 +281,10 @@ class Admin extends BaseController
 
     public function duplicat_soal($idSoal)
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $getBankSoal = $this->bankSoalModel->where([
             'id_soal' => $idSoal
         ])->first();
@@ -419,6 +457,10 @@ class Admin extends BaseController
 
     public function update_soal()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $menuSoal = $this->request->getVar('MenuSoal');
         $submenuSoal = $this->request->getVar('SubmenuSoal');
 
@@ -503,6 +545,10 @@ class Admin extends BaseController
 
     public function upload_image()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         try {
             $allowExt = array("gif", "jpeg", "jpg", "png");
             $temp = explode(".", $_FILES["file"]["name"]);
@@ -526,6 +572,10 @@ class Admin extends BaseController
 
     public function deleted_image()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
@@ -542,6 +592,10 @@ class Admin extends BaseController
 
     public function deleted_soal($id_soal)
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $bank_soal = $this->bankSoalModel;
         $selectedSoal = $bank_soal->where(['id_soal' => $id_soal])->first();
         $cekInQuiz = $this->bankQuizModel->where(['quiz_question' => $id_soal])->first();
@@ -662,12 +716,20 @@ class Admin extends BaseController
     // QUIZ SECTION
     public function quiz()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $quiz = $this->quizModel->findAll();
+        $bankQuiz = $this->bankQuizModel->groupBy('quiz_id')->findAll();
         $category = $this->categoryQuizModel->findAll();
+
         $data = [
             'title' => 'Quiz Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'quiz_type' => $quiz,
+            'bank_quiz' => $bankQuiz,
             'category_quiz' =>  $category
         ];
 
@@ -676,6 +738,11 @@ class Admin extends BaseController
 
     public function daftar_quiz()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $slug = $this->request->getVar('slug');
         $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->findAll();
         $number_soal = [];
@@ -685,7 +752,7 @@ class Admin extends BaseController
         }
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'bankQuiz' => $quizListQuestion,
             'quiz_number' => $number_soal
 
@@ -696,8 +763,12 @@ class Admin extends BaseController
 
     public function input_quiz()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $slug = $this->request->getVar('slug');
-        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
         $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
         if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
 
@@ -720,11 +791,21 @@ class Admin extends BaseController
             }
         }
 
+        $remakBankSoal = [];
+        $getBankSoal = $this->bankSoalModel->orderBy('type_soal', 'sub_type_soal')->findAll();
+        foreach ($getBankSoal as $bs) {
+            for ($i = 0; $i < sizeof($subjectName); $i++) {
+                if ($subjectName[$i]['type_soal_id'] == $bs['type_soal']) {
+                    array_push($remakBankSoal, $bs);
+                }
+            }
+        }
+
         $data = [
             'title' => 'Daftar Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'soal_subject' => $subjectName,
-            'bank_soal' => $getBankSoal,
+            'bank_soal' => $remakBankSoal,
             'validation' => \Config\Services::validation()
         ];
 
@@ -733,6 +814,10 @@ class Admin extends BaseController
 
     public function save_quiz()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $uri = current_url(true)->getSegment(4);
         $quizType = $this->request->getVar('slug');
         $quizName = $this->request->getVar('QuizName');
@@ -769,11 +854,16 @@ class Admin extends BaseController
             ]);
         }
 
-        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $quizType))->withInput();
+        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '?slug=' . $quizType))->withInput();
     }
 
     public function detail_quiz($quiz_id)
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
         $slug = $this->request->getVar('slug');
         $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
@@ -816,7 +906,7 @@ class Admin extends BaseController
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'soal_subject' => $subjectName,
             'bank_soal' => $bankSoal,
             'bank_soal_option' => $bankSoalOption,
@@ -829,6 +919,10 @@ class Admin extends BaseController
 
     public function delete_soal_quiz()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $quiz_id = $this->request->getVar('quiz_id');
         $soal_id = $this->request->getVar('id_soal');
         $slug = $this->request->getVar('slug');
@@ -841,7 +935,7 @@ class Admin extends BaseController
 
         if ($bankQuiz) {
             $this->bankQuizModel->delete($bankQuiz['id']);
-            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u));
+            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '?slug=' . $slug . '&' . 'u=' . $u));
         } else {
             return redirect()->to(base_url('admin/quiz'));
         }
@@ -849,6 +943,10 @@ class Admin extends BaseController
 
     public function save_soal_quiz()
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $quiz_id = $this->request->getVar('quiz_id');
         $slug = $this->request->getVar('slug');
         $u = $this->request->getVar('u');
@@ -859,7 +957,7 @@ class Admin extends BaseController
 
         if (!$quizListQuestion) {
             session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
-            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u))->withInput();
+            return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '?slug=' . $slug . '&' . 'u=' . $u))->withInput();
         }
 
         foreach ($quizListQuestion as $qLQ) {
@@ -875,22 +973,27 @@ class Admin extends BaseController
             ]);
         }
 
-        return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '/?slug=' . $slug . '&' . 'u=' . $u));
-    }
-
-    public function update_quiz()
-    {
-        dd("updated");
+        return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '?slug=' . $slug . '&' . 'u=' . $u));
     }
 
     public function deleted_quiz($quiz_id)
     {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
         $uri = $this->request->getVar('u');
         $slug = $this->request->getVar('slug');
         $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
         foreach ($bankQuiz as $bq) {
             $this->bankQuizModel->delete($bq['id']);
         }
-        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $slug));
+        return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '?slug=' . $slug));
+    }
+
+    // ERROR
+    public function error_404()
+    {
+        return view('errors/html/error_404');
     }
 }

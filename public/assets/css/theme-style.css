@@ -175,6 +175,17 @@ a {
   font-size: 0.9rem;
 }
 
+.box_item__container .box_item__body .box_body__number {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.box_item__container .box_item__body .box_body__number_desc {
+  font-weight: 400;
+}
+
 .box_item__container .box_item__body .box_body__desc {
   margin-top: 5px;
   color: var(--color-1);

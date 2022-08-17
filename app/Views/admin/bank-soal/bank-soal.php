@@ -11,7 +11,7 @@
                         <p class="box__subtitle">Pilih kategori Soal</p>
                         <div id="tab_header_button" class="button__container">
                             <?php foreach ($type_soal as $type) : ?>
-                                <div class="tab_button tab_button_style" id="<?= $type['slug']; ?>"><?= strtoupper($type['main_type_soal']); ?></div>
+                                <div class="tab_button tab_button_style" id="<?= $type['slug']; ?>"><?= strtoupper(str_replace('_', ' ', $type['slug'])); ?></div>
                             <?php endforeach; ?>
                         </div>
                     </div>

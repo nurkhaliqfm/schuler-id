@@ -7,7 +7,6 @@ use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
 use App\Models\QuizModel;
 use App\Models\CategoryQuizModel;
-use App\Models\UsersModel;
 use App\Models\UserHistoryModel;
 use stdClass;
 
@@ -18,7 +17,6 @@ class Home extends BaseController
     protected $bankQuizModel;
     protected $quizModel;
     protected $categoryQuizModel;
-    protected $usersModel;
     protected $userHistoryModel;
 
     public function __construct()
@@ -28,15 +26,19 @@ class Home extends BaseController
         $this->bankQuizModel = new BankQuizModel();
         $this->quizModel = new QuizModel();
         $this->categoryQuizModel = new CategoryQuizModel();
-        $this->usersModel = new UsersModel();
         $this->userHistoryModel  = new UserHistoryModel();
     }
 
     public function index()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $data = [
             'title' => 'Dasboard Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => $user['username']
         ];
 
         return view('home/dashboard', $data);
@@ -45,9 +47,14 @@ class Home extends BaseController
     // PROGRAM KHUSUS
     public function super_camp_utbk()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $data = [
             'title' => 'Super Camp UTBK Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => $user['username']
         ];
 
         return view('home/program-khusus/super-camp-utbk', $data);
@@ -56,10 +63,15 @@ class Home extends BaseController
     // MENU UTBK LATIHAN
     public function daftar_latihan()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $categoryQuiz = $this->categoryQuizModel->where(['group' => '0'])->findAll();
         $data = [
             'title' => 'Daftar Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'data_type' => $categoryQuiz
         ];
 
@@ -68,6 +80,11 @@ class Home extends BaseController
 
     public function latihan_home($slug = "")
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $cekCategoryQuiz = $this->categoryQuizModel->where([
             'slug' => $slug,
             'group' => '0'
@@ -107,7 +124,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Daftar Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'quiz_group' => $slug,
             'type_soal' => $typeSoal,
             'bank_quiz' => $remakeBankQuiz,
@@ -119,6 +136,11 @@ class Home extends BaseController
 
     public function latihan_guide()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $query = $this->request->getVar('query');
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
@@ -126,7 +148,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Petunjuk Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
             'jumlah_soal' => count($dataQuiz),
             'session_id' => $users['slug'],
@@ -138,8 +160,12 @@ class Home extends BaseController
 
     public function kerjakan_latihan()
     {
-        $query = $this->request->getVar('query');
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
 
+        $query = $this->request->getVar('query');
         $quizData = $this->bankQuizModel->where([
             'quiz_id' => $query
         ])->findAll();
@@ -152,7 +178,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Kerjakan Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
             'type_soal' => $typeSoal,
@@ -166,6 +192,11 @@ class Home extends BaseController
 
     public function save_hasil_latihan()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
@@ -216,6 +247,11 @@ class Home extends BaseController
 
     public function list_hasil_latihan()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $userHistory = $this->userHistoryModel->where([
             'user_id' => $users['slug'],
@@ -239,7 +275,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Daftar Hasil Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'data_user' => $dataUser
         ];
 
@@ -248,6 +284,11 @@ class Home extends BaseController
 
     public function hasil_latihan()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $query = $this->request->getVar('query');
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
 
@@ -273,7 +314,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Hasil Latihan Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
             'type_soal' => $typeSoal,
@@ -287,6 +328,11 @@ class Home extends BaseController
     // MENU UTBK SIMULASI
     public function simulasi_gratis()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $cekCategoryQuiz = $this->categoryQuizModel->where([
             'group' => '0'
         ])->findAll();
@@ -309,7 +355,7 @@ class Home extends BaseController
         }
         $data = [
             'title' => 'Simulasi Gratis Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'type_soal' => $cekCategoryQuiz,
             'bank_quiz' => $remakeBankQuiz,
             'filter_category' => $this->categoryQuizModel->where(['group' => '0'])->findAll()
@@ -320,6 +366,11 @@ class Home extends BaseController
 
     public function simulasi_gratis_guide()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $query = $this->request->getVar('query');
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
@@ -327,7 +378,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
             'jumlah_soal' => count($dataQuiz),
             'session_id' => $users['slug'],
@@ -339,8 +390,12 @@ class Home extends BaseController
 
     public function kerjakan_simulasi_geratis()
     {
-        $query = $this->request->getVar('query');
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
 
+        $query = $this->request->getVar('query');
         $quizData = $this->bankQuizModel->where([
             'quiz_id' => $query
         ])->findAll();
@@ -356,7 +411,7 @@ class Home extends BaseController
 
         $data = [
             'title' => 'Simulasi Schuler.id',
-            'user_name' => 'codefm.my.id',
+            'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
             'type_soal' => $typeSoal,
@@ -371,20 +426,36 @@ class Home extends BaseController
 
     public function simulasi_premium()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $data = [
             'title' => 'Simulasi Premium Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => $user['username']
         ];
 
         return view('home/menu-utbk/simulasi-utbk/simulasi-premium', $data);
     }
     public function hasil_simulasi()
     {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
         $data = [
             'title' => 'Hasil Simulasi Schuler.id',
-            'user_name' => 'codefm.my.id'
+            'user_name' => $user['username']
         ];
 
         return view('home/menu-utbk/simulasi-utbk/hasil-simulasi', $data);
+    }
+
+    // ERROR
+    public function error_404()
+    {
+        return view('errors/html/error_404');
     }
 }

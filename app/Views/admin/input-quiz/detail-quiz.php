@@ -48,7 +48,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="<?= base_url('admin/daftar_quiz/' . $uri . '/?slug=' . $_GET['slug']); ?>" class="box_item__Btn list_quiz_button delete__btn">Kembali</a>
+                    <a href="<?= base_url('admin/daftar_quiz/' . $uri . '?slug=' . $_GET['slug']); ?>" class="box_item__Btn list_quiz_button delete__btn">Kembali</a>
                 </div>
             </div>
         </div>
@@ -139,7 +139,7 @@
             itemSoal.appendChild(itemSoalBtn);
 
             itemActionBtn.className = "box_item__Btn list_quiz_button delete__btn";
-            itemActionBtn.setAttribute('href', "<?= base_url('admin/delete_soal_quiz') . '/?quiz_id=' . $uri . "&slug=" . $_GET['slug'] . "&u=" . $_GET['u'] . "&id_soal="; ?>" + categoryItems[i]['id_soal'])
+            itemActionBtn.setAttribute('href', "<?= base_url('admin/delete_soal_quiz') . '?quiz_id=' . $uri . "&slug=" . $_GET['slug'] . "&u=" . $_GET['u'] . "&id_soal="; ?>" + categoryItems[i]['id_soal'])
             itemActionBtn.innerHTML = "Hapus Soal"
             itemAction.appendChild(itemActionBtn);
 
@@ -216,7 +216,7 @@
 
             container.innerHTML = '';
             for (let i = 0; i < categoryItems.length; i++) {
-                document.getElementById('form-modal_add-question').setAttribute('action', "<?= base_url('admin/save_soal_quiz') . '/?quiz_id=' . $uri . "&slug=" . $_GET['slug'] . "&u=" . $_GET['u'] . "&id_soal="; ?>" + categoryItems[i]['id_soal'])
+                document.getElementById('form-modal_add-question').setAttribute('action', "<?= base_url('admin/save_soal_quiz') . '?quiz_id=' . $uri . "&slug=" . $_GET['slug'] . "&u=" . $_GET['u'] . "&id_soal="; ?>" + categoryItems[i]['id_soal'])
 
                 var itemBox = document.createElement("tr");
                 var itemCheckbox = document.createElement("td");

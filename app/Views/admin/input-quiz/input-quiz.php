@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    <form action="<?= base_url('admin/save_quiz/' . $uri . '/?slug=' . $_GET['slug']); ?>" method="POST">
+                    <form action="<?= base_url('admin/save_quiz/' . $uri . '?slug=' . $_GET['slug']); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <!-- Nama Quiz -->
                         <h3 class="box-title simulation">Nama Quiz</h3>

@@ -23,7 +23,7 @@
                                         <span><?= ucwords($du['type']); ?></span>
                                         <span><?= $du['category']; ?></span>
                                         <span>
-                                            <a class="table_button" href="<?= base_url('home/hasil_latihan/?query=') . $du['quiz_id']; ?>">Detail</a>
+                                            <a class="table_button" href="<?= base_url('home/hasil_latihan?query=') . $du['quiz_id']; ?>">Detail</a>
                                         </span>
                                     </div>
                                 <?php endforeach; ?>

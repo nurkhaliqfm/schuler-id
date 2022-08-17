@@ -65,7 +65,7 @@
             </div>
             <div class="modal-footer">
                 <div class="button__container">
-                    <a id="start_btn" href="<?= base_url('home/kerjakan_latihan/?id=' . $_GET['id'] . '&query=' . $_GET['query']); ?>" class="modal-style start__simulation__Btn">
+                    <a id="start_btn" href="<?= base_url('home/kerjakan_latihan?id=' . $_GET['id'] . '&query=' . $_GET['query']); ?>" class="modal-style start__simulation__Btn">
                         <i class="fa-solid fa-play"></i><span>Mulai</span>
                     </a>
                     <a class="modal-style close__simulation__Btn" data-bs-dismiss="modal"><i class="fa-solid fa-times-circle"></i><span>Batal</span></a>

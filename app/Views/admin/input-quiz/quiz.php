@@ -33,15 +33,21 @@
 
     let dataTypeQuiz = <?= json_encode($quiz_type); ?>;
     let dataCategoryQuiz = <?= json_encode($category_quiz); ?>;
+    let dataBankQuiz = <?= json_encode($bank_quiz); ?>;
 
-    function CreateItemOption(categoryItems, items) {
+    function CreateItemOption(categoryItems, items, quiz) {
         var container = document.getElementById("container_body");
         container.innerHTML = '';
         for (let i = 0; i < Object.keys(categoryItems).length; i++) {
+            let data_q = quiz.filter(quiz => {
+                return quiz.quiz_type == categoryItems[i].slug
+            });
+
             var boxItem = document.createElement("div");
             var boxHeader = document.createElement("div");
             var boxBody = document.createElement("div");
             var boxBodyTitle = document.createElement("div");
+            var boxBodyDesc = document.createElement("div");
             var boxFooter = document.createElement("div");
             var boxFooterBtn = document.createElement("a");
 
@@ -50,14 +56,17 @@
             boxHeader.className = "box_item__header"
             boxHeader.innerHTML = categoryItems[i].category_name.toUpperCase();
             boxBody.className = "box_item__body";
-            boxBodyTitle.className = "box_body__title";
-            boxBodyTitle.innerHTML = "Jumlah Soal = 12 Nomor";
+            boxBodyTitle.className = "box_body__number";
+            boxBodyTitle.innerHTML = data_q.length;
+            boxBodyDesc.className = "box_body__number_desc";
+            boxBodyDesc.innerHTML = "Quiz";
             boxFooter.className = "box_item__footer quiz_footer";
             boxFooterBtn.className = "box_item__Btn list_quiz_button selected";
-            boxFooterBtn.setAttribute('href', "<?= base_url("admin/daftar_quiz/"); ?>" + "/" + items.slug + "/?slug=" + categoryItems[i].slug)
+            boxFooterBtn.setAttribute('href', "<?= base_url("admin/daftar_quiz/"); ?>" + "/" + items.slug + "?slug=" + categoryItems[i].slug)
             boxFooterBtn.innerHTML = "Detail"
 
             boxBody.appendChild(boxBodyTitle);
+            boxBody.appendChild(boxBodyDesc);
             boxFooter.appendChild(boxFooterBtn);
             boxItem.appendChild(boxHeader);
             boxItem.appendChild(boxBody);
@@ -73,7 +82,11 @@
             return categoryItems.group == typeItems[0].category_group
         });
 
-        CreateItemOption(data, typeItems[0]);
+        let data_q = dataBankQuiz.filter(dataBankQuiz => {
+            return dataBankQuiz.quiz_category == typeItems[0].slug
+        });
+
+        CreateItemOption(data, typeItems[0], data_q);
     }
 
     function TabButtonControl(typeItems, categoryItems) {
@@ -91,7 +104,11 @@
                     return categoryItems.group == item.category_group
                 });
 
-                CreateItemOption(data, item);
+                let data_q = dataBankQuiz.filter(dataBankQuiz => {
+                    return dataBankQuiz.quiz_category == item.slug
+                });
+
+                CreateItemOption(data, item, data_q);
             })
 
         }
