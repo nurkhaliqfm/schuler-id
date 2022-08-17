@@ -88,18 +88,21 @@ class Home extends BaseController
             return redirect()->to(base_url('home/daftar_latihan'));
         }
 
+        $remakeBankQuiz = [];
         $filterCategory = $this->categoryQuizModel->where(['slug' => $slug])->first();
         $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'practice'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $remakeBankQuiz[] = array(
+            $dataremakeBankQuiz = array(
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
                 'total_soal' => count($count),
                 'timer' => $timer['quiz_timer'] / 60
             );
+
+            array_push($remakeBankQuiz, $dataremakeBankQuiz);
         }
 
         $data = [
@@ -218,15 +221,20 @@ class Home extends BaseController
             'user_id' => $users['slug'],
         ])->findAll();
 
+        $dataUser = [];
         foreach ($userHistory as $history) {
             $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $history['quiz_id']])->first();
-            $typeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $bankQuiz['quiz_subject']])->first();
-            $dataUser[] = array(
-                'quiz_id' => $bankQuiz['quiz_id'],
-                'quiz_name' => $bankQuiz['quiz_name'],
-                'type' => join(' ', explode('_', $typeSoal['slug'])),
-                'category' => $typeSoal['list_type_soal']
-            );
+            if ($bankQuiz) {
+                $typeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $bankQuiz['quiz_subject']])->first();
+                $data = array(
+                    'quiz_id' => $bankQuiz['quiz_id'],
+                    'quiz_name' => $bankQuiz['quiz_name'],
+                    'type' => join(' ', explode('_', $typeSoal['slug'])),
+                    'category' => $typeSoal['list_type_soal']
+                );
+
+                array_push($dataUser, $data);
+            }
         };
 
         $data = [
@@ -283,11 +291,12 @@ class Home extends BaseController
             'group' => '0'
         ])->findAll();
 
+        $remakeBankQuiz = [];
         $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'free_simulation'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $remakeBankQuiz[] = array(
+            $dataremakeBankQuiz = array(
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
@@ -295,8 +304,9 @@ class Home extends BaseController
                 'timer' => ($timer['quiz_timer'] / 60) * 9,
                 'quiz_type' => $bq['quiz_type']
             );
-        }
 
+            array_push($remakeBankQuiz, $dataremakeBankQuiz);
+        }
         $data = [
             'title' => 'Simulasi Gratis Schuler.id',
             'user_name' => 'codefm.my.id',

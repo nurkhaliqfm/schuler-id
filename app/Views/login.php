@@ -17,11 +17,6 @@
 </head>
 
 <body>
-    <?php if (session()->getFlashdata('user_or_pass')) : ?>
-        <div class="alert alert-danger" role="alert">
-            <?= session()->getFlashdata('user_or_pass'); ?>
-        </div>
-    <?php endif; ?>
     <form action="<?php echo base_url('login/auth'); ?>" method="post">
         <?= csrf_field(); ?>
         <div class="white-box login__container">
@@ -30,6 +25,11 @@
                     <img src="/assets/img/schuler-logo.png" alt="SHCHULER.ID" width="135">
                 </a>
             </div>
+            <?php if (session()->getFlashdata('user_or_pass')) : ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= session()->getFlashdata('user_or_pass'); ?>
+                </div>
+            <?php endif; ?>
             <div class="body__login">
                 <div class="form__menu">
                     <h3 class="custom-box-title">Alamat Email</h3>

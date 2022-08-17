@@ -34,9 +34,10 @@
     let dataTypeQuiz = <?= json_encode($quiz_type); ?>;
     let dataCategoryQuiz = <?= json_encode($category_quiz); ?>;
 
-    function CreateItemOption(categoryItems) {
+    function CreateItemOption(categoryItems, items) {
+        var container = document.getElementById("container_body");
+        container.innerHTML = '';
         for (let i = 0; i < Object.keys(categoryItems).length; i++) {
-            var container = document.getElementById("container_body");
             var boxItem = document.createElement("div");
             var boxHeader = document.createElement("div");
             var boxBody = document.createElement("div");
@@ -53,7 +54,7 @@
             boxBodyTitle.innerHTML = "Jumlah Soal = 12 Nomor";
             boxFooter.className = "box_item__footer quiz_footer";
             boxFooterBtn.className = "box_item__Btn list_quiz_button selected";
-            boxFooterBtn.setAttribute('data-button', categoryItems[i].slug);
+            boxFooterBtn.setAttribute('href', "<?= base_url("admin/daftar_quiz/"); ?>" + "/" + items.slug + "/?slug=" + categoryItems[i].slug)
             boxFooterBtn.innerHTML = "Detail"
 
             boxBody.appendChild(boxBodyTitle);
@@ -65,27 +66,14 @@
         }
     }
 
-    function FilterCategoryOptions(categoryItems, items) {
-        for (let i = 0; i < Object.keys(categoryItems).length; i++) {
-            if (categoryItems[i].group == items.category_group) {
-                document.querySelectorAll('.box_item__container[data-box="' + categoryItems[i].group + '"]').forEach(item => {
-                    item.setAttribute('style', "");
-                })
-            } else {
-                document.querySelectorAll('.box_item__container[data-box="' + categoryItems[i].group + '"]').forEach(item => {
-                    item.setAttribute('style', "display:none");
-                })
-            }
-        }
-    }
-
     function DefaultTabButton(typeItems, categoryItems) {
         document.getElementById(typeItems[0].slug).classList.add('active');
-        document.querySelectorAll('a.list_quiz_button').forEach(item => {
-            item.setAttribute('href', "<?= base_url('admin/daftar_quiz/'); ?>" + "/" + typeItems[0].slug + "/?slug=" + item.getAttribute('data-button'))
-        })
 
-        FilterCategoryOptions(categoryItems, typeItems[0]);
+        let data = categoryItems.filter(categoryItems => {
+            return categoryItems.group == typeItems[0].category_group
+        });
+
+        CreateItemOption(data, typeItems[0]);
     }
 
     function TabButtonControl(typeItems, categoryItems) {
@@ -98,17 +86,17 @@
                 })
 
                 document.getElementById(el.target.id).classList.add("active");
-                document.querySelectorAll('a.list_quiz_button').forEach(item => {
-                    item.setAttribute('href', "<?= base_url('admin/daftar_quiz/'); ?>" + "/" + el.target.id + "/?slug=" + item.getAttribute('data-button'))
-                })
 
-                FilterCategoryOptions(categoryItems, item);
+                let data = categoryItems.filter(categoryItems => {
+                    return categoryItems.group == item.category_group
+                });
+
+                CreateItemOption(data, item);
             })
 
         }
     }
 
-    CreateItemOption(dataCategoryQuiz);
     DefaultTabButton(dataTypeQuiz, dataCategoryQuiz);
     TabButtonControl(dataTypeQuiz, dataCategoryQuiz);
 </script>

@@ -71,11 +71,11 @@ class Login extends BaseController
                 }
             } else {
                 session()->setFlashdata('user_or_pass', 'Username atau Password Anda Salah');
-                return redirect()->back();
+                return redirect()->to(base_url('login'));
             }
         } else {
             session()->setFlashdata('user_or_pass', 'Username atau Password Anda Salah');
-            return redirect()->back();
+            return redirect()->to(base_url('login'));
         }
     }
 
