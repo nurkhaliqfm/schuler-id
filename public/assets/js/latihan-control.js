@@ -21,6 +21,7 @@ function CreateOption(question_id, id, value, label_option) {
   var descLabel = document.createTextNode(label_option + ". ");
   var descText = document.createElement("span");
   descText.id = value;
+  // descText.setAttribute("style", "display: inherit;");
 
   label.appendChild(descLabel);
   label.appendChild(descText);
@@ -80,6 +81,15 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     document.getElementById("question__subject").innerHTML =
       subjectListName[getId];
     document.getElementById("question__part").innerHTML = dataSoal.soal;
+
+    if (window.MathJax) {
+      let math1 = document.querySelector("math");
+      if (math1 != null) {
+        let node_soal = document.querySelector("#question__part");
+        MathJax.typesetPromise([node_soal]).then(() => {});
+      }
+    }
+
     document
       .getElementById("question__part")
       .setAttribute("id-soal", dataSoal.id_soal);
@@ -104,12 +114,24 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
           );
         });
     }
+
     document
       .querySelectorAll("input.form-check-input")
       .forEach((itemOption) => {
         document.querySelector(
           'span[id="' + itemOption.value + '"]'
         ).innerHTML = dataSoal[itemOption.value];
+
+        if (window.MathJax) {
+          let math = document.querySelector("math");
+          if (math != null) {
+            let node = document.querySelector(
+              'span[id="' + itemOption.value + '"]'
+            );
+            MathJax.typesetPromise([node]).then(() => {});
+          }
+        }
+
         itemOption.checked = false;
         if (itemOption.value == UserQuizStorage[dataSoal.id_soal]) {
           itemOption.checked = true;

@@ -159,6 +159,12 @@
                         </li>
                     </ul>
                 </li>
+                <li class="sidebar-item admin-style">
+                    <a class="sidebar-link admin-style <?= $uri == 'input-kampus' || $uri == '' ? 'active' : ''; ?>" href=" <?= base_url('admin/input_kampus'); ?>" aria-expanded="false">
+                        <i class="fa-solid fa-file-pen"></i>
+                        <span class="hide-menu">Input Kampus</span>
+                    </a>
+                </li>
             </ul>
         <?php }; ?>
     </div>

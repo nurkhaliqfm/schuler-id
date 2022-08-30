@@ -17,7 +17,7 @@
     <link href="<?= base_url('node_modules/froala-editor/css/froala_style.min.css') ?>" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('node_modules/froala-editor/css/plugins/image.min.css') ?>" rel="stylesheet" type="text/css" />
     <!-- Wiris -->
-    <link href="<?= base_url('node_modules/@wiris/mathtype-froala3/icon/css/wirisplugin.css') ?>" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('node_modules/@wiris/mathtype-froala3/icon/css/wirisplugin.css') ?>" />
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('assets/css/theme-style.css') ?>">
 
@@ -44,6 +44,10 @@
     <script src="<?= base_url('assets/js/sidebarmenu.js') ?>"></script>
     <!-- Main Js -->
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
+    <!-- MathJax -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js">
+    </script>
 </body>
 
 </html>

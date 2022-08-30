@@ -3,6 +3,8 @@ const list_element = document.getElementById("question__part"),
   prev_button = document.getElementById("item_prev"),
   next_button = document.getElementById("item_next"),
   finish_button = document.getElementById("item_selesai"),
+  session_notif_button = document.getElementById("item_session_notif"),
+  checkpoin_button = document.getElementById("item_selesai_cekpoint"),
   notif_button = document.getElementById("notif_btn"),
   question_num_btn = document.getElementById("question__number_side");
 
@@ -21,6 +23,7 @@ function CreateOption(question_id, id, value, label_option) {
   var descLabel = document.createTextNode(label_option + ". ");
   var descText = document.createElement("span");
   descText.id = value;
+  // descText.setAttribute("style", "display: inherit;");
 
   label.appendChild(descLabel);
   label.appendChild(descText);
@@ -76,9 +79,21 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
       (index) => index === item.quiz_sub_subject
     );
 
+    UserQuizStorage["quiz_sub_subject"] = subjectListID[getId];
+    localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+
     document.getElementById("question__number").innerHTML = page + 1;
     document.getElementById("question__subject").innerHTML =
       subjectListName[getId];
+
+    if (subjectListName[getId + 1] == null) {
+      document.getElementById("next_session").innerHTML =
+        subjectListName[getId];
+    } else {
+      document.getElementById("next_session").innerHTML =
+        subjectListName[getId + 1];
+    }
+
     document.getElementById("question__part").innerHTML = dataSoal.soal;
     document
       .getElementById("question__part")
@@ -182,16 +197,32 @@ function ButtonPagination(items, url, urlRedirect) {
   notif_button.addEventListener("click", () => {
     var UserQuizStorage = localStorage.getItem(sessionID);
     UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
-
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", url, true);
     xhttp.onreadystatechange = () => {
       if (xhttp.readyState == 4 && xhttp.status == 200) {
         var response = JSON.parse(xhttp.responseText);
         $(".txt_csrfname").val(response.token);
-        setTimeout(() => {
-          window.location.replace(urlRedirect + "/?query=" + response.quiz_id);
-        }, 3000);
+
+        if (response.status == "Success") {
+          var UserQuizStorage = localStorage.getItem(sessionID);
+          UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+          UserQuizStorage["status_timer"] = "stop";
+          localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+
+          let session_timeout = 10;
+          document.getElementById("timer_session_count").innerHTML =
+            session_timeout.toString().padStart(2, "0");
+          setInterval(function () {
+            document.getElementById("timer_session_count").innerHTML =
+              session_timeout.toString().padStart(2, "0");
+            session_timeout--;
+            if (session_timeout == 0) {
+              checkpoin_button.click();
+              localStorage.removeItem(sessionID);
+            }
+          }, 1000);
+        }
       }
     };
     xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
@@ -265,12 +296,20 @@ class Timer {
       var UserQuizStorage = localStorage.getItem(sessionID);
       UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
       UserQuizStorage["time"] = this.remainingSeconds;
+      UserQuizStorage["quiz_id"] = query;
       localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+
+      if (UserQuizStorage["status_timer"] == "stop") {
+        this.stop();
+        delete UserQuizStorage.time;
+        localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+      }
 
       if (this.remainingSeconds === 0) {
         this.stop();
         delete UserQuizStorage.time;
         localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+        notif_button.click();
       }
     }, 1000);
   }

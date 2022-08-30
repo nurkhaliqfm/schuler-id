@@ -19,6 +19,7 @@ function CreateOption(question_id, id, value, label_option) {
   var descLabel = document.createTextNode(label_option + ". ");
   var descText = document.createElement("span");
   descText.id = value;
+  descText.setAttribute("style", "display: inherit;");
 
   label.appendChild(descLabel);
   label.appendChild(descText);
@@ -96,6 +97,17 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
 
     document.getElementById("question__part").innerHTML = dataSoal.soal;
     document.getElementById("explain__part").innerHTML = dataSoal.pembahasan;
+
+    if (window.MathJax) {
+      let math1 = document.querySelector("math");
+      if (math1 != null) {
+        let node_soal = document.querySelector("#question__part");
+        let node_answ = document.querySelector("#explain__part");
+        MathJax.typesetPromise([node_soal]).then(() => {});
+        MathJax.typesetPromise([node_answ]).then(() => {});
+      }
+    }
+
     document.getElementById("your_answare").innerHTML =
       yourAnsware[1].toUpperCase();
     document.getElementById("real_answare").innerHTML =
@@ -129,6 +141,17 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
         document.querySelector(
           'span[id="' + itemOption.value + '"]'
         ).innerHTML = dataSoal[itemOption.value];
+
+        if (window.MathJax) {
+          let math = document.querySelector("math");
+          if (math != null) {
+            let node = document.querySelector(
+              'span[id="' + itemOption.value + '"]'
+            );
+            MathJax.typesetPromise([node]).then(() => {});
+          }
+        }
+
         itemOption.disabled = true;
         itemOption.checked = false;
         if (itemOption.value == userAnsware[dataSoal.id_soal]) {

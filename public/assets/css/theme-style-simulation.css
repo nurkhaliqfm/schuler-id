@@ -123,6 +123,34 @@ body {
   font-weight: 400;
 }
 
+.modal-body.notif-style .text-notif.title-style {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-1);
+  border: 2px solid var(--color-1);
+  border-radius: 5px;
+  padding: 5px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+.modal-body.notif-style .timer-style i {
+  text-align: center;
+  font-size: 3rem;
+  color: var(--color-1);
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 0px;
+}
+
+.modal-body.notif-style .timer-style .session-timer {
+  text-align: center;
+  color: var(--color-1);
+  font-size: 1.8rem;
+  margin-top: 0px;
+  font-weight: 500;
+}
+
 .modal-footer {
   border-top: none;
   justify-content: center;

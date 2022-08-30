@@ -156,9 +156,9 @@
     new FroalaEditor('#editorQuestion', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -185,6 +185,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -265,9 +266,9 @@
     new FroalaEditor('#editorExplanation', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -294,6 +295,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -371,9 +373,9 @@
     new FroalaEditor('#option_a', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -400,6 +402,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -477,9 +480,9 @@
     new FroalaEditor('#option_b', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -506,6 +509,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -583,9 +587,9 @@
     new FroalaEditor('#option_c', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -612,6 +616,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -689,9 +694,9 @@
     new FroalaEditor('#option_d', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -718,6 +723,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {
@@ -795,9 +801,9 @@
     new FroalaEditor('#option_e', {
         toolbarButtons: {
             moreText: {
-                buttons: ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting'],
+                buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
                 align: 'left',
-                buttonsVisible: 3
+                buttonsVisible: 5
             },
             moreParagraph: {
                 buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent'],
@@ -824,6 +830,7 @@
             }
         },
 
+        fontSize: ['8', '9', '10', '11', '12', '14', '16', '18', '24', '30', '36', '48', '60', '72', '96'],
         imageEditButtons: ['imageDisplay', 'imageAlign', 'imageRemove'],
         imageUploadURL: '<?= base_url('admin/upload_image') ?>',
         imageUploadParams: {

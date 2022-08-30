@@ -7,6 +7,7 @@ use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
 use App\Models\CategoryQuizModel;
 use App\Models\QuizModel;
+use App\Models\UniversitasModel;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -17,6 +18,7 @@ class Admin extends BaseController
     protected $bankQuizModel;
     protected $categoryQuizModel;
     protected $quizModel;
+    protected $universitasModel;
 
     public function __construct()
     {
@@ -25,6 +27,7 @@ class Admin extends BaseController
         $this->bankQuizModel = new BankQuizModel();
         $this->categoryQuizModel = new CategoryQuizModel();
         $this->quizModel = new QuizModel();
+        $this->universitasModel = new UniversitasModel();
     }
 
     public function index()
@@ -248,15 +251,15 @@ class Admin extends BaseController
             'type_soal' => $menuSoal,
             'sub_type_soal' => $submenuSoal,
             'id_soal' => uniqid(),
-            'soal' => $this->request->getVar('editorQuestion'),
-            'option_a' => $this->request->getVar('option_a'),
-            'option_b' => $this->request->getVar('option_b'),
-            'option_c' => $this->request->getVar('option_c'),
-            'option_d' => $this->request->getVar('option_d'),
-            'option_e' => $this->request->getVar('option_e'),
+            'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
+            'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_a')),
+            'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_b')),
+            'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_c')),
+            'option_d' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_d')),
+            'option_e' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_e')),
             'jawaban' => md5($questionAns[0]),
             'ans_id' => $questionAns[0],
-            'pembahasan' => $this->request->getVar('editorExplanation'),
+            'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
             'value' => $this->request->getVar('questionValue')
         ]);
 
@@ -527,15 +530,15 @@ class Admin extends BaseController
         $questionAns = $this->request->getVar('checkbox');
         $bankSoalModel = $this->bankSoalModel;
         $bankSoalModel->update($this->request->getVar('id'), [
-            'soal' => $this->request->getVar('editorQuestion'),
-            'option_a' => $this->request->getVar('option_a'),
-            'option_b' => $this->request->getVar('option_b'),
-            'option_c' => $this->request->getVar('option_c'),
-            'option_d' => $this->request->getVar('option_d'),
-            'option_e' => $this->request->getVar('option_e'),
+            'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
+            'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_a')),
+            'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_b')),
+            'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_c')),
+            'option_d' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_d')),
+            'option_e' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_e')),
             'jawaban' => md5($questionAns[0]),
             'ans_id' => $questionAns[0],
-            'pembahasan' => $this->request->getVar('editorExplanation'),
+            'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
             'value' => $this->request->getVar('questionValue')
         ]);
 
@@ -554,7 +557,7 @@ class Admin extends BaseController
             $temp = explode(".", $_FILES["file"]["name"]);
             $extension = end($temp);
 
-            if (in_array($extension, $allowExt)) {
+            if (in_array(strtolower($extension), $allowExt)) {
                 $fileupload_name = sha1(microtime()) . "." . $extension;
                 move_uploaded_file($_FILES["file"]["tmp_name"], getcwd() . "/assets/upload_image/" . $fileupload_name);
 
@@ -991,9 +994,138 @@ class Admin extends BaseController
         return redirect()->to(base_url('admin/daftar_quiz/' . $uri . '?slug=' . $slug));
     }
 
+    public function input_kampus()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
+        $kampus = $this->universitasModel->findAll();
+
+        $data = [
+            'title' => 'Daftar Quiz Schuler.id',
+            'user_name' => $user['username'],
+            'daftar_Kampus' => $kampus,
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('admin/input-kampus', $data);
+    }
+
+    public function save_kampus()
+    {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
+        if (!$this->validate([
+            'nama_kampus' => [
+                'rules' => 'required|is_unique[universitas.nama_universitas]',
+                'errors' => [
+                    'required' => 'Nama Kampus Harus Diisi',
+                ]
+            ]
+        ])) {
+            session()->setFlashdata('failed', "Kampus Gagal Ditambahkan.");
+            return redirect()->to(base_url('admin/input_kampus'))->withInput();
+        }
+
+        $this->universitasModel->save([
+            'id_universitas' => uniqid(),
+            'nama_universitas' => strtoupper($this->request->getVar('nama_kampus'))
+        ]);
+
+        session()->setFlashdata('success', "Kampus Berhasil Ditambahkan.");
+        return redirect()->to(base_url('admin/input_kampus'));
+    }
+
+    public function deleted_kampus($universitas_id)
+    {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
+        $kampus = $this->universitasModel->where(['id_universitas' => $universitas_id])->first();
+
+        $this->universitasModel->delete($kampus['id']);
+        return redirect()->to(base_url('admin/input_kampus'));
+    }
+
     // ERROR
     public function error_404()
     {
         return view('errors/html/error_404');
+    }
+
+    public function clean()
+    {
+        $bankSoal = $this->bankSoalModel->findAll();
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('<p></p>', '', $bs['option_a']),
+                    'option_b' => str_replace('<p></p>', '', $bs['option_b']),
+                    'option_c' => str_replace('<p></p>', '', $bs['option_c']),
+                    'option_d' => str_replace('<p></p>', '', $bs['option_d']),
+                    'option_e' => str_replace('<p></p>', '', $bs['option_e']),
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_a']),
+                    'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_b']),
+                    'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_c']),
+                    'option_d' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_d']),
+                    'option_e' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_e']),
+                    'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['pembahasan']),
+                    'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['soal'])
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('<p><br></p>', '', $bs['option_a']),
+                    'option_b' => str_replace('<p><br></p>', '', $bs['option_b']),
+                    'option_c' => str_replace('<p><br></p>', '', $bs['option_c']),
+                    'option_d' => str_replace('<p><br></p>', '', $bs['option_d']),
+                    'option_e' => str_replace('<p><br></p>', '', $bs['option_e']),
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('</p>', '', $bs['option_a']),
+                    'option_b' => str_replace('</p>', '', $bs['option_b']),
+                    'option_c' => str_replace('</p>', '', $bs['option_c']),
+                    'option_d' => str_replace('</p>', '', $bs['option_d']),
+                    'option_e' => str_replace('</p>', '', $bs['option_e']),
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('<p>', '', $bs['option_a']),
+                    'option_b' => str_replace('<p>', '', $bs['option_b']),
+                    'option_c' => str_replace('<p>', '', $bs['option_c']),
+                    'option_d' => str_replace('<p>', '', $bs['option_d']),
+                    'option_e' => str_replace('<p>', '', $bs['option_e']),
+                ]
+            );
+        }
     }
 }
