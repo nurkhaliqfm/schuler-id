@@ -175,7 +175,7 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
-        $navbarTitle = "Latihan " . $quizData[0]['quiz_name'];
+        $navbarTitle = $quizData[0]['quiz_name'];
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
 
@@ -355,6 +355,7 @@ class Home extends BaseController
 
             array_push($remakeBankQuiz, $dataremakeBankQuiz);
         }
+
         $data = [
             'title' => 'Simulasi Gratis Schuler.id',
             'user_name' => $user['username'],
@@ -378,13 +379,16 @@ class Home extends BaseController
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $dataQuiz[0]['quiz_category']])->first();
 
+        $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
             'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
             'jumlah_soal' => count($dataQuiz),
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer']
+            'timer' => $timer['quiz_timer'],
+            'universitas_pilihan' => $getUniversitas['nama_universitas']
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-guide', $data);
@@ -440,7 +444,7 @@ class Home extends BaseController
 
         // dd($getSession);
 
-        $navbarTitle = "Simulasi " . strtoupper($quizData[0]['quiz_name']);
+        $navbarTitle = strtoupper($quizData[0]['quiz_name']);
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
 

@@ -18,24 +18,24 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Jenis Latihan</td>
+                                <td>Simulasi</td>
                                 <td>:</td>
                                 <td><?= strtoupper($nama_quiz); ?></td>
                             </tr>
                             <tr>
-                                <td>Jumlah Soal</td>
+                                <td>Soal</td>
                                 <td>:</td>
                                 <td><?= $jumlah_soal; ?> Nomor</td>
                             </tr>
                             <tr>
-                                <td>Waktu Mengerjakan</td>
+                                <td>Waktu</td>
                                 <td>:</td>
                                 <td><?= ($timer / 60) * 9; ?> Menit</td>
                             </tr>
                             <tr>
                                 <td>PTN Pilihan</td>
                                 <td>:</td>
-                                <td>UNIVERSITAS HASANUDDIN</td>
+                                <td><?= $universitas_pilihan; ?></td>
                             </tr>
                         </table>
                     </div>

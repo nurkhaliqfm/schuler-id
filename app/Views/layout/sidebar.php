@@ -123,6 +123,12 @@
                         <span class="hide-menu">Akun Saya</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="<?= base_url('login/logout'); ?>" aria-expanded="false">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span class="hide-menu">Logout</span>
+                    </a>
+                </li>
             </ul>
         <?php } else {; ?>
             <ul id="sidebarnav" class="sidebarnav-list">
@@ -165,22 +171,13 @@
                         <span class="hide-menu">Input Kampus</span>
                     </a>
                 </li>
+                <li class="sidebar-item admin-style">
+                    <a class="sidebar-link admin-style" href="<?= base_url('login/logout'); ?>" aria-expanded="false">
+                        <i class="fa-solid fa-sign-out-alt"></i>
+                        <span class="hide-menu">Logout</span>
+                    </a>
+                </li>
             </ul>
         <?php }; ?>
-    </div>
-    <div class="sidebar-bottom">
-        <div class="sidebar-profil-container">
-            <div class="profil-container">
-                <img class="profil-sidebar" alt="img" src="<?= base_url('assets/img/codebreak.png'); ?>">
-            </div>
-            <div class="user-name-container">
-                <p class="user-name">
-                    <?= $user_name; ?>
-                </p>
-                <div class="sidebar-shop">
-                    <i class="fa-solid fa-cart-shopping"></i> <span> 0 </span> item
-                </div>
-            </div>
-        </div>
     </div>
 </nav>

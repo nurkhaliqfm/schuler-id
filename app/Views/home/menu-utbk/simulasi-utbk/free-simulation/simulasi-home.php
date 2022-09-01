@@ -28,31 +28,6 @@
     </div>
 </div>
 
-<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="modalGuide" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header format-title">
-                <h5 class="modal-title">Pilih Target PTN Impian Anda</h5>
-            </div>
-            <div class="modal-body">
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Pilih Universitas</option>
-                    <option value="unhas">Universitas Hasanuddin</option>
-                    <option value="ui">Universitas Indonesia</option>
-                    <option value="itb">Institute Teknologi Bandung</option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <div class="button__container">
-                    <a id="start_btn" class="modal-style start__simulation__Btn">
-                        <i class="fa-solid fa-play"></i><span>Simpan</span>
-                    </a>
-                    <a class="modal-style close__simulation__Btn" data-bs-dismiss="modal"><i class="fa-solid fa-times-circle"></i><span>Batal</span></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 <script src="<?= base_url('assets/js/simulasi-home-category.js') ?>"></script>
 
 <script>

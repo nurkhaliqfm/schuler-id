@@ -10,23 +10,29 @@
                         <h3 class="box-title simulation">Daftar Hasil <span>Latihan UTBK</span></h3>
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Data hasil latihan akan terhapus jika latihan dikerjakan kembali</div>
                         <div class="result-container">
-                            <div class="result-table">
-                                <div class="headings">
-                                    <span class="heading">Nama</span>
-                                    <span class="heading">Jenis Latihan</span>
-                                    <span class="heading">Kategori</span>
-                                    <span class="heading">Actions</span>
-                                </div>
-                                <?php foreach ($data_user as $du) : ?>
-                                    <div class="result">
-                                        <span><?= $du['quiz_name']; ?></span>
-                                        <span><?= ucwords($du['type']); ?></span>
-                                        <span><?= $du['category']; ?></span>
-                                        <span>
-                                            <a class="table_button" href="<?= base_url('home/hasil_latihan?query=') . $du['quiz_id']; ?>">Detail</a>
-                                        </span>
-                                    </div>
-                                <?php endforeach; ?>
+                            <div class="result-table list__result">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="headings">
+                                            <td class="text-center heading">Nama</td>
+                                            <td class="text-center heading">Jenis Latihan</td>
+                                            <td class="text-center heading">Kategori</td>
+                                            <td class="text-center heading">Action</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($data_user as $du) : ?>
+                                            <tr class="result">
+                                                <td><?= $du['quiz_name']; ?></td>
+                                                <td><?= ucwords($du['type']); ?></td>
+                                                <td><?= $du['category']; ?></td>
+                                                <td>
+                                                    <a class="table_button" href="<?= base_url('home/hasil_latihan?query=') . $du['quiz_id']; ?>">Detail</a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

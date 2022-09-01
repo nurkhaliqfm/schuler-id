@@ -34,8 +34,6 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxFooter.className = "box_item__footer simulasi_box_footer";
       boxFooterBtn.className = "box_item__Btn list_quiz_button-normal selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
-      boxFooterBtn.setAttribute("data-bs-toggle", "modal");
-      boxFooterBtn.setAttribute("data-bs-target", "#modalGuide");
       boxFooterBtn.innerHTML = "Kerjakan";
       boxFooterBtn1.className = "box_item__Btn";
       boxFooterBtn1.innerHTML = "Rangking Universitas";
@@ -81,18 +79,14 @@ function FilterCategoryOptions(categoryItems, items) {
 function DefaultTabButton(typeItems, categoryItems, base_url) {
   document.getElementById(typeItems[0].slug).classList.add("active");
   document.querySelectorAll("a.list_quiz_button-normal").forEach((item) => {
-    item.addEventListener("click", () => {
-      document
-        .querySelector(".modal-footer .button__container a")
-        .setAttribute(
-          "href",
-          base_url +
-            "/?id=" +
-            typeItems[0].category_id +
-            "&query=" +
-            item.getAttribute("data-button")
-        );
-    });
+    item.setAttribute(
+      "href",
+      base_url +
+        "?id=" +
+        typeItems[0].category_id +
+        "&query=" +
+        item.getAttribute("data-button")
+    );
   });
 
   FilterCategoryOptions(categoryItems, typeItems[0]);
@@ -102,26 +96,25 @@ function TabButtonControl(typeItems, categoryItems, base_url) {
   for (let i = 0; i < Object.keys(typeItems).length; i++) {
     let item = typeItems[i];
     let btnId = item.slug;
+
     document.getElementById(btnId).addEventListener("click", (el) => {
       tabButton.forEach((itemBtnTab) => {
         itemBtnTab.classList.remove("active");
       });
 
       document.getElementById(el.target.id).classList.add("active");
-      document.querySelectorAll("a.list_quiz_button-normal").forEach((item) => {
-        item.addEventListener("click", () => {
-          document
-            .querySelector(".modal-footer .button__container a")
-            .setAttribute(
-              "href",
-              base_url +
-                "/?id=" +
-                el.target.category_id +
-                "&query=" +
-                item.getAttribute("data-button")
-            );
+      document
+        .querySelectorAll("a.list_quiz_button-normal")
+        .forEach((element) => {
+          element.setAttribute(
+            "href",
+            base_url +
+              "?id=" +
+              item.category_id +
+              "&query=" +
+              element.getAttribute("data-button")
+          );
         });
-      });
 
       FilterCategoryOptions(categoryItems, item);
     });

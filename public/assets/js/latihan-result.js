@@ -86,13 +86,13 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
 
     if (userAnsware[dataSoal.id_soal] == "0") {
       document.getElementById("box_desc").classList.add("normal");
-      document.getElementById("box_desc").innerHTML = "KOSONG";
+      document.getElementById("box_desc-text").innerHTML = "KOSONG";
     } else if (dataSoal.jawaban == md5(userAnsware[dataSoal.id_soal])) {
       document.getElementById("box_desc").classList.add("active");
-      document.getElementById("box_desc").innerHTML = "BENAR";
+      document.getElementById("box_desc-text").innerHTML = "BENAR";
     } else {
       document.getElementById("box_desc").classList.add("warning");
-      document.getElementById("box_desc").innerHTML = "SALAH";
+      document.getElementById("box_desc-text").innerHTML = "SALAH";
     }
 
     document.getElementById("question__part").innerHTML = dataSoal.soal;
@@ -163,13 +163,69 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
 
 function PaginationListNumber(items, row_per_page, userAnsware) {
   let page_count = Math.ceil(items.length / row_per_page);
+  let salah = 0;
+  let benar = 0;
+  let kosong = 0;
   for (let i = 1; i < page_count + 1; i++) {
-    let btn = BtnNumberPagination(i, userAnsware, items);
-    question_num_btn.appendChild(btn);
+    let btn = BtnNumberPagination(i, userAnsware, items, benar, salah, kosong);
+    question_num_btn.appendChild(btn[0]);
+    benar = btn[1];
+    salah = btn[2];
+    kosong = btn[3];
   }
+
+  let questionNumberTotal = Object.entries(userAnsware).length;
+  document.getElementById("result_persentage").innerHTML =
+    Math.round((benar / questionNumberTotal) * 100) + "%";
+  document.getElementById("result_persentage_explenation").innerHTML =
+    "Soal Benar " + benar + " / " + questionNumberTotal;
+  createGrafik(benar, salah, kosong);
 }
 
-function BtnNumberPagination(page, userAnsware, items) {
+function createGrafik(benarAns, salahAns, kosongAns) {
+  let root = document.querySelector("ul.pie-chart__legend");
+  root.innerHTML = "";
+
+  var benarBox = document.createElement("li");
+  benarBox.className = "benar-box";
+  var benarTextBox = document.createElement("em");
+  benarTextBox.innerHTML = "Soal Benar";
+  var benarValueBox = document.createElement("span");
+  benarValueBox.innerHTML = benarAns;
+  benarBox.appendChild(benarTextBox);
+  benarBox.appendChild(benarValueBox);
+
+  var salahBox = document.createElement("li");
+  salahBox.className = "salah-box";
+  var salahTextBox = document.createElement("em");
+  salahTextBox.innerHTML = "Soal Salah";
+  var salahValueBox = document.createElement("span");
+  salahValueBox.innerHTML = salahAns;
+  salahBox.appendChild(salahTextBox);
+  salahBox.appendChild(salahValueBox);
+
+  var kosongBox = document.createElement("li");
+  kosongBox.className = "kosong-box";
+  var kosongTextBox = document.createElement("em");
+  kosongTextBox.innerHTML = "Soal Kosong";
+  var kosongValueBox = document.createElement("span");
+  kosongValueBox.innerHTML = kosongAns;
+  kosongBox.appendChild(kosongTextBox);
+  kosongBox.appendChild(kosongValueBox);
+
+  root.appendChild(benarBox);
+  root.appendChild(salahBox);
+  root.appendChild(kosongBox);
+}
+
+function BtnNumberPagination(
+  page,
+  userAnsware,
+  items,
+  benarAns,
+  salahAns,
+  kosongAns
+) {
   let btn__side = document.createElement("div");
   btn__side.className = "question__number";
   btn__side.setAttribute("id-question", page);
@@ -182,13 +238,16 @@ function BtnNumberPagination(page, userAnsware, items) {
 
   if (userAnsware[dataSoal.id_soal] == "0") {
     btn__side.classList.add("normal");
+    kosongAns++;
   } else if (dataSoal.jawaban == md5(userAnsware[dataSoal.id_soal])) {
     btn__side.classList.add("active");
+    benarAns++;
   } else {
     btn__side.classList.add("warning");
+    salahAns++;
   }
 
-  return btn__side;
+  return [btn__side, benarAns, salahAns, kosongAns];
 }
 
 function SidebarStatus(current_page) {

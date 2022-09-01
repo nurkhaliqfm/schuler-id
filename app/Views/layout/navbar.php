@@ -12,9 +12,11 @@
             </div>
 
             <div class="d-flex">
-                <div class="navbar-shop">
-                    <i class="fa-solid fa-cart-shopping"></i> <span> 0 </span> item
-                </div>
+                <?php if (session()->get('user_level') != 'admin super') { ?>
+                    <div class="navbar-shop">
+                        <i class="fa-solid fa-cart-shopping"></i> <span> 0 </span> item
+                    </div>
+                <?php }; ?>
                 <div class="navbar-username">
                     Hai, <?= $user_name; ?>
                 </div>

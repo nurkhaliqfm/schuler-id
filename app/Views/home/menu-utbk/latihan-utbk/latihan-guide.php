@@ -13,22 +13,22 @@
                     <div class="body__simulationfree">
                         <table class="table">
                             <tr>
-                                <td width="250"></td>
-                                <td width="10"></td>
+                                <td></td>
+                                <td></td>
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Jenis Latihan</td>
+                                <td>Latihan</td>
                                 <td>:</td>
                                 <td><?= $nama_quiz; ?></td>
                             </tr>
                             <tr>
-                                <td>Jumlah Soal</td>
+                                <td>Soal</td>
                                 <td>:</td>
                                 <td><?= $jumlah_soal; ?> Nomor</td>
                             </tr>
                             <tr>
-                                <td>Waktu Mengerjakan</td>
+                                <td>Waktu</td>
                                 <td>:</td>
                                 <td><?= $timer / 60; ?> Menit</td>
                             </tr>

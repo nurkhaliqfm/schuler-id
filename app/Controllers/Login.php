@@ -2,20 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\UsersModel;
-
 class Login extends BaseController
 {
-
-    protected $usersModel;
-
-
-    public function __construct()
-    {
-        $this->usersModel = new UsersModel();
-    }
-
-
     public function index()
     {
         if (session()->get('user_level') == 'admin super') {
@@ -51,6 +39,12 @@ class Login extends BaseController
             $user_level = $cek['level_user'];
             $cek_password = $users->where(['email' => $cek['email'], 'password' => $this->request->getVar('password')])->first();
             if ($cek_password) {
+                if ($user_level == 'users') {
+                    if ($cek_password['universitas_pilihan'] == "") {
+                        return redirect()->to(base_url('login/kampus?slug=' . $cek_password['slug'] . '&query=login'));
+                    }
+                }
+
                 session()->set([
                     'username' => $this->request->getVar('email'),
                     'password' => $this->request->getVar('password'),
@@ -107,7 +101,8 @@ class Login extends BaseController
                 'errors' => [
                     'required' => 'Wajib Diisi',
                     'valid_email' => 'Email Tidak Valid',
-                    'valid_emails' => 'Email Tidak Valid'
+                    'valid_emails' => 'Email Tidak Valid',
+                    'is_unique' => 'Email Telah Terdaftar'
                 ]
             ],
             'password' => [
@@ -131,10 +126,10 @@ class Login extends BaseController
             session()->setFlashdata('failed', "Gagal Melakukan Registrasi.");
             return redirect()->to(base_url('login/regist'))->withInput();
         } else {
-
+            $slug = uniqid();
             $this->usersModel->save([
                 'username' => $username,
-                'slug' => uniqid(),
+                'slug' => $slug,
                 'phone' => $phoneNumber,
                 'password' => $password,
                 'level_user' => 'users',
@@ -143,6 +138,58 @@ class Login extends BaseController
                 'last_login' => date('Y-m-d H:i:s')
             ]);
 
+            session()->setFlashdata('success', "Berhasil Melakukan Registrasi.");
+            return redirect()->to(base_url('login/kampus?slug=' . $slug))->withInput();
+        }
+    }
+
+    public function kampus()
+    {
+        $slug = $this->request->getVar('slug');
+        if ($slug == null) return redirect()->to(base_url('login'));
+
+        $data = [
+            'kampus' => $this->universitasModel->findAll(),
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('kampus', $data);
+    }
+
+
+    public function kampus_auth()
+    {
+        $query = $this->request->getVar('query');
+        $slug = $this->request->getVar('slug');
+        $kampus_1 = $this->request->getVar("kampus_1");
+
+        if (!$this->validate([
+            'kampus_1' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Wajib Diisi'
+                ]
+            ],
+        ])) {
+            session()->setFlashdata('failed', "Gagal Menambahkan Kampus Impian.");
+            if ($query == 'login') {
+                return redirect()->to(base_url('login/kampus?slug=' . $slug . '&query=' . $query))->withInput();
+            } else {
+                return redirect()->to(base_url('login/kampus?slug=' . $slug))->withInput();
+            }
+        }
+
+        $kampus_1 =  $this->universitasModel->where(['id_universitas' => $kampus_1])->first();
+        $getUser = $this->usersModel->where(['slug' => $slug])->first();
+
+        $this->usersModel->update($getUser['id'], [
+            'universitas_pilihan' => $kampus_1['id_universitas'],
+        ]);
+
+        if ($query == 'login') {
+            session()->setFlashdata('success', "Berhasil Menambah Kampus Impian, Silahkan Login kembali.");
+            return redirect()->to(base_url('login'))->withInput();
+        } else {
             session()->setFlashdata('success', "Berhasil Melakukan Registrasi.");
             return redirect()->to(base_url('login'))->withInput();
         }

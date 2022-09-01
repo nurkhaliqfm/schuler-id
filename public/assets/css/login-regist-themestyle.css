@@ -54,7 +54,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 3px;
+  height: 3px;
 }
 
 ::-webkit-scrollbar-track {
@@ -97,6 +98,21 @@ body {
 }
 
 .login__container .head__login {
+  margin: 35px 0px;
+}
+
+.regist__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.regist__container .head__login {
   margin: 35px 0px;
 }
 
@@ -170,9 +186,10 @@ body {
 }
 
 .form__icon i {
-  color: transparent;
+  /* color: transparent;
   background-clip: text;
-  background-image: var(--color-gradient-icon);
+  background-image: var(--color-gradient-icon); */
+  color: var(--color-5);
 }
 
 .footer__login {
@@ -198,27 +215,38 @@ body {
 /*----------------
 Responsive
 ---------------*/
-
-@media (max-width: 1020px) {
-}
-
-@media (max-width: 932px) {
-}
-
-@media (max-width: 840px) {
+@media (min-width: 240px) {
   .body__login .form__menu.flex__2r {
     flex-wrap: wrap;
   }
+
+  .login__container {
+    width: calc(100vw - 30px);
+    margin: 0px;
+  }
+
+  .regist__container {
+    width: calc(100vw - 30px);
+    margin: 10px 0px;
+  }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 380px) {
+  .login__container {
+    width: 360px;
+  }
 }
 
-@media (max-width: 620px) {
+@media (min-width: 420px) {
+  .regist__container {
+    width: 400px;
+    margin: 0px;
+  }
 }
 
-@media (max-width: 480px) {
-}
-
-@media (max-width: 420px) {
+@media (min-width: 720px) {
+  .regist__container {
+    width: 700px;
+    margin: 0px;
+  }
 }

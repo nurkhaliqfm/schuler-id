@@ -48,6 +48,9 @@ class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         // User Model
         $this->usersModel = new \App\Models\UsersModel;
+        // Kampus
+        $this->universitasModel = new \App\Models\UniversitasModel();
+
         // E.g.: $this->session = \Config\Services::session();
     }
 }

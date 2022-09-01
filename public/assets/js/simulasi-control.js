@@ -94,13 +94,16 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
         subjectListName[getId + 1];
     }
 
+    let simulation_subtitle = qSubject.slug.replace("_", " ");
+
     document.getElementById("question__part").innerHTML = dataSoal.soal;
     document
       .getElementById("question__part")
       .setAttribute("id-soal", dataSoal.id_soal);
     document.getElementById("simulation__title").innerHTML = navbarTitle;
     document.getElementById("simulation__subtitle").innerHTML =
-      qSubject.main_type_soal;
+      simulation_subtitle.charAt(0).toUpperCase() +
+      simulation_subtitle.slice(1);
     if (document.querySelector('p[data-f-id="pbf"]'))
       document
         .querySelector('p[data-f-id="pbf"]')
