@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use Ramsey\Uuid\Uuid;
+
 class Login extends BaseController
 {
     public function index()
@@ -33,6 +35,7 @@ class Login extends BaseController
 
     public function auth()
     {
+        $session_id = Uuid::uuid4();
         $users = $this->usersModel;
         $cek = $users->where(['email' => $this->request->getVar('email')])->first();
         if ($cek) {
@@ -46,15 +49,16 @@ class Login extends BaseController
                 }
 
                 session()->set([
+                    'session_id' => $session_id,
                     'username' => $this->request->getVar('email'),
                     'password' => $this->request->getVar('password'),
                     'logged_in' => true,
                     'user_level' => $user_level
                 ]);
 
-                $users->save([
-                    'id' => $cek['id'],
-                    'last_login' => date('Y-m-d H:i:s')
+                $users->update($cek['id'], [
+                    'last_login' => date('Y-m-d H:i:s'),
+                    'login_session' => $session_id
                 ]);
 
                 session()->setFlashdata('success', 'Login Berhasil');

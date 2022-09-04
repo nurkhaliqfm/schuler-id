@@ -254,9 +254,8 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $userHistory = $this->userHistoryModel->where([
-            'user_id' => $users['slug'],
+            'user_id' => $user['slug'],
         ])->findAll();
 
         $dataUser = [];
@@ -405,10 +404,14 @@ class Home extends BaseController
         $query = $this->request->getVar('query');
         $getSession = $this->request->getVar('utbk_session');
 
-        $typeSoal = $this->typeSoalModel->findAll();
         $bankSoal = $this->bankSoalModel->findAll();
         $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
         $subcategoryQuiz = explode(',', $categoryQuiz['category_item']);
+        $remakeTypeSoal = [];
+        foreach ($subcategoryQuiz as $scQ) {
+            $typeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $scQ])->first();
+            array_push($remakeTypeSoal, $typeSoal);
+        }
 
         $listSession = [];
         foreach ($subcategoryQuiz as $scq) {
@@ -442,8 +445,6 @@ class Home extends BaseController
             ])->findAll();
         }
 
-        // dd($getSession);
-
         $navbarTitle = strtoupper($quizData[0]['quiz_name']);
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
@@ -453,7 +454,7 @@ class Home extends BaseController
             'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
-            'type_soal' => $typeSoal,
+            'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
             'session_id' => $users['slug'],
             'timer' => $timer['quiz_timer'],
@@ -538,19 +539,100 @@ class Home extends BaseController
         return view('home/menu-utbk/simulasi-utbk/simulasi-premium', $data);
     }
 
-    public function hasil_simulasi()
+    public function list_hasil_simulasi()
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'users') {
             return redirect()->to(base_url('admin/error_404'));
         }
 
+        $userHistoryUtbk = $this->userHistoryUtbkModel->where([
+            'user_id' => $user['slug'],
+        ])->findAll();
+
+        $dataUser = [];
+        foreach ($userHistoryUtbk as $history) {
+            $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $history['quiz_id']])->first();
+            if ($bankQuiz) {
+                $typeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $bankQuiz['quiz_subject']])->first();
+                $data = array(
+                    'quiz_id' => $bankQuiz['quiz_id'],
+                    'quiz_name' => $bankQuiz['quiz_name'],
+                    'type' => join(' ', explode('_', $typeSoal['slug'])),
+                    'category' => $typeSoal['list_type_soal']
+                );
+
+                array_push($dataUser, $data);
+            }
+        };
+
+        $data = [
+            'title' => 'Daftar Hasil Latihan Schuler.id',
+            'user_name' => $user['username'],
+            'data_user' => $dataUser
+        ];
+
+        return view('home/menu-utbk/simulasi-utbk/hasil-simulasi-list', $data);
+    }
+
+    public function hasil_simulasi()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $query = $this->request->getVar('query');
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $userHistoryUtbk = $this->userHistoryUtbkModel->where([
+            'user_id' => $user['slug'],
+            'quiz_id' => $query
+        ])->first();
+
+        $idSoal = explode(',', $userHistoryUtbk['id_soal']);
+        $userAns = explode(',', $userHistoryUtbk['answare']);
+        $userAnsware = new stdClass;
+        for ($i = 0; $i < count($idSoal); $i++) {
+            $userAnsware->{$idSoal[$i]} = $userAns[$i];
+        }
+
+        $quizData = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->findAll();
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = "Hasil & Jawaban " . $quizData[0]['quiz_name'];
+
         $data = [
             'title' => 'Hasil Simulasi Schuler.id',
-            'user_name' => $user['username']
+            'user_name' => $user['username'],
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'type_soal' => $typeSoal,
+            'navbar_title' => $navbarTitle,
+            'user_answare' => $userAnsware
         ];
 
         return view('home/menu-utbk/simulasi-utbk/hasil-simulasi', $data);
+    }
+
+    public function session_login()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $response = array();
+        if ($user['login_session'] != session()->get('session_id')) {
+            $response['status'] = "Logout";
+        } else {
+            $response['status'] = "Login";
+        }
+
+        return $this->response->setJSON($response);
     }
 
     // ERROR

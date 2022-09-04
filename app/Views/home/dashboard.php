@@ -52,13 +52,27 @@
             </div>
             <div class="col-md-12">
                 <div class="container-sosmed">
-                    <div class="sosmed-facebook"><i class="fa-brands fa-facebook"></i> <span>FACEBOOK</span></div>
-                    <div class="sosmed-whatsapp"><i class="fa-brands fa-whatsapp"></i> <span>WHATSAPP</span></div>
-                    <div class="sosmed-instagram"><i class="fa-brands fa-instagram"></i> <span>INSTAGRAM</span></div>
+                    <div class="sosmed-facebook"><i class="fa-brands fa-facebook"></i> <span class="sosmed-text">FACEBOOK</span></div>
+                    <div class="sosmed-whatsapp"><i class="fa-brands fa-whatsapp"></i> <span class="sosmed-text">WHATSAPP</span></div>
+                    <div class="sosmed-instagram"><i class="fa-brands fa-instagram"></i> <span class="sosmed-text">INSTAGRAM</span></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    const facebook = document.querySelector('.sosmed-facebook'),
+        whatsapp = document.querySelector('.sosmed-whatsapp'),
+        instagram = document.querySelector('.sosmed-instagram');
 
+    facebook.addEventListener('click', () => {
+        window.open("https://web.facebook.com/medc.id", '_blank').focus;
+    })
+    whatsapp.addEventListener('click', () => {
+        window.open("https://wa.me/6285396380597", '_blank').focus;
+    })
+    instagram.addEventListener('click', () => {
+        window.open("https://www.instagram.com/medc.id/", '_blank').focus;
+    })
+</script>
 <?= $this->endSection(); ?>

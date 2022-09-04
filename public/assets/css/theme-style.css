@@ -83,7 +83,7 @@ a {
   background-color: var(--color-2);
   padding: 0px 10px;
   border-radius: 5px;
-  text-align: center;
+  /* text-align: center; */
   width: fit-content;
   font-weight: 400;
   margin-top: 5px;
@@ -111,6 +111,14 @@ a {
 .container_header_1 .box__subtitle {
   font-size: 0.8rem;
   margin-bottom: 5px;
+}
+
+.container_header_1 .box__image {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  align-content: center;
+  flex-wrap: wrap;
 }
 
 .container_header_1 .header_edit {
@@ -724,6 +732,7 @@ Main Content
   color: var(--main-color);
   font-weight: 500;
   box-shadow: var(--shadow-white-box);
+  cursor: pointer;
 }
 
 .sosmed-whatsapp {
@@ -735,6 +744,7 @@ Main Content
   color: var(--main-color);
   font-weight: 500;
   box-shadow: var(--shadow-white-box);
+  cursor: pointer;
 }
 
 .sosmed-instagram {
@@ -746,6 +756,7 @@ Main Content
   color: var(--main-color);
   font-weight: 500;
   box-shadow: var(--shadow-white-box);
+  cursor: pointer;
 }
 
 .sosmed-facebook:hover {
@@ -767,6 +778,18 @@ Main Content
   border: 1px solid var(--color-instagram);
   box-shadow: 0px 3px 1px var(--color-instagram);
   color: var(--color-instagram);
+}
+
+/* SUPER CAMP UTBK */
+.box__image .pamflet-content-img {
+  width: 100%;
+  height: 100%;
+  margin: 10px auto;
+}
+
+.box__image .pamflet-content-img img {
+  width: 100%;
+  height: 100%;
 }
 
 /* MENU UTBK */
@@ -1502,20 +1525,22 @@ Responsive
     height: 30px;
   }
 
+  .container-head-dashboard .head-content .content-name {
+    width: 90px;
+  }
+
   .container-sosmed {
-    flex-direction: column;
+    flex-direction: row;
   }
 
-  .container-sosmed .sosmed-facebook {
-    margin: 5px 0px;
-  }
-
+  .container-sosmed .sosmed-facebook,
+  .container-sosmed .sosmed-instagram,
   .container-sosmed .sosmed-whatsapp {
-    margin: 5px 0px;
+    margin: 5px;
   }
 
-  .container-sosmed .sosmed-instagram {
-    margin: 5px 0px;
+  .container-sosmed .sosmed-text {
+    display: none;
   }
 
   /* List Hasil Latihan */
@@ -1708,14 +1733,22 @@ Responsive
     flex-direction: row;
   }
 
+  .container-head-dashboard .head-content .content-name {
+    width: fit-content;
+  }
+
   .container-sosmed .sosmed-facebook,
   .container-sosmed .sosmed-whatsapp,
   .container-sosmed .sosmed-instagram {
-    margin: 5px 5px;
+    margin: 5px;
   }
 
   .container-head-dashboard {
     flex-direction: row;
+  }
+
+  .container-sosmed .sosmed-text {
+    display: inline;
   }
 
   .container-head-dashboard .head-content {
@@ -1745,6 +1778,17 @@ Responsive
 @media (min-width: 645px) {
   .container-head-dashboard .head-content {
     width: fit-content;
+  }
+
+  /* SUPER CAMP UTBK */
+  .box__image .pamflet-content-img {
+    width: 45%;
+    height: 45%;
+  }
+
+  .box__image .pamflet-content-img img {
+    width: 100%;
+    height: 100%;
   }
 }
 

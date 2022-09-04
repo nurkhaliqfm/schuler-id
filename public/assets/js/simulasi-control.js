@@ -86,12 +86,24 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     document.getElementById("question__subject").innerHTML =
       subjectListName[getId];
 
-    if (subjectListName[getId + 1] == null) {
-      document.getElementById("next_session").innerHTML =
-        subjectListName[getId];
-    } else {
-      document.getElementById("next_session").innerHTML =
-        subjectListName[getId + 1];
+    if (utbk_session < utbk_session_limit) {
+      if (subjectListName[getId + 1] == null) {
+        let labelIndex = typeSoal
+          .map((e) => e.id_main_type_soal)
+          .indexOf(item.quiz_subject);
+
+        var subjectListNameNext;
+        if (labelIndex + 1 <= typeSoal.length) {
+          let nextSubject = typeSoal[labelIndex + 1];
+          subjectListNameNext = nextSubject.list_type_soal.split(",");
+        }
+
+        document.getElementById("next_session").innerHTML =
+          subjectListNameNext[0];
+      } else {
+        document.getElementById("next_session").innerHTML =
+          subjectListName[getId + 1];
+      }
     }
 
     let simulation_subtitle = qSubject.slug.replace("_", " ");
@@ -216,15 +228,24 @@ function ButtonPagination(items, url, urlRedirect) {
           let session_timeout = 10;
           document.getElementById("timer_session_count").innerHTML =
             session_timeout.toString().padStart(2, "0");
-          setInterval(function () {
-            document.getElementById("timer_session_count").innerHTML =
-              session_timeout.toString().padStart(2, "0");
-            session_timeout--;
-            if (session_timeout == 0) {
-              checkpoin_button.click();
-              localStorage.removeItem(sessionID);
-            }
-          }, 1000);
+
+          if (utbk_session < utbk_session_limit) {
+            setInterval(function () {
+              document.getElementById("timer_session_count").innerHTML =
+                session_timeout.toString().padStart(2, "0");
+              session_timeout--;
+              if (session_timeout == 0) {
+                checkpoin_button.click();
+                localStorage.removeItem(sessionID);
+              }
+            }, 1000);
+          } else {
+            setTimeout(() => {
+              window.location.replace(
+                urlRedirect + "?query=" + response.quiz_id
+              );
+            }, 3000);
+          }
         }
       }
     };

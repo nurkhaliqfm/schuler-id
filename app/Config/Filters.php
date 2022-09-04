@@ -39,7 +39,7 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'invalidchars',
             // 'csrf',
-            'csrf' => ['except' => ['admin/upload_image', 'admin/deleted_image']],
+            'csrf' => ['except' => ['admin/upload_image', 'admin/deleted_image', 'home/session_login', 'admin/session_login']],
             'usersAuth' => [
                 'except' => [
                     'login',

@@ -1052,6 +1052,24 @@ class Admin extends BaseController
         return redirect()->to(base_url('admin/input_kampus'));
     }
 
+    public function session_login()
+    {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $response = array();
+        if ($user['login_session'] != session()->get('session_id')) {
+            $response['status'] = "Logout";
+        } else {
+            $response['status'] = "Login";
+        }
+
+        return $this->response->setJSON($response);
+    }
+
     // ERROR
     public function error_404()
     {

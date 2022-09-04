@@ -46,7 +46,7 @@
 </div>
 <?= $this->include('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-popup'); ?>
 
-<!-- <script src="<?= base_url('assets/js/prevent-access.js') ?>"></script> -->
+<script src="<?= base_url('assets/js/prevent-access.js') ?>"></script>
 <script src="<?= base_url('assets/js/simulasi-control.js') ?>"></script>
 <script type="text/javascript">
     function preventBack() {
@@ -67,7 +67,7 @@
     let sessionID = <?= json_encode($session_id); ?>;
     let id = <?= json_encode($_GET['id']); ?>;
     let query = <?= json_encode($_GET['query']); ?>;
-    let urlRedirect = "<?= base_url('home/hasil_latihan'); ?>";
+    let urlRedirect = "<?= base_url('home/hasil_simulasi'); ?>";
     let urlDone = "<?= base_url('home/save_simulasi_geratis') ?>";
     let current_page = 1;
     let rows = 1;

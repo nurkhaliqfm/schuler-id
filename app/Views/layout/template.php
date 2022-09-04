@@ -46,7 +46,34 @@
     <script src="<?= base_url('assets/js/main.js') ?>"></script>
     <!-- MathJax -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js">
+    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script>
+    <script>
+        // SESSION CHECKER
+        var url;
+        if ("<?= $_SESSION['user_level'] ?>" == 'users') {
+            url = "<?= base_url('home/session_login') ?>";
+        } else {
+            url = "<?= base_url('admin/session_login') ?>";
+        }
+        let urlRedirect = "<?= base_url('login/logout') ?>";
+        setInterval(function() {
+            const data = {
+                'status': 'session_check'
+            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", url, true);
+            xhttp.onreadystatechange = () => {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    var response = JSON.parse(xhttp.responseText);
+                    if (response.status == "Logout") {
+                        window.location.href = urlRedirect;
+                    }
+                }
+            };
+            xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xhttp.setRequestHeader("Content-Type", "application/json");
+            xhttp.send(JSON.stringify(data));
+        }, 5000);
     </script>
 </body>
 

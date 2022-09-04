@@ -64,7 +64,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item last-btn">
+                <li class="sidebar-item">
                     <a class="sidebar-link" href="#" aria-expanded="false">
                         <i class="fa-solid fa-laptop-file"></i>
                         <span class="hide-menu">
@@ -90,7 +90,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="<?= base_url('home/hasil_simulasi'); ?>" aria-expanded="false">
+                            <a class="sidebar-link" href="<?= base_url('home/list_hasil_simulasi'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-circle-check"></i>
                                 <span class="hide-menu">
                                     Hasil Simulasi
@@ -98,6 +98,12 @@
                             </a>
                         </li>
                     </ul>
+                </li>
+                <li class="sidebar-item last-btn">
+                    <a class="sidebar-link" href="#" aria-expanded="false">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <span class="hide-menu">Rangking</span>
+                    </a>
                 </li>
                 <li class="sidebar-item-title">
                     <span class="title-sidebar-item">EVENT</span>
