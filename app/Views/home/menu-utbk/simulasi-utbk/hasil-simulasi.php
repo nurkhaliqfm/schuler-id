@@ -18,10 +18,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="header__button-box container_header_1 simulation-result__tab">
+                        <div class="button__container">
+                            <?php empty($_GET['id']) ? $uri = '' : $uri = $_GET['id']; ?>
+                            <?php $i = 0; ?>
+                            <?php foreach ($type_soal_tab as $rts) : ?>
+                                <?php if ($i == 0) {; ?>
+                                    <a href="<?= base_url('home/hasil_simulasi?query=' . $_GET['query'] . '&id=' . $rts['id']); ?>" class="tab_button tab_button_style <?= $uri == '' || $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
+                                <?php } else {; ?>
+                                    <a href="<?= base_url('home/hasil_simulasi?query=' . $_GET['query'] . '&id=' . $rts['id']); ?>" class="tab_button tab_button_style <?= $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
+                                <?php }; ?>
+                                <?php $i++; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                     <div id="pembahasan-section" class="container__body result__container">
                         <div class="box_item__container container_result large-box">
                             <div class="box_item__body result_body">
-                                <div class="question-container">
+                                <div id="question-container" class="question-container">
                                     <div class="d-flex mb-3 align-items-center question_header">
                                         <div class="quest__number">SOAL NOMOR <span id="question__number"></span></div>
                                         <div class="quest__subject"><span id="question__subject"></span></div>
@@ -79,15 +93,21 @@
                     </div>
                     <div id="statistik-section" style="display: none;" class="container__body statistik__container">
                         <div class="box_item__container container_statistik small-box">
-                            <div class="box_item__header">SKOR AKHIR</div>
+                            <div class="box_item__header">SKOR SIMULASI UTBK</div>
                             <div class="box_item__body statistik-skor">
-                                <div id="result_persentage" class="box_body__title"></div>
-                                <div id="result_persentage_explenation" class="box_body__subtitle"></div>
+                                <div id="result_simulasi" class="box_body__title"></div>
                             </div>
                             <div class=" box_item__footer quiz_footer"></div>
                         </div>
                         <div class="box_item__container container_statistik small-box">
-                            <div class="box_item__header">GRAFIK</div>
+                            <div class="box_item__header" id="result_category__title"></div>
+                            <div id="result_base_category" class="box_item__body statistik-skor result_base_category">
+
+                            </div>
+                            <div class=" box_item__footer quiz_footer"></div>
+                        </div>
+                        <div class="box_item__container container_statistik small-box">
+                            <div class="box_item__header" id="grafik_category__title"></div>
                             <div class="box_item__body statistik-skor">
                                 <div class="pie-charts">
                                     <div class="pieID--micro-skills pie-chart-wrapper">
@@ -106,20 +126,33 @@
         </div>
     </div>
 </div>
-<script src="<?= base_url('assets/js/latihan-result.js') ?>"></script>
+<script src="<?= base_url('assets/js/simulasi-result.js') ?>"></script>
 <script>
     let dataItems = <?= json_encode($bank_soal); ?>;
     let dataQuiz = <?= json_encode($quiz_data); ?>;
+    let dataQuizRemake = <?= json_encode($bank_soal_remake); ?>;
     let typeSoal = <?= json_encode($type_soal); ?>;
+    let typeSoalTab = <?= json_encode($type_soal_tab); ?>;
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let userAnsware = <?= json_encode($user_answare); ?>;
     let current_page = 1;
     let rows = 1;
+    let tab_section;
 
-    DisplayList(dataQuiz, rows, current_page, userAnsware)
-    NavBtnControl(current_page)
-    PaginationListNumber(dataQuiz, rows, userAnsware)
-    ButtonPagination(dataQuiz);
+    if (<?= json_encode($uri); ?> == "") {
+        tab_section = typeSoalTab[0]
+    } else {
+        tab_section = typeSoalTab.find(
+            ({
+                id
+            }) => id === <?= json_encode($uri); ?>
+        );
+    }
+
+    DisplayList(dataQuizRemake, rows, current_page, userAnsware);
+    NavBtnControl(current_page, dataQuizRemake);
+    PaginationListNumber(dataQuizRemake, rows, userAnsware, tab_section);
+    ButtonPagination(dataQuizRemake);
 
     const pembahasan_btn = document.getElementById('pembahasanBtn'),
         statistik_btn = document.getElementById('statistikBtn');

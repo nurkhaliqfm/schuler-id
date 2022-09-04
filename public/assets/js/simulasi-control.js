@@ -109,6 +109,15 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     let simulation_subtitle = qSubject.slug.replace("_", " ");
 
     document.getElementById("question__part").innerHTML = dataSoal.soal;
+
+    if (window.MathJax) {
+      let math1 = document.querySelector("math");
+      if (math1 != null) {
+        let node_soal = document.querySelector("#question__part");
+        MathJax.typesetPromise([node_soal]).then(() => {});
+      }
+    }
+
     document
       .getElementById("question__part")
       .setAttribute("id-soal", dataSoal.id_soal);
@@ -140,6 +149,17 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
         document.querySelector(
           'span[id="' + itemOption.value + '"]'
         ).innerHTML = dataSoal[itemOption.value];
+
+        if (window.MathJax) {
+          let math = document.querySelector("math");
+          if (math != null) {
+            let node = document.querySelector(
+              'span[id="' + itemOption.value + '"]'
+            );
+            MathJax.typesetPromise([node]).then(() => {});
+          }
+        }
+
         itemOption.checked = false;
         if (itemOption.value == UserQuizStorage[dataSoal.id_soal]) {
           itemOption.checked = true;
@@ -210,36 +230,38 @@ function ButtonPagination(items, url, urlRedirect) {
   });
 
   notif_button.addEventListener("click", () => {
-    var UserQuizStorage = localStorage.getItem(sessionID);
-    UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", url, true);
-    xhttp.onreadystatechange = () => {
-      if (xhttp.readyState == 4 && xhttp.status == 200) {
-        var response = JSON.parse(xhttp.responseText);
-        $(".txt_csrfname").val(response.token);
+    let session_timeout = 10;
+    document.getElementById("timer_session_count").innerHTML = session_timeout
+      .toString()
+      .padStart(2, "0");
 
-        if (response.status == "Success") {
-          var UserQuizStorage = localStorage.getItem(sessionID);
-          UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
-          UserQuizStorage["status_timer"] = "stop";
-          localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+    if (utbk_session < utbk_session_limit) {
+      setInterval(function () {
+        document.getElementById("timer_session_count").innerHTML =
+          session_timeout.toString().padStart(2, "0");
+        session_timeout--;
+        if (session_timeout == 0) {
+          checkpoin_button.click();
+        }
+      }, 1000);
+    } else {
+      var UserQuizStorage = localStorage.getItem(sessionID);
+      UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("POST", url, true);
+      xhttp.onreadystatechange = () => {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          var response = JSON.parse(xhttp.responseText);
+          $(".txt_csrfname").val(response.token);
 
-          let session_timeout = 10;
-          document.getElementById("timer_session_count").innerHTML =
-            session_timeout.toString().padStart(2, "0");
+          if (response.status == "Success") {
+            var UserQuizStorage = localStorage.getItem(sessionID);
+            UserQuizStorage = UserQuizStorage
+              ? JSON.parse(UserQuizStorage)
+              : {};
+            UserQuizStorage["status_timer"] = "stop";
+            localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
 
-          if (utbk_session < utbk_session_limit) {
-            setInterval(function () {
-              document.getElementById("timer_session_count").innerHTML =
-                session_timeout.toString().padStart(2, "0");
-              session_timeout--;
-              if (session_timeout == 0) {
-                checkpoin_button.click();
-                localStorage.removeItem(sessionID);
-              }
-            }, 1000);
-          } else {
             setTimeout(() => {
               window.location.replace(
                 urlRedirect + "?query=" + response.quiz_id
@@ -247,11 +269,11 @@ function ButtonPagination(items, url, urlRedirect) {
             }, 3000);
           }
         }
-      }
-    };
-    xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-    xhttp.setRequestHeader("Content-Type", "application/json");
-    xhttp.send(JSON.stringify(UserQuizStorage));
+      };
+      xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(JSON.stringify(UserQuizStorage));
+    }
   });
 }
 

@@ -476,7 +476,6 @@ class Home extends BaseController
 
         $quizData = $this->bankQuizModel->where([
             'quiz_id' => $data['quiz_id'],
-            'quiz_sub_subject' => $data['quiz_sub_subject']
         ])->findAll();
 
 
@@ -497,12 +496,9 @@ class Home extends BaseController
         ])->first();
 
         if ($cekHistoryUtbk) {
-            $newIdSoal =  $cekHistoryUtbk['id_soal'] . ',' . join(',', $id_soal);
-            $newAnsware = $cekHistoryUtbk['answare'] . ',' .  join(',', $answare);
-
             $this->userHistoryUtbkModel->update($cekHistoryUtbk['id'], [
-                'id_soal' => $newIdSoal,
-                'answare' => $newAnsware
+                'id_soal' => join(',', $id_soal),
+                'answare' => join(',', $answare)
             ]);
         } else {
             $this->userHistoryUtbkModel->save([
@@ -582,6 +578,12 @@ class Home extends BaseController
         }
 
         $query = $this->request->getVar('query');
+        $id = $this->request->getVar('id');
+
+        if (!$query) {
+            return redirect()->to(base_url("home/list_hasil_simulasi"));
+        }
+
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
 
         $userHistoryUtbk = $this->userHistoryUtbkModel->where([
@@ -596,9 +598,50 @@ class Home extends BaseController
             $userAnsware->{$idSoal[$i]} = $userAns[$i];
         }
 
-        $quizData = $this->bankQuizModel->where([
+        $getQUizType = $this->bankQuizModel->where([
             'quiz_id' => $query
-        ])->findAll();
+        ])->first();
+
+        $getcategorySoalData = $this->categoryQuizModel->where(['slug' => $getQUizType['quiz_type']])->first();
+        $categorySoal = explode(',', $getcategorySoalData['category_item']);
+
+        $quizData = [];
+        $quizDataSplit = [];
+        foreach ($categorySoal as $cs) {
+            $getTypesoalData = $this->typeSoalModel->where(['id_main_type_soal' => $cs])->first();
+            $typeSoal = explode(',', $getTypesoalData['list_type_soal_id']);
+            $remakeTypeSoal[] = [
+                'id' => $cs,
+                'name' => $getTypesoalData['main_type_soal'],
+                'slug' => $getTypesoalData['slug'],
+            ];
+
+            foreach ($typeSoal as $ts) {
+                $getQuizSoal = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts
+                ])->findAll();
+
+                $getQuizSplit = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $id,
+                    'quiz_sub_subject' => $ts
+                ])->orderBy('quiz_sub_subject')->findAll();
+
+                foreach ($getQuizSoal as $qQs) {
+                    array_push($quizData, $qQs);
+                }
+
+                foreach ($getQuizSplit as $qS) {
+                    array_push($quizDataSplit, $qS);
+                }
+            }
+        }
+
+        if ($id == null) {
+            $id = $categorySoal[0];
+        };
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
@@ -609,7 +652,9 @@ class Home extends BaseController
             'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
+            'bank_soal_remake' => $quizDataSplit,
             'type_soal' => $typeSoal,
+            'type_soal_tab' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
             'user_answare' => $userAnsware
         ];

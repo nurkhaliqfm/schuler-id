@@ -434,7 +434,7 @@ class Admin extends BaseController
             'option_d' => $new_option_d,
             'option_e' => $new_option_e,
             'jawaban' => $getBankSoal['jawaban'],
-            'ans_id' => $getBankSoal['jawaban'],
+            'ans_id' => $getBankSoal['ans_id'],
             'pembahasan' => $new_pembahasan,
             'value' => $getBankSoal['value']
         ]);
