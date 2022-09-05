@@ -1903,7 +1903,6 @@ Responsive
   /* Main Content */
   .result_body .question-container {
     width: 730px;
-    overflow-x: scroll;
   }
 
   .result__container .container_result.large-box {
@@ -1913,6 +1912,10 @@ Responsive
   .result__container .container_result.small-box {
     width: 250px;
     max-height: 750px;
+  }
+
+  .box_item__container .box_item__footer {
+    overflow-y: scroll;
   }
 
   .box_item__body.sidebar_body_container {

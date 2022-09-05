@@ -605,6 +605,10 @@ class Home extends BaseController
         $getcategorySoalData = $this->categoryQuizModel->where(['slug' => $getQUizType['quiz_type']])->first();
         $categorySoal = explode(',', $getcategorySoalData['category_item']);
 
+        if ($id == null) {
+            $id = $categorySoal[0];
+        };
+
         $quizData = [];
         $quizDataSplit = [];
         foreach ($categorySoal as $cs) {
@@ -638,10 +642,6 @@ class Home extends BaseController
                 }
             }
         }
-
-        if ($id == null) {
-            $id = $categorySoal[0];
-        };
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();

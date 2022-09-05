@@ -798,8 +798,11 @@ class Admin extends BaseController
         $getBankSoal = $this->bankSoalModel->orderBy('type_soal', 'sub_type_soal')->findAll();
         foreach ($getBankSoal as $bs) {
             for ($i = 0; $i < sizeof($subjectName); $i++) {
-                if ($subjectName[$i]['type_soal_id'] == $bs['type_soal']) {
-                    array_push($remakBankSoal, $bs);
+                $cekSoal = $this->bankQuizModel->where(['quiz_question' => $bs['id_soal']])->findAll();
+                if (!$cekSoal) {
+                    if ($subjectName[$i]['type_soal_id'] == $bs['type_soal']) {
+                        array_push($remakBankSoal, $bs);
+                    }
                 }
             }
         }
