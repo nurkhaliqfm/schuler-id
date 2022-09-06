@@ -106,7 +106,7 @@
         </div>
     </div>
 </div>
-<script src="<?= base_url('assets/js/latihan-result.js') ?>"></script>
+<script src="<?= base_url('assets/js/latihan-result.js?v=') . time() ?>"></script>
 <script>
     let dataItems = <?= json_encode($bank_soal); ?>;
     let dataQuiz = <?= json_encode($quiz_data); ?>;

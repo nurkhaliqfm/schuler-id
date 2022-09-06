@@ -223,6 +223,15 @@ function ButtonPagination(items, url, urlRedirect) {
     xhttp.setRequestHeader("Content-Type", "application/json");
     xhttp.send(JSON.stringify(UserQuizStorage));
   });
+
+  document.querySelectorAll(".question__number").forEach((element) => {
+    element.addEventListener("click", () => {
+      current_page = parseInt(element.getAttribute("id-question"));
+      DisplayList(items, rows, current_page);
+      NavBtnControl(current_page);
+      SidebarStatus(current_page);
+    });
+  });
 }
 
 function NavBtnControl(current_page) {

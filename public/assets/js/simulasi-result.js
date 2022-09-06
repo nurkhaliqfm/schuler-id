@@ -197,11 +197,8 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     data = btn[4];
   }
 
-  console.log(data);
-
   document.getElementById("result_simulasi").innerHTML = UserResult();
 
-  let questionNumberTotal = Object.entries(userAnsware).length;
   document.getElementById("result_category__title").innerHTML =
     "HASIL " + tab.name.toUpperCase();
 
@@ -212,7 +209,7 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     line.className = "line-separator";
     title.className = "box_body__title";
     subtitle.className = "box_body__subtitle";
-    title.innerHTML = data[x]["value"];
+    title.innerHTML = data[x]["value"] * 50;
     subtitle.innerHTML = data[x]["nama"];
 
     document.getElementById("result_base_category").appendChild(subtitle);
@@ -384,6 +381,14 @@ function ButtonPagination(items) {
     current_page = current_page - 1;
     DisplayList(items, rows, current_page, userAnsware);
     NavBtnControl(current_page, items);
+  });
+
+  document.querySelectorAll(".question__number").forEach((element) => {
+    element.addEventListener("click", () => {
+      current_page = parseInt(element.getAttribute("id-question"));
+      DisplayList(items, rows, current_page, userAnsware);
+      NavBtnControl(current_page, items);
+    });
   });
 }
 

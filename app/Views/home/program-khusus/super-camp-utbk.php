@@ -9,7 +9,7 @@
                     <div class="container_header_1 head_latihan">
                         <h3 class="box-title">PROGRAM BIMBEL OFFLINE SUPERCAMP UTBK 2023</h3>
                         <p class="box__subtitle">&nbsp;</p>
-                        <div class="alert__box"><i class="fa-solid fa-circle-info"></i>
+                        <div class="alert__box super_camp_utbk"><i class="fa-solid fa-circle-info"></i>
                             <span> Perhatian : </span>
                             <ul>
                                 <li>Fasilitas program supercamp tidak termasuk pada paket premium</li>

@@ -25,10 +25,16 @@
                                             <tr class="result">
                                                 <td><?= $du['quiz_name']; ?></td>
                                                 <td><?= ucwords($du['type']); ?></td>
-                                                <td><?= $du['category']; ?></td>
+                                                <td><?= ucwords($du['category']); ?></td>
                                                 <td>
                                                     <a class="table_button" href="<?= base_url('home/hasil_simulasi?query=') . $du['quiz_id']; ?>">Detail</a>
                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>

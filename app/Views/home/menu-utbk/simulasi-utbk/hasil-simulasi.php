@@ -13,20 +13,21 @@
                         </div>
                         <div class="header__button-box container_header_1">
                             <div class="button__container">
-                                <div id="pembahasanBtn" class="hasil_btn tab_button_style pembahasan  active"><i class="fa-solid fa-file-lines"></i> <span class="pembahasan-tab">PEMBAHASAN</span></div>
-                                <div id="statistikBtn" class="hasil_btn tab_button_style statistik "><i class="fa-solid fa-chart-simple"></i> <span class="statistik-tab">STATISTIK</span></div>
+                                <div data-button="pembahasan" id="pembahasanBtn" class="hasil_btn tab_button_style pembahasan  active"><i class="fa-solid fa-file-lines"></i> <span class="pembahasan-tab">PEMBAHASAN</span></div>
+                                <div data-button="statistik" id="statistikBtn" class="hasil_btn tab_button_style statistik "><i class="fa-solid fa-chart-simple"></i> <span class="statistik-tab">STATISTIK</span></div>
                             </div>
                         </div>
                     </div>
                     <div class="header__button-box container_header_1 simulation-result__tab">
                         <div class="button__container">
                             <?php empty($_GET['id']) ? $uri = '' : $uri = $_GET['id']; ?>
+                            <?php empty($_GET['slug']) ? $slug = '' : $slug = $_GET['slug']; ?>
                             <?php $i = 0; ?>
                             <?php foreach ($type_soal_tab as $rts) : ?>
                                 <?php if ($i == 0) {; ?>
-                                    <a href="<?= base_url('home/hasil_simulasi?query=' . $_GET['query'] . '&id=' . $rts['id']); ?>" class="tab_button tab_button_style <?= $uri == '' || $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
+                                    <a href="" data-id="<?= $rts['id']; ?>" data-status="" class="tab_button tab_button_style <?= $uri == '' || $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
                                 <?php } else {; ?>
-                                    <a href="<?= base_url('home/hasil_simulasi?query=' . $_GET['query'] . '&id=' . $rts['id']); ?>" class="tab_button tab_button_style <?= $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
+                                    <a href="" data-id="<?= $rts['id']; ?>" data-status="" class="tab_button tab_button_style <?= $uri == $rts['id'] ? 'active' : ''; ?>"><?= strtoupper($rts['name']); ?></a>
                                 <?php }; ?>
                                 <?php $i++; ?>
                             <?php endforeach; ?>
@@ -126,7 +127,7 @@
         </div>
     </div>
 </div>
-<script src="<?= base_url('assets/js/simulasi-result.js') ?>"></script>
+<script src="<?= base_url('assets/js/simulasi-result.js?v=') . time() ?>"></script>
 <script>
     let dataItems = <?= json_encode($bank_soal); ?>;
     let dataQuiz = <?= json_encode($quiz_data); ?>;
@@ -135,6 +136,7 @@
     let typeSoalTab = <?= json_encode($type_soal_tab); ?>;
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let userAnsware = <?= json_encode($user_answare); ?>;
+    let urltab = "<?= base_url('home/hasil_simulasi?query=' . $_GET['query']); ?>"
     let current_page = 1;
     let rows = 1;
     let tab_section;
@@ -157,11 +159,40 @@
     const pembahasan_btn = document.getElementById('pembahasanBtn'),
         statistik_btn = document.getElementById('statistikBtn');
 
+
+    if ("<?= $slug; ?>" == "" || "<?= $slug ?>" == "pembahasan") {
+        document.getElementById('statistik-section').setAttribute('style', 'display: none;')
+        document.getElementById('pembahasan-section').setAttribute('style', '')
+        statistik_btn.classList.remove('active')
+        pembahasan_btn.classList.add('active')
+
+        document.querySelectorAll(".tab_button.tab_button_style").forEach(element => {
+            let defaultURL = urltab + '&id=' + element.getAttribute('data-id');
+            element.setAttribute('href', defaultURL);
+        });
+    } else {
+        document.getElementById('pembahasan-section').setAttribute('style', 'display: none;')
+        document.getElementById('statistik-section').setAttribute('style', '')
+        statistik_btn.classList.add('active')
+        pembahasan_btn.classList.remove('active')
+
+        document.querySelectorAll(".tab_button.tab_button_style").forEach(element => {
+            let defaultURL = urltab + '&id=' + element.getAttribute('data-id') + '&slug=' + "<?= $slug; ?>";
+            element.setAttribute('href', defaultURL)
+        });
+    }
+
     statistik_btn.addEventListener('click', () => {
         document.getElementById('pembahasan-section').setAttribute('style', 'display: none;')
         document.getElementById('statistik-section').setAttribute('style', '')
         statistik_btn.classList.add('active')
         pembahasan_btn.classList.remove('active')
+
+        let getslug = statistik_btn.getAttribute('data-button');
+        document.querySelectorAll(".tab_button.tab_button_style").forEach(element => {
+            let fixURL = urltab + '&id=' + element.getAttribute('data-id') + '&slug=' + getslug
+            element.setAttribute('href', fixURL)
+        });
     })
 
     pembahasan_btn.addEventListener('click', () => {
@@ -169,6 +200,12 @@
         document.getElementById('pembahasan-section').setAttribute('style', '')
         statistik_btn.classList.remove('active')
         pembahasan_btn.classList.add('active')
+
+        let getslug = pembahasan_btn.getAttribute('data-button');
+        document.querySelectorAll(".tab_button.tab_button_style").forEach(element => {
+            let fixURL = urltab + '&id=' + element.getAttribute('data-id') + '&slug=' + getslug
+            element.setAttribute('href', fixURL)
+        });
     })
 </script>
 <script src="<?= base_url('assets/js/chart.js') ?>"></script>

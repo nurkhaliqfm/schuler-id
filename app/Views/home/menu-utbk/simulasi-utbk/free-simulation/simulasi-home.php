@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<script src="<?= base_url('assets/js/simulasi-home-category.js') ?>"></script>
+<script src="<?= base_url('assets/js/simulasi-home-category.js?v=') . time() ?>"></script>
 
 <script>
     let dataTypeSoal = <?= json_encode($type_soal); ?>;

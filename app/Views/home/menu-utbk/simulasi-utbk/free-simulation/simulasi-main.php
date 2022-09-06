@@ -47,7 +47,7 @@
 <?= $this->include('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-popup'); ?>
 
 <script src="<?= base_url('assets/js/prevent-access.js') ?>"></script>
-<script src="<?= base_url('assets/js/simulasi-control.js') ?>"></script>
+<script src="<?= base_url('assets/js/simulasi-control.js?v=') . time() ?>"></script>
 <script type="text/javascript">
     function preventBack() {
         window.history.forward();
@@ -79,18 +79,22 @@
     var UserQuizStorage = localStorage.getItem(sessionID);
     UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
 
-    if (UserQuizStorage["status_timer"] == "stop") {
-        let timerStatus = "start";
-        UserQuizStorage["status_timer"] = "start";
-        localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
-    } else {
-        let timerStatus = UserQuizStorage["status_timer"];
-    }
-
     DisplayList(dataQuiz, rows, current_page, csrfName, csrfHash)
     NavBtnControl(current_page, dataQuiz)
     PaginationListNumber(dataQuiz, rows)
     ButtonPagination(dataQuiz, urlDone, urlRedirect);
+
+    if (UserQuizStorage['time'] == 0) {
+        notif_button.click();
+    } else {
+        if (UserQuizStorage["status_timer"] == "stop") {
+            let timerStatus = "start";
+            UserQuizStorage["status_timer"] = "start";
+            localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+        } else {
+            let timerStatus = UserQuizStorage["status_timer"];
+        }
+    }
 
     new Timer(
         document.querySelector(".timer__countdown"), timerUtbk

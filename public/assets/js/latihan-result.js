@@ -276,6 +276,14 @@ function ButtonPagination(items) {
     DisplayList(items, rows, current_page, userAnsware);
     NavBtnControl(current_page);
   });
+
+  document.querySelectorAll(".question__number").forEach((element) => {
+    element.addEventListener("click", () => {
+      current_page = parseInt(element.getAttribute("id-question"));
+      DisplayList(items, rows, current_page, userAnsware);
+      NavBtnControl(current_page);
+    });
+  });
 }
 
 function NavBtnControl(current_page) {

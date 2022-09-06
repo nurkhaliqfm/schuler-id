@@ -11,7 +11,7 @@
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
     <!-- Theme style -->
-    <link rel="stylesheet" href="<?= base_url('assets/css/login-regist-themestyle.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('assets/css/login-regist-themestyle.css?v=') . time() ?>">
     <!-- Fav Icon -->
     <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.png') ?>">
 </head>
