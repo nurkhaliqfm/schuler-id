@@ -47,7 +47,7 @@
                     </a>
                     <ul class="nav-treeview collapse">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="<?= base_url('home/daftar_latihan'); ?>" aria-expanded="false">
+                            <a class="sidebar-link" href="<?= base_url('home/latihan_home'); ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
                                     Kerjakan Latihan

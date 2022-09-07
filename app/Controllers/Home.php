@@ -64,24 +64,7 @@ class Home extends BaseController
     }
 
     // MENU UTBK LATIHAN
-    public function daftar_latihan()
-    {
-        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
-        if (session()->get('user_level') != 'users') {
-            return redirect()->to(base_url('admin/error_404'));
-        }
-
-        $categoryQuiz = $this->categoryQuizModel->where(['group' => '0'])->findAll();
-        $data = [
-            'title' => 'Daftar Latihan Schuler.id',
-            'user_name' => $user['username'],
-            'data_type' => $categoryQuiz
-        ];
-
-        return view('home/menu-utbk/latihan-utbk/latihan-list', $data);
-    }
-
-    public function latihan_home($slug = "")
+    public function latihan_home()
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'users') {
@@ -89,27 +72,34 @@ class Home extends BaseController
         }
 
         $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'slug' => $slug,
             'group' => '0'
-        ])->first();
-        if (!$cekCategoryQuiz) return redirect()->to(base_url('home/daftar_latihan'));
-        $idCategoryQuiz = explode(',', $cekCategoryQuiz['category_item']);
+        ])->findAll();
 
-        foreach ($idCategoryQuiz as $id) {
-            $getTypeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $id])->first();
-            $typeSoal[] = [
-                'id' => $id,
-                'name' => $getTypeSoal['main_type_soal'],
-                'slug' => $getTypeSoal['slug'],
-            ];
-        }
-
-        if (!$cekCategoryQuiz) {
-            return redirect()->to(base_url('home/daftar_latihan'));
+        $typeSoalID = [];
+        $filterCategory = [];
+        foreach ($cekCategoryQuiz as $cC) {
+            $idCategoryQuiz = explode(',', $cC['category_item']);
+            foreach ($idCategoryQuiz as $id) {
+                if (!in_array($id, $typeSoalID)) {
+                    $getTypeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $id])->first();
+                    $name = str_replace('_', ' ', $getTypeSoal['slug']);
+                    $typeSoal[] = [
+                        'id' => $id,
+                        'name' => $name,
+                        'slug' => $getTypeSoal['slug'],
+                    ];
+                    $dataFilter = explode(',', $cC['category_item']);
+                    foreach ($dataFilter as $df) {
+                        if (!in_array($df, $filterCategory)) {
+                            array_push($filterCategory, $df);
+                        }
+                    }
+                    array_push($typeSoalID, $id);
+                }
+            }
         }
 
         $remakeBankQuiz = [];
-        $filterCategory = $this->categoryQuizModel->where(['slug' => $slug])->first();
         $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'practice'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
@@ -128,10 +118,9 @@ class Home extends BaseController
         $data = [
             'title' => 'Daftar Latihan Schuler.id',
             'user_name' => $user['username'],
-            'quiz_group' => $slug,
             'type_soal' => $typeSoal,
             'bank_quiz' => $remakeBankQuiz,
-            'filter_category' => $filterCategory['category_item']
+            'filter_category' => join(',', $filterCategory)
         ];
 
         return view('home/menu-utbk/latihan-utbk/latihan-home', $data);

@@ -7,7 +7,7 @@
             <div class="col-md-12">
                 <div class="white-box">
                     <div class="container_header_1 head_latihan">
-                        <h3 class="box-title simulation">Latihan UTBK <span><?= strtoupper($quiz_group); ?></span></h3>
+                        <h3 class="box-title simulation">Latihan UTBK</span></h3>
                         <p class="box__subtitle">Belajar menejeman waktu sesuai kategori yang diinginkan</p>
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Gunakan browser google chrome versi terbaru agar website dapat diakses dengan lancar tanpa masalah</div>
                         <div class="button__container">
