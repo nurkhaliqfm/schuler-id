@@ -527,15 +527,29 @@ class Admin extends BaseController
             return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
         }
 
+        $cleanList = ['<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '<p><br></p>', '<p>', '</p>'];
+        $optionA = $this->request->getVar('option_a');
+        $optionB = $this->request->getVar('option_b');
+        $optionC = $this->request->getVar('option_c');
+        $optionD = $this->request->getVar('option_d');
+        $optionE = $this->request->getVar('option_e');
+        foreach ($cleanList as $cl) {
+            $optionA = str_replace($cl, '', $optionA);
+            $optionB = str_replace($cl, '', $optionB);
+            $optionC = str_replace($cl, '', $optionC);
+            $optionD = str_replace($cl, '', $optionD);
+            $optionE = str_replace($cl, '', $optionE);
+        };
+
         $questionAns = $this->request->getVar('checkbox');
         $bankSoalModel = $this->bankSoalModel;
         $bankSoalModel->update($this->request->getVar('id'), [
             'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
-            'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_a')),
-            'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_b')),
-            'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_c')),
-            'option_d' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_d')),
-            'option_e' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_e')),
+            'option_a' => $optionA,
+            'option_b' => $optionB,
+            'option_c' => $optionC,
+            'option_d' => $optionD,
+            'option_e' => $optionE,
             'jawaban' => md5($questionAns[0]),
             'ans_id' => $questionAns[0],
             'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
