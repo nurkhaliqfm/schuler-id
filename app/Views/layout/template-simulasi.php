@@ -11,7 +11,7 @@
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
     <!-- Fav Icon -->
-    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.png') ?>">
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.png?v=') . time() ?>">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('assets/css/theme-style-simulation.css?v=') . time() ?>">
 

@@ -11,7 +11,7 @@
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
     <!-- Fav Icon -->
-    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.png') ?>">
+    <link rel="icon" type="image/x-icon" href="<?= base_url('assets/img/favicon.png?v=') . time() ?>">
     <!-- Froala -->
     <link href="<?= base_url('node_modules/froala-editor/css/froala_editor.pkgd.min.css') ?>" rel="stylesheet" type="text/css" />
     <link href="<?= base_url('node_modules/froala-editor/css/froala_style.min.css') ?>" rel="stylesheet" type="text/css" />

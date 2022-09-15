@@ -51,6 +51,11 @@ class BaseController extends Controller
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 
+        // TRANSAKSI
+        $this->utbkShopModel = new \App\Models\UtbkShopModel();
+        $this->akunPremiumModel = new \App\Models\AkunPremiumModel();
+        $this->transaksiUserModel = new \App\Models\TransaksiUserModel();
+
         // E.g.: $this->session = \Config\Services::session();
     }
 }

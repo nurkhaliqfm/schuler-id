@@ -10,6 +10,8 @@ use App\Models\CategoryQuizModel;
 use App\Models\UserHistoryModel;
 use App\Models\UserHistoryUtbkModel;
 use stdClass;
+use Ramsey\Uuid\Uuid;
+
 
 class Home extends BaseController
 {
@@ -848,6 +850,68 @@ class Home extends BaseController
         }
 
         return $this->response->setJSON($response);
+    }
+
+    // MENU BELI PAKET
+    public function beli_paket()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $getShopItem = $this->utbkShopModel->orderBy('id', 'DESC')->findAll();
+
+        $data = [
+            'title' => 'Simulasi Schuler.id',
+            'user_name' => $user['username'],
+            'shop_item' => $getShopItem
+        ];
+
+        return view('home/paket-utbk/home-paket', $data);
+    }
+
+    public function make_transaksi()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $item = $this->utbkShopModel->where(['id_item' => $this->request->getVar('id')])->first();
+        $transaksi_id = Uuid::uuid4();
+        if ($item['discount'] != 0) {
+            $price = $item['price'] - (($item['price'] * $item['discount']) / 100);
+        } else {
+            $price = $item['price'];
+        }
+
+        $this->transaksiUserModel->save([
+            'id_transaksi' => $transaksi_id,
+            'id_user' => $user['slug'],
+            'nama_user' => $user['username'],
+            'id_item_beli' =>  $item['id_item'],
+            'price' => $price,
+            'status_pembayaran' => '0'
+        ]);
+
+        return redirect()->to(base_url('home/pembayaran'));
+    }
+
+    // INVOICE
+    public function pembayaran()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $data = [
+            'title' => 'Simulasi Schuler.id',
+            'user_name' => $user['username'],
+        ];
+
+        return view('home/invoice/invoice', $data);
     }
 
     // ERROR

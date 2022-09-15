@@ -23,13 +23,13 @@
                     <span class="title-sidebar-item">PEMBELIAN</span>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                    <a class="sidebar-link" href="<?= base_url('home/beli_paket'); ?>" aria-expanded="false">
                         <i class="fa-solid fa-store"></i>
                         <span class="hide-menu">Beli Paket UTBK</span>
                     </a>
                 </li>
                 <li class="sidebar-item last-btn">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                    <a class="sidebar-link" href="<?= base_url('home/pembayaran'); ?>" aria-expanded="false">
                         <i class="fa-solid fa-credit-card"></i>
                         <span class="hide-menu">Invoice & Pembayaran</span>
                     </a>

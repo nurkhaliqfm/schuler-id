@@ -78,6 +78,11 @@ a {
   text-decoration: none;
 }
 
+body.modal-open {
+  overflow: hidden;
+  /* position: fixed; */
+}
+
 .alert__box {
   font-size: 0.8rem;
   background-color: var(--color-2);
@@ -97,7 +102,7 @@ a {
 .modal-header .custom_modal_closs {
   margin-right: 10px;
   display: block;
-  margin-top: 4px;
+  font-size: 0.7rem;
 }
 /* Template Header Start*/
 .container_header_1 .box-title {
@@ -157,6 +162,35 @@ a {
   color: var(--main-color);
   background-color: var(--color-5);
 }
+
+.box_item__footer .button__container .tab_button_style {
+  padding: 5px;
+  border: 1px solid var(--color-5);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-5);
+  margin-right: 10px;
+  margin-top: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.box_item__footer .button__container .tab_button_style.active {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.box_item__footer .button__container .tab_button_style:hover {
+  color: var(--main-color);
+  background-color: var(--color-5);
+}
+
+.box_item__footer .button__container .tab_button_style.active:hover {
+  color: var(--color-5);
+  background-color: var(--main-color);
+}
+
 /* Template Header End*/
 
 /* Template Box Item Start */
@@ -214,7 +248,7 @@ a {
 
 .box_item__Btn {
   border: 1px solid var(--color-5);
-  margin: 2px 0px;
+  margin: 2px 2px;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 400;
@@ -798,6 +832,58 @@ Main Content
 
 .alert__box.super_camp_utbk {
   width: 100%;
+}
+
+/* BELI PAKET */
+.container__body.paket__container {
+  display: flex;
+  justify-content: center;
+}
+
+.container__body.paket__container .small-box {
+  max-width: 300px;
+  margin: 5px 10px;
+  justify-content: flex-start;
+  min-height: 450px;
+}
+
+.container_paket.small-box .box_body__title {
+  color: var(--color-question-number-active);
+  font-weight: 700;
+  /* font-size: 1.5rem; */
+}
+
+.container_paket.small-box .box_body__subtitle {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.alert-belipaket {
+  font-size: 0.6rem;
+  background-color: var(--color-danger-border);
+  color: var(--main-color);
+  margin-right: 4px;
+  padding: 2px 4px;
+}
+
+.box_item__header .discount_paket .price {
+  color: black;
+  text-decoration: line-through;
+  font-size: 0.8rem;
+}
+
+.box_item__body.paket_body {
+  text-align: start;
+  font-size: 0.8rem;
+}
+
+.modal-body.modalChart {
+  font-size: 0.9rem;
+}
+
+/* INVOICE */
+.invoice_alert {
+  padding: 5px 10px;
 }
 
 /* MENU UTBK */
@@ -1573,6 +1659,11 @@ Responsive
     display: none;
   }
 
+  /* Shop */
+  .container__body.paket__container {
+    flex-wrap: wrap;
+  }
+
   /* List Hasil Latihan */
   .result_body .question-container {
     width: calc(100vw - 70px);
@@ -1925,6 +2016,7 @@ Responsive
 
   .box_item__container .box_item__footer {
     overflow-y: scroll;
+    padding: 5px;
   }
 
   .box_item__body.sidebar_body_container {

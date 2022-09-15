@@ -39,7 +39,7 @@
                             <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
                                 <i class="fa-solid fa-play"></i><span>Kerjakan</span>
                             </a>
-                            <a href="<?= base_url('home/daftar_latihan'); ?>" class="close__simulation__Btn">
+                            <a href="<?= base_url('home/latihan_home'); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>
                             </a>
                         </div>
