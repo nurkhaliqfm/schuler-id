@@ -104,6 +104,7 @@ body.modal-open {
   display: block;
   font-size: 0.7rem;
 }
+
 /* Template Header Start*/
 .container_header_1 .box-title {
   margin-bottom: 0px;
@@ -257,6 +258,7 @@ body.modal-open {
 .box_item__Btn span {
   margin-left: 5px;
 }
+
 .box_item__Btn.selected {
   color: var(--main-color);
   background-color: var(--color-5);
@@ -291,6 +293,7 @@ body.modal-open {
   color: var(--color-warning-border);
   border: 1px solid var(--color-warning-border);
 }
+
 /* Template Box Item End */
 
 /* Popup Modal Template Start */
@@ -337,6 +340,7 @@ body.modal-open {
 .modal-footer .button__container .modal-style {
   font-size: 0.9rem;
 }
+
 /* Popup Modal Template End */
 
 /* Table Template */
@@ -445,6 +449,7 @@ Navbar
   margin-top: auto;
   margin-bottom: auto;
 }
+
 .navbar .navbar-profil .border-profil {
   margin: 0px 5px;
   border: 2px solid var(--color-1);
@@ -603,6 +608,7 @@ Sidebar Nav
   font-size: 1rem;
   vertical-align: baseline;
 }
+
 .sidebar-nav .sidebar-link span {
   padding-right: 8px;
   font-size: 0.9rem;
@@ -884,6 +890,135 @@ Main Content
 /* INVOICE */
 .invoice_alert {
   padding: 5px 10px;
+}
+
+.container_invoice {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.container_invoice .invoice_box_header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container_invoice .header__desc {
+  text-align: start;
+  padding: 10px;
+  width: 300px;
+}
+
+.container_invoice .header__desc div {
+  display: grid;
+  grid-template-columns: 0.2fr 0.1fr 1fr;
+}
+
+.container_invoice .header__desc .name {
+  width: 62px;
+}
+
+.container_invoice .box_body__title {
+  color: black;
+  font-weight: 200;
+  font-size: 0.9rem;
+}
+
+.alert-invoice {
+  padding: 2px 5px;
+  background-color: var(--main-color);
+}
+
+.alert-invoice.waiting {
+  background-color: var(--color-3);
+  color: var(--color-6);
+}
+
+.alert-invoice.success {
+  background-color: var(--color-question-number-active);
+  color: var(--main-color);
+}
+
+.alert-invoice.cancel {
+  background-color: var(--color-danger-border);
+  color: var(--main-color);
+}
+
+.box_item__body.invoice-body .body__rek {
+  margin-bottom: 30px;
+}
+
+.box_item__body.invoice-body .body__rek .rek_title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.box_item__body.invoice-body .body__rek .rek_data {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.box_item__body.invoice-body .tab_button_style {
+  border: 0px;
+  border-radius: 5px;
+  padding: 2px 5px;
+  background-color: var(--color-2);
+  color: var(--color-5);
+}
+
+.invoice-body .body__nominal {
+  text-align: start;
+}
+
+.invoice-body .body__nominal .nominal_title {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.invoice-body .body__nominal .nominal_value {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.invoice-body .body__nominal .nominal_desc {
+  font-size: 0.7rem;
+}
+
+.invoice_footer .button__container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.invoice_footer .button__container .tab_button_style {
+  width: 180px;
+  margin-right: 0;
+}
+
+.invoice_footer .button__container .tab_button_style.deleted-Btn {
+  border: 1px solid var(--color-danger-border);
+  background-color: var(--color-danger-border);
+  color: var(--main-color);
+}
+
+.invoice_footer .button__container .tab_button_style.success-Btn {
+  border: 1px solid var(--color-question-number-active);
+  background-color: var(--color-question-number-active);
+  color: var(--main-color);
+}
+
+.invoice_footer .button__container .tab_button_style.deleted-Btn:hover {
+  border: 1px solid var(--color-danger-border);
+  background-color: var(--main-color);
+  color: var(--color-danger-border);
+}
+
+.invoice_footer .button__container .tab_button_style.success-Btn:hover {
+  border: 1px solid var(--color-question-number-active);
+  background-color: var(--main-color);
+  color: var(--color-question-number-active);
 }
 
 /* MENU UTBK */
@@ -1222,6 +1357,7 @@ p {
   font-size: 1rem;
   margin-top: 5px;
 }
+
 .box_item__body.statistik-skor.result_base_category .line-separator {
   border-bottom: 2px solid silver;
   margin: 10px 0px;
@@ -1899,6 +2035,25 @@ Responsive
 @media (min-width: 645px) {
   .container-head-dashboard .head-content {
     width: fit-content;
+  }
+
+  /* INVOICE */
+  .container_invoice .invoice_box_header {
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .container_invoice .header__status span {
+    display: table;
+    margin-top: 30px;
+  }
+
+  .invoice_footer .button__container .tab_button_style {
+    margin-right: 5px;
+  }
+
+  .box_item__container .box_item__footer.invoice_footer {
+    justify-content: left;
   }
 
   /* SUPER CAMP UTBK */

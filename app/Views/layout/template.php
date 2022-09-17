@@ -49,24 +49,24 @@
     <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/mml-chtml.js"></script>
     <script>
         // SESSION CHECKER
-        var url;
+        var url_session;
         if ("<?= $_SESSION['user_level'] ?>" == 'users') {
-            url = "<?= base_url('home/session_login') ?>";
+            url_session = "<?= base_url('home/session_login') ?>";
         } else {
-            url = "<?= base_url('admin/session_login') ?>";
+            url_session = "<?= base_url('admin/session_login') ?>";
         }
-        let urlRedirect = "<?= base_url('login/logout') ?>";
+        let urlRedirectSession = "<?= base_url('login/logout') ?>";
         setInterval(function() {
             const data = {
                 'status': 'session_check'
             }
             var xhttp = new XMLHttpRequest();
-            xhttp.open("POST", url, true);
+            xhttp.open("POST", url_session, true);
             xhttp.onreadystatechange = () => {
                 if (xhttp.readyState == 4 && xhttp.status == 200) {
                     var response = JSON.parse(xhttp.responseText);
                     if (response.status == "Logout") {
-                        window.location.href = urlRedirect;
+                        window.location.href = urlRedirectSession;
                     }
                 }
             };

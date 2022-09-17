@@ -51,6 +51,9 @@ class BaseController extends Controller
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 
+        // Shop
+        $this->UtbkShopModel = new \App\Models\UtbkShopModel();
+
         // TRANSAKSI
         $this->utbkShopModel = new \App\Models\UtbkShopModel();
         $this->akunPremiumModel = new \App\Models\AkunPremiumModel();

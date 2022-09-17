@@ -865,37 +865,128 @@ class Home extends BaseController
         $data = [
             'title' => 'Simulasi Schuler.id',
             'user_name' => $user['username'],
-            'shop_item' => $getShopItem
+            'shop_item' => $getShopItem,
+            'session_id' => $user['slug'],
         ];
 
         return view('home/paket-utbk/home-paket', $data);
     }
 
-    public function make_transaksi()
+    public function payMidtrans()
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'users') {
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $item = $this->utbkShopModel->where(['id_item' => $this->request->getVar('id')])->first();
-        $transaksi_id = Uuid::uuid4();
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $item = $this->utbkShopModel->where(['id_item' => $data['id_item']])->first();
+
         if ($item['discount'] != 0) {
             $price = $item['price'] - (($item['price'] * $item['discount']) / 100);
         } else {
             $price = $item['price'];
         }
 
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $items = array(
+            array(
+                'id' => $item['id_item'],
+                'price' => $price,
+                'quantity' => 1,
+                'name' => 'Paket ' . $item['nama_item']
+            ),
+        );
+
+        $customer_details = array(
+            'first_name'       => $user['username'],
+            'email'            => $user['email'],
+            'phone'            => $user['phone'],
+        );
+
+        $params = [
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => $price,
+            ),
+            'item_details' => $items,
+            'customer_details' => $customer_details
+        ];
+
+        $response = array();
+        $response['status'] = "Success";
+        $response['snapToken'] = \Midtrans\Snap::getSnapToken($params);
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+
+        return $this->response->setJSON($response);
+    }
+
+    public function save_transaksi()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $item = $this->utbkShopModel->where(['id_item' => $data['id_item']])->first();
+
+        if ($item['discount'] != 0) {
+            $price = $item['price'] - (($item['price'] * $item['discount']) / 100);
+        } else {
+            $price = $item['price'];
+        }
+
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $customer_details = array(
+            'first_name' => $user['username'],
+            'email' => $user['email'],
+            'phone' => $user['phone'],
+        );
+
+        $params = [
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => $price,
+            ),
+            'customer_details' => $customer_details
+        ];
+
         $this->transaksiUserModel->save([
-            'id_transaksi' => $transaksi_id,
+            'transaction_id' => $data['transaction_id'],
+            'order_id' => $data['order_id'],
             'id_user' => $user['slug'],
             'nama_user' => $user['username'],
             'id_item_beli' =>  $item['id_item'],
+            'paket_name' => ucfirst($item['slug']),
             'price' => $price,
-            'status_pembayaran' => '0'
+            'payment_type' => $data['payment_type'],
+            'va_number' => $data['va_number'],
+            'bank' => $data['bank'],
+            'transaction_status' => $data['transaction_status'],
+            'transaction_time' => $data['transaction_time']
         ]);
 
-        return redirect()->to(base_url('home/pembayaran'));
+        $response = array();
+        $response['status'] = "Success";
+        $response['snapToken'] = \Midtrans\Snap::getSnapToken($params);
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+
+        return $this->response->setJSON($response);
     }
 
     // INVOICE
@@ -906,12 +997,99 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
+        $transaksi = $this->transaksiUserModel->where(['id_user' => $user['slug']])->findAll();
+        $pending = $this->transaksiUserModel->where([
+            'id_user' => $user['slug'],
+            'transaction_status' => 'pending',
+        ])->countAllResults();
+
+        $cancel = $this->transaksiUserModel->where([
+            'id_user' => $user['slug'],
+            'transaction_status' => 'cancel',
+        ])->countAllResults();
+
+        $settlement = $this->transaksiUserModel->where([
+            'id_user' => $user['slug'],
+            'transaction_status' => 'settlement',
+        ])->countAllResults();
+
+        $status = [
+            'pending' => ['Menunggu Pembayaran', 'waiting'],
+            'settlement' => ['Pembayaran Berhasil', 'success'],
+            'cancel' => ['Pembayaran Dibatalkan', 'cancel'],
+        ];
+
         $data = [
             'title' => 'Simulasi Schuler.id',
             'user_name' => $user['username'],
+            'data_transaksi' => $transaksi,
+            'list_status' => $status,
+            'pending' => $pending,
+            'settlement' => $settlement,
+            'cancel' => $cancel,
         ];
 
         return view('home/invoice/invoice', $data);
+    }
+
+    public function transactionHandle()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $transaksi =  $this->transaksiUserModel->where(['order_id' => $data['order_id']])->first();
+
+        if ($data['user_order'] == 'cek_transaction') {
+            $status = \Midtrans\Transaction::status($data['order_id']);
+            $dataInvoice = json_decode(json_encode($status), true);
+
+            if ($dataInvoice['status_code'] == "200") {
+                $this->transaksiUserModel->update($transaksi['id'], [
+                    'transaction_status' => 'settlement',
+                ]);
+            }
+        } else if ($data['user_order'] == 'cancel') {
+            $status = \Midtrans\Transaction::cancel($data['order_id']);
+
+            $this->transaksiUserModel->update($transaksi['id'], [
+                'transaction_status' => 'cancel',
+            ]);
+        }
+
+        $response = array();
+        $response['status'] = "Success";
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+
+        return $this->response->setJSON($response);
+    }
+
+    public function notificationHandle()
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
+        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+
+        $response = array();
+        $response['data'] = $data;
+        $response['status'] = "Success";
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+
+        return $this->response->setJSON($response);
     }
 
     // ERROR
