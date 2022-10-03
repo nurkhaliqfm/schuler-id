@@ -11,7 +11,6 @@
             </div>
             <div class="modal-footer">
                 <div class="button__container">
-                    <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                     <a id="notif_btn" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="<?= $utbk_session + 1 < $utbk_session_limit ? '#modalSessionNotif' : "#modalDoneNotif"; ?>" class="modal-style start__simulation__Btn">
                         <i class="fa-solid fa-play"></i><span>Submit</span>
                     </a>

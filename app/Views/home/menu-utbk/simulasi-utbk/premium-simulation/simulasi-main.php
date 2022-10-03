@@ -10,6 +10,7 @@
                         <div class="box_item__container container_simulasi large-box">
                             <div class="box_item__body simulasi_body">
                                 <div class="question-container">
+                                    <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                                     <div class="d-flex mb-3 align-items-center question_header">
                                         <div class="quest__number">SOAL NOMOR <span id="question__number"></span></div>
                                         <div class="quest__subject"><span id="question__subject"></span></div>
@@ -60,6 +61,8 @@
 <script>
     let dataItems = <?= json_encode($bank_soal); ?>;
     let dataQuiz = <?= json_encode($quiz_data); ?>;
+    let allQuizData = <?= json_encode($all_quiz_data); ?>;
+    let allTypeSoal = <?= json_encode($all_type_soal); ?>;
     let typeSoal = <?= json_encode($type_soal); ?>;
     let utbk_session = parseInt(<?= json_encode($utbk_session); ?>) + 1;
     let utbk_session_limit = <?= json_encode($utbk_session_limit); ?>;
@@ -69,6 +72,7 @@
     let query = <?= json_encode($_GET['query']); ?>;
     let urlRedirect = "<?= base_url('home/hasil_simulasi'); ?>";
     let urlDone = "<?= base_url('home/save_simulasi_premium') ?>";
+    let urlRanking = "<?= base_url('home/save_simulasi_rangking') ?>";
     let current_page = 1;
     let rows = 1;
     let timerUtbk = <?= $timer ?>;
@@ -76,13 +80,13 @@
     var csrfName = document.getElementById('txt_csrfname').getAttribute('name');
     var csrfHash = document.getElementById('txt_csrfname').value;
 
+    var UserQuizStorage = localStorage.getItem(sessionID);
+    UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+
     DisplayList(dataQuiz, rows, current_page, csrfName, csrfHash)
     NavBtnControl(current_page, dataQuiz)
     PaginationListNumber(dataQuiz, rows)
-    ButtonPagination(dataQuiz, urlDone, urlRedirect);
-
-    var UserQuizStorage = localStorage.getItem(sessionID);
-    UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+    ButtonPagination(dataQuiz, urlDone, urlRedirect, urlRanking);
 
     if (UserQuizStorage['time'] == 0) {
         notif_button.click();

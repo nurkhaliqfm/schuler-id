@@ -12,7 +12,7 @@
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Gunakan browser google chrome versi terbaru agar website dapat diakses dengan lancar tanpa masalah</div>
                         <div class="button__container">
                             <?php foreach ($type_soal as $ts) : ?>
-                                <div class="tab_button tab_button_style" id="<?= $ts['slug']; ?>"><?= strtoupper($ts['slug']); ?></div>
+                                <div style="display: none;" class="tab_button tab_button_style" id="<?= $ts['slug']; ?>"><?= strtoupper($ts['slug']); ?></div>
                             <?php endforeach; ?>
                         </div>
                     </div>

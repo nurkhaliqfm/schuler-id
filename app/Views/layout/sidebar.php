@@ -99,11 +99,32 @@
                         </li>
                     </ul>
                 </li>
-                <li class="sidebar-item last-btn">
+                <li class="sidebar-item">
                     <a class="sidebar-link" href="#" aria-expanded="false">
                         <i class="fa-solid fa-chart-simple"></i>
-                        <span class="hide-menu">Rangking</span>
+                        <span class="hide-menu">
+                            Rangking UTBK
+                            <i class="fas fa-angle-right"></i>
+                        </span>
                     </a>
+                    <ul class="nav-treeview collapse">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/rangking') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-globe"></i>
+                                <span class="hide-menu">
+                                    Rangking Nasional
+                                </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/rangking_universitas') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <span class="hide-menu">
+                                    Rangking Universitas
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="sidebar-item-title">
                     <span class="title-sidebar-item">EVENT</span>
@@ -124,7 +145,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" aria-expanded="false">
+                    <a class="sidebar-link" href="<?= base_url('home/account-setting') ?>" aria-expanded="false">
                         <i class="fa-solid fa-user"></i>
                         <span class="hide-menu">Akun Saya</span>
                     </a>

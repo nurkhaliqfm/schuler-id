@@ -41,9 +41,39 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
+        $getQuizSoal = $this->bankQuizModel->groupBy('quiz_id')->countAllResults();
+
+        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+
+        if ($cekAccount) {
+            $split_deadline = explode("-", $cekAccount['tgl_berakhir']);
+            $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
+
+            $curret_date = date('Y-m-d');
+            $split_current_date = explode("-", $curret_date);
+            $tcurrent_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
+
+            $date_different = strtotime($tcurrent_date_time) - strtotime($deatline_time);
+            $selisih = $date_different / 86400;
+
+            if ($selisih < 0) {
+                $hasil_tgl = -1 * floor($selisih);
+            } else {
+                $hasil_tgl = 0;
+            }
+
+            if ($hasil_tgl > 0) {
+                $getUserQuiz = $this->bankQuizModel->where(['quiz_category' => 'free_simulation'])->groupBy('quiz_id')->countAllResults();
+            }
+        } else {
+            $getUserQuiz = $this->bankQuizModel->where(['quiz_category' => 'free_simulation'])->groupBy('quiz_id')->countAllResults();
+        }
+
         $data = [
             'title' => 'Dasboard Schuler.id',
-            'user_name' => $user['username']
+            'user_name' => $user['username'],
+            'all_quiz' => $getQuizSoal,
+            'user_quiz' => $getUserQuiz,
         ];
 
         return view('home/dashboard', $data);
@@ -155,8 +185,39 @@ class Home extends BaseController
     public function kerjakan_latihan()
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $getId = $this->request->getVar('id');
+        $getQuery = $this->request->getVar('query');
+
         if (session()->get('user_level') != 'users') {
             return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+
+        if ($cekAccount) {
+            $split_deadline = explode("-", $cekAccount['tgl_berakhir']);
+            $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
+
+            $curret_date = date('Y-m-d');
+            $split_current_date = explode("-", $curret_date);
+            $tcurrent_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
+
+            $date_different = strtotime($tcurrent_date_time) - strtotime($deatline_time);
+            $selisih = $date_different / 86400;
+
+            if ($selisih < 0) {
+                $hasil_tgl = -1 * floor($selisih);
+            } else {
+                $hasil_tgl = 0;
+            }
+
+            if ($hasil_tgl > 0) {
+                session()->setFlashdata('failed', "Masa Berlaku Akses Kelas Telah Usai.");
+                return redirect()->to(base_url('home/latihan_guide?id=' . $getId . '&query=' . $getQuery))->withInput();
+            }
+        } else {
+            session()->setFlashdata('failed', "Anda Tidak Memiliki Akses Ke Kelas Ini, Silahkan Melakukan Pembelian Paket Terlebih Dahulu.");
+            return redirect()->to(base_url('home/latihan_guide?id=' . $getId . '&query=' . $getQuery))->withInput();
         }
 
         $query = $this->request->getVar('query');
@@ -327,7 +388,8 @@ class Home extends BaseController
         }
 
         $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'group' => '0'
+            'group' => '0',
+            'slug' => 'basic'
         ])->findAll();
 
         $remakeBankQuiz = [];
@@ -470,7 +532,6 @@ class Home extends BaseController
             'quiz_id' => $data['quiz_id'],
         ])->findAll();
 
-
         foreach ($quizData as $qd) {
             if (array_key_exists($qd['quiz_question'], $data)) {
                 $id_soal[] =  $qd['quiz_question'];
@@ -504,7 +565,8 @@ class Home extends BaseController
         }
 
         $response = array();
-        $response['token'] = csrf_token();
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
         $response['status'] = "Success";
         $response['quiz_id'] = $data['quiz_id'];
         $response['quiz_sub_subject'] = $data['quiz_sub_subject'];
@@ -521,7 +583,8 @@ class Home extends BaseController
         }
 
         $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'group' => '0'
+            'group' => '0',
+            'slug' => 'basic'
         ])->findAll();
 
         $remakeBankQuiz = [];
@@ -590,6 +653,34 @@ class Home extends BaseController
         $query = $this->request->getVar('query');
         $getSession = $this->request->getVar('utbk_session');
 
+        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+
+        if ($cekAccount) {
+            $split_deadline = explode("-", $cekAccount['tgl_berakhir']);
+            $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
+
+            $curret_date = date('Y-m-d');
+            $split_current_date = explode("-", $curret_date);
+            $current_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
+
+            $date_different = strtotime($current_date_time) - strtotime($deatline_time);
+            $selisih = $date_different / 86400;
+
+            if ($selisih >= 1) {
+                $hasil_tgl = floor($selisih);
+            } else {
+                $hasil_tgl = 0;
+            }
+
+            if ($hasil_tgl > 0) {
+                session()->setFlashdata('failed', "Masa Berlaku Akses Kelas Telah Usai.");
+                return redirect()->to(base_url('home/simulasi_premium_guide?id=' . $id . '&query=' . $query))->withInput();
+            }
+        } else {
+            session()->setFlashdata('failed', "Anda Tidak Memiliki Akses Ke Kelas Ini, Silahkan Melakukan Pembelian Paket Terlebih Dahulu.");
+            return redirect()->to(base_url('home/simulasi_premium_guide?id=' . $id . '&query=' . $query))->withInput();
+        }
+
         $bankSoal = $this->bankSoalModel->findAll();
         $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
         $subcategoryQuiz = explode(',', $categoryQuiz['category_item']);
@@ -635,11 +726,19 @@ class Home extends BaseController
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
 
+        $allQuizData = $this->bankQuizModel->where([
+            'quiz_id' => $query,
+        ])->findAll();
+
+        $alltypeSoal = $this->typeSoalModel->findAll();
+
         $data = [
             'title' => 'Simulasi Schuler.id',
             'user_name' => $user['username'],
             'bank_soal' => $bankSoal,
             'quiz_data' => $quizData,
+            'all_quiz_data' => $allQuizData,
+            'all_type_soal' => $alltypeSoal,
             'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
             'session_id' => $users['slug'],
@@ -698,7 +797,8 @@ class Home extends BaseController
         }
 
         $response = array();
-        $response['token'] = csrf_token();
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
         $response['status'] = "Success";
         $response['quiz_id'] = $data['quiz_id'];
         $response['quiz_sub_subject'] = $data['quiz_sub_subject'];
@@ -832,6 +932,119 @@ class Home extends BaseController
         ];
 
         return view('home/menu-utbk/simulasi-utbk/hasil-simulasi', $data);
+    }
+
+    // RANGKING
+    public function save_simulasi_rangking()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        $kampus = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+        $cek_rangking = $this->rangkingSimulasi->where([
+            'id_user' => $user['slug'],
+            'email' => $user['email'],
+        ])->first();
+
+        if ($cek_rangking) {
+            $this->rangkingSimulasi->update($cek_rangking['id'], [
+                'skor' => $data['result'],
+            ]);
+        } else {
+            $this->rangkingSimulasi->save([
+                'id_user' => $user['slug'],
+                'user_name' => $user['username'],
+                'email' => $user['email'],
+                'id_universitas' => $kampus['id_universitas'],
+                'universitas_pilihan' => $kampus['nama_universitas'],
+                'asal_sekolah' => $user['asal_sekolah'],
+                'skor' => $data['result']
+            ]);
+        }
+
+        $response = array();
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+        $response['quiz_id'] = $data['quiz_id'];
+        $response['status'] = "Success";
+
+        return $this->response->setJSON($response);
+    }
+
+    public function rangking()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $data_rangking = $this->rangkingSimulasi->orderBy('skor', 'DESC')->findAll();
+        $data_user = $this->rangkingSimulasi->where([
+            'id_user' => $user['slug'],
+            'email' => $user['email'],
+        ])->first();
+
+        if ($data_user) {
+            $user_rank = array_search($data_user['email'], array_column($data_rangking, 'email'));
+        } else {
+            $user_rank = 0;
+        }
+
+        $data = [
+            'title' => 'Daftar Hasil Latihan Schuler.id',
+            'user_name' => $user['username'],
+            'user_rank' => $user_rank + 1,
+            'data_user' => $data_user,
+            'data_rangking' => $data_rangking
+        ];
+
+        return view('home/menu-utbk/rangking', $data);
+    }
+
+    public function rangking_universitas()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $query = $this->request->getVar('keyword');
+        $kampus = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+        if ($query) {
+            $data_rangking = $this->rangkingSimulasi->where(['id_universitas' => $query])->orderBy('skor', 'DESC')->findAll();
+        } else {
+            $data_rangking = $this->rangkingSimulasi->where(['id_universitas' => $kampus['id_universitas']])->orderBy('skor', 'DESC')->findAll();
+        }
+
+        $data_user = $this->rangkingSimulasi->where([
+            'id_user' => $user['slug'],
+            'email' => $user['email'],
+        ])->first();
+
+
+        if ($data_user) {
+            $user_rank = array_search($data_user['email'], array_column($data_rangking, 'email'));
+        } else {
+            $user_rank = 0;
+        }
+
+        $data = [
+            'title' => 'Daftar Hasil Latihan Schuler.id',
+            'user_name' => $user['username'],
+            'user_rank' => $user_rank + 1,
+            'data_user' => $data_user,
+            'university_list' =>  $this->universitasModel->findAll(),
+            'kampus' =>  $kampus,
+            'data_rangking' => $data_rangking
+        ];
+
+        return view('home/menu-utbk/rangking-universitas', $data);
     }
 
     public function session_login()
@@ -1056,6 +1269,31 @@ class Home extends BaseController
                 $this->transaksiUserModel->update($transaksi['id'], [
                     'transaction_status' => 'settlement',
                 ]);
+
+                $email = session()->get('username');
+                $user = $this->usersModel->where(['email' => $email])->first();
+
+                $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+
+                if ($cekAccount) {
+                    $tgl_start = explode("-", $cekAccount['tgl_berakhir']);
+                    $year = mktime(0, 0, 0, $tgl_start[1], $tgl_start[0] + 365, $tgl_start[2]);
+                    $tgl_end = date("d-m-Y", $year);
+
+                    $this->akunPremiumModel->update($cekAccount['id'], [
+                        'tgl_berakhir' => $tgl_end
+                    ]);
+                } else {
+                    $tgl_start = date('d-m-Y');
+                    $year = mktime(0, 0, 0, date("n"), date("j") + 360, date('Y'));
+                    $tgl_end = date("d-m-Y", $year);
+
+                    $this->akunPremiumModel->save([
+                        'user_id' => $user['slug'],
+                        'tgl_mulai' => $tgl_start,
+                        'tgl_berakhir' => $tgl_end
+                    ]);
+                }
             }
         } else if ($data['user_order'] == 'cancel') {
             $status = \Midtrans\Transaction::cancel($data['order_id']);
@@ -1090,6 +1328,135 @@ class Home extends BaseController
         $response['value'] = csrf_hash();
 
         return $this->response->setJSON($response);
+    }
+
+    // ACCOUNT SETTING
+    public function account()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $kampus = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+        $data = [
+            'title' => 'Simulasi Schuler.id',
+            'user_name' => $user['username'],
+            'data' => $user,
+            'kampus' =>  $kampus,
+            'university_list' =>  $this->universitasModel->findAll(),
+            'validation' => \Config\Services::validation()
+        ];
+
+        return view('home/akun/account-setting', $data);
+    }
+
+    public function update_sekolah()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        if (!$this->validate([
+            'asal_sekolah' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Asal Sekolah Harus Dipilih',
+                ]
+            ],
+        ])) {
+            session()->setFlashdata('failed', "Gagal Mengubah Asal Sekolah.");
+            return redirect()->to(base_url('home/account-setting'))->withInput();
+        }
+
+        $this->usersModel->update($user['id'], [
+            'asal_sekolah' => $this->request->getVar('asal_sekolah'),
+        ]);
+
+        $cek_rangking = $this->rangkingSimulasi->where([
+            'id_user' => $user['slug'],
+            'email' => $user['email'],
+        ])->first();
+
+        if ($cek_rangking) {
+            $this->rangkingSimulasi->update($cek_rangking['id'], [
+                'asal_sekolah' => $this->request->getVar('asal_sekolah'),
+            ]);
+        }
+
+        session()->setFlashdata('success', "Berhasil Mengubah Asal Sekolah");
+        return redirect()->to(base_url('home/account-setting'))->withInput();
+    }
+
+    public function update_universitas()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        if (!$this->validate([
+            'kampus_1' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Kampus Harus Dipilih',
+                ]
+            ],
+        ])) {
+            session()->setFlashdata('failed', "Gagal Mengubah Kampus.");
+            return redirect()->to(base_url('home/account-setting'))->withInput();
+        }
+
+        $this->usersModel->update($user['id'], [
+            'universitas_pilihan' => $this->request->getVar('kampus_1'),
+        ]);
+
+        $cek_rangking = $this->rangkingSimulasi->where([
+            'id_user' => $user['slug'],
+            'email' => $user['email'],
+        ])->first();
+
+        $getUniversitas = $this->universitasModel->where(['id_universitas' => $this->request->getVar('kampus_1')])->first();
+
+        if ($cek_rangking) {
+            $this->rangkingSimulasi->update($cek_rangking['id'], [
+                'id_universitas' => $getUniversitas['id_universitas'],
+                'universitas_pilihan' => $getUniversitas['nama_universitas'],
+            ]);
+        }
+
+        session()->setFlashdata('success', "Berhasil Mengubah Universitas Impian");
+        return redirect()->to(base_url('home/account-setting'))->withInput();
+    }
+
+    public function update_pass()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        if (!$this->validate([
+            'password' => [
+                'rules' => 'required|min_length[8]',
+                'errors' => [
+                    'required' => 'Harus Diisi',
+                    'min_length' => 'Pass Minimal 8 Karakter'
+                ]
+            ],
+        ])) {
+            session()->setFlashdata('failed', "Gagal Mengubah Password.");
+            return redirect()->to(base_url('home/account-setting'))->withInput();
+        }
+
+        $this->usersModel->update($user['id'], [
+            'password' => $this->request->getVar('password'),
+        ]);
+
+        session()->setFlashdata('success', "Berhasil Mengubah Password");
+        return redirect()->to(base_url('home/account-setting'))->withInput();
     }
 
     // ERROR

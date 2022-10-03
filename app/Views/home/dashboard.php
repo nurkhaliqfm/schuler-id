@@ -15,7 +15,7 @@
                                 PAKET<br>TERSEDIA
                             </div>
                             <div class="content-value">
-                                2
+                                <?= $all_quiz ?>
                             </div>
                         </div>
                         <div class="line-separator left"></div>
@@ -27,7 +27,7 @@
                                 PAKET<br>YANG DIBELI
                             </div>
                             <div class="content-value">
-                                1
+                                <?= $user_quiz ?>
                             </div>
                         </div>
                         <div class="line-separator right"></div>
@@ -39,7 +39,7 @@
                                 REFERAL<br>AKTIF
                             </div>
                             <div class="content-value">
-                                1
+                                0
                             </div>
                         </div>
                     </div>

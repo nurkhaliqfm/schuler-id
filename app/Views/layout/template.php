@@ -20,6 +20,11 @@
     <link href="<?= base_url('node_modules/@wiris/mathtype-froala3/icon/css/wirisplugin.css') ?>" />
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('assets/css/theme-style.css?v=') . time() ?>">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/tempusdominus-bootstrap-4.min.css') ?>">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/select2.min.css') ?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/css/select2-bootstrap4.min.css') ?>">
 
     <!-- jQuery -->
     <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
@@ -27,6 +32,13 @@
     <script src="<?= base_url('assets/js/md5.js') ?>"></script>
     <!-- Bootstrap 5 -->
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+    <!-- Select2 -->
+    <script src="<?php echo base_url('assets/js/select2.full.min.js') ?>"></script>
+    <!-- InputMask -->
+    <script src="<?php echo base_url('assets/js/moment.min.js') ?>"></script>
+    <script src="<?php echo base_url('assets/js/jquery.inputmask.min.js') ?>"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="<?php echo base_url('assets/js/tempusdominus-bootstrap-4.min.js') ?>"></script>
     <!-- Froala -->
     <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/froala_editor.pkgd.min.js') ?>"></script>
     <script type="text/javascript" src="<?= base_url('node_modules/froala-editor/js/plugins/image.min.js') ?>"></script>

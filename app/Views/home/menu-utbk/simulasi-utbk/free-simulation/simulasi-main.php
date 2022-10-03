@@ -10,6 +10,7 @@
                         <div class="box_item__container container_simulasi large-box">
                             <div class="box_item__body simulasi_body">
                                 <div class="question-container">
+                                    <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                                     <div class="d-flex mb-3 align-items-center question_header">
                                         <div class="quest__number">SOAL NOMOR <span id="question__number"></span></div>
                                         <div class="quest__subject"><span id="question__subject"></span></div>

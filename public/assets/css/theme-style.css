@@ -369,6 +369,10 @@ body.modal-open {
   border-bottom-width: 0px;
 }
 
+.result-table.list__result tfoot td {
+  border-bottom-width: 0px;
+}
+
 .result .table_button {
   padding: 5px;
   border: 1px solid var(--color-5);
@@ -1490,10 +1494,66 @@ p {
   float: right;
 }
 
+/* ACCOUNT SETTING */
+.alert__box.account_setting-alert {
+  padding: 10px;
+  background-color: var(--color-4);
+  width: 100%;
+}
+
+.account_setting-alert .button__container {
+  text-align: end;
+}
+
+.account_setting-alert .button__container .save-btn,
+.account_setting-alert .button__container .batal-btn {
+  padding: 2px 5px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.account_setting-alert .button__container .save-btn {
+  border: 1px solid var(--color-1);
+  background-color: var(--color-2);
+  color: var(--color-1);
+}
+
+.account_setting-alert .button__container .batal-btn {
+  border: 1px solid var(--color-danger-border);
+  background-color: var(--color-danger);
+  color: var(--color-danger-border);
+}
+
 /* ---------------
 Admin Section
 ----------------*/
 /* Default */
+.floating-info {
+  position: fixed;
+  right: 1rem;
+  bottom: 5%;
+  right: 50px;
+  background-color: var(--main-color);
+  box-shadow: var(--shadow-white-box);
+  border: 2px solid black;
+  padding: 0.3rem;
+  border-radius: 0.4rem;
+  z-index: 100;
+}
+
+.floating-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.floating-item div {
+  margin: 2px 5px;
+}
+
 .bank__soalBtn {
   padding: 2px 20px;
   font-size: 0.9rem;
@@ -1876,6 +1936,15 @@ Responsive
 
   .box_item__body.sidebar_body_container {
     flex-direction: column;
+  }
+
+  .button__container.rangking_search_btn {
+    justify-content: end;
+  }
+
+  .button__container.rangking_search_btn .tab_button_style {
+    margin-right: 0px;
+    border-radius: 5px;
   }
 
   /* Sidebar Nav */

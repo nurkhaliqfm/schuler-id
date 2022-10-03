@@ -17,6 +17,8 @@
 
     <!-- jQuery -->
     <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
+    <!-- MD5 Script -->
+    <script src="<?= base_url('assets/js/md5.js') ?>"></script>
     <!-- Bootstrap 5 -->
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 </head>

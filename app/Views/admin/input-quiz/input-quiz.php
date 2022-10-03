@@ -10,6 +10,10 @@
                 <?= session()->getFlashdata('failed'); ?>
             </div>
         <?php endif; ?>
+        <!-- Input Floating Info -->
+        <div class="floating-info">
+            <div id="floatingContainer" class="floating-countainer"></div>
+        </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
@@ -97,6 +101,7 @@
             checkbox.className = "custom-control-input";
             checkbox.type = "checkbox";
             checkbox.value = categoryItems[i]['id_soal'];
+            checkbox.setAttribute('checkbox-name', query[0][categoryItems[i]['sub_type_soal']])
             checkbox.name = "quiz_list_question[]";
             itemCheckbox.appendChild(checkbox);
             itemJenis.innerHTML = query[0][categoryItems[i]['sub_type_soal']];
@@ -130,6 +135,52 @@
             element.setAttribute('style', '');
         });
 
+        let floatingCountainer = document.getElementById('floatingContainer');
+        floatingCountainer.innerHTML = '';
+        var dataItem = {};
+        for (let k in typeItems[0]) {
+            if (k != 'type_soal_id' && k != 'type_soal_name') {
+                var floatingItem = document.createElement("div");
+                floatingItem.className = 'floating-item';
+                floatingItem.setAttribute('data-name', typeItems[0][k]);
+
+                var floatingTitle = document.createElement("div");
+                floatingTitle.className = 'floating-title';
+                floatingTitle.innerHTML = typeItems[0][k];
+
+                var floatingValue = document.createElement("div");
+                floatingValue.className = 'floating-value';
+                floatingValue.innerHTML = '0';
+
+                floatingItem.appendChild(floatingTitle);
+                floatingItem.appendChild(floatingValue);
+
+                floatingCountainer.appendChild(floatingItem);
+                dataItem[typeItems[0][k]] = 0
+            }
+        }
+
+        selectedItem.forEach(element => {
+            element.addEventListener('click', (el) => {
+                var build = {};
+                for (let k in dataItem) {
+                    build[k] = 0
+                }
+                selectedItem.forEach(element => {
+                    let element_item = element.firstChild.firstElementChild;
+                    let element_name = element_item.attributes['checkbox-name'].nodeValue;
+                    if (element_item.checked == true) {
+                        build[element_name] = build[element_name] + 1
+                    }
+                });
+
+                for (let k in dataItem) {
+                    dataItem[k] = build[k];
+                    document.querySelector('.floating-item[data-name="' + k + '"] .floating-value').innerHTML = build[k];
+                }
+            })
+        })
+
         PopUp(dataCategory);
     }
 
@@ -156,6 +207,71 @@
                 selectedItem.forEach(element => {
                     element.setAttribute('style', '');
                 });
+
+                let floatingCountainer = document.getElementById('floatingContainer');
+                floatingCountainer.innerHTML = '';
+                var dataItem = {};
+                for (let k in item) {
+                    if (k != 'type_soal_id' && k != 'type_soal_name') {
+                        var floatingItem = document.createElement("div");
+                        floatingItem.className = 'floating-item';
+                        floatingItem.setAttribute('data-name', item[k]);
+
+                        var floatingTitle = document.createElement("div");
+                        floatingTitle.className = 'floating-title';
+                        floatingTitle.innerHTML = item[k];
+
+                        var floatingValue = document.createElement("div");
+                        floatingValue.className = 'floating-value';
+                        floatingValue.innerHTML = '0';
+
+                        floatingItem.appendChild(floatingTitle);
+                        floatingItem.appendChild(floatingValue);
+
+                        floatingCountainer.appendChild(floatingItem);
+                        dataItem[item[k]] = 0
+                    }
+                }
+
+                selectedItem.forEach(element => {
+                    var build = {};
+                    for (let k in dataItem) {
+                        build[k] = 0
+                    }
+
+                    selectedItem.forEach(element => {
+                        let element_item = element.firstChild.firstElementChild;
+                        let element_name = element_item.attributes['checkbox-name'].nodeValue;
+                        if (element_item.checked == true) {
+                            build[element_name] = build[element_name] + 1
+                        }
+                    });
+
+                    for (let k in dataItem) {
+                        dataItem[k] = build[k];
+                        document.querySelector('.floating-item[data-name="' + k + '"] .floating-value').innerHTML = build[k];
+                    }
+
+                    element.addEventListener('click', (el) => {
+                        var build = {};
+                        for (let k in dataItem) {
+                            build[k] = 0
+                        }
+
+                        selectedItem.forEach(element => {
+                            let element_item = element.firstChild.firstElementChild;
+                            let element_name = element_item.attributes['checkbox-name'].nodeValue;
+                            if (element_item.checked == true) {
+                                build[element_name] = build[element_name] + 1
+                            }
+                        });
+
+                        for (let k in dataItem) {
+                            dataItem[k] = build[k];
+                            document.querySelector('.floating-item[data-name="' + k + '"] .floating-value').innerHTML = build[k];
+                        }
+                    })
+                })
 
                 PopUp(dataCategory);
             })

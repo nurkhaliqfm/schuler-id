@@ -174,6 +174,12 @@ class Login extends BaseController
                     'required' => 'Wajib Diisi'
                 ]
             ],
+            'asalSekolah' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Wajib Diisi'
+                ]
+            ],
         ])) {
             session()->setFlashdata('failed', "Gagal Menambahkan Kampus Impian.");
             if ($query == 'login') {
@@ -188,6 +194,7 @@ class Login extends BaseController
 
         $this->usersModel->update($getUser['id'], [
             'universitas_pilihan' => $kampus_1['id_universitas'],
+            'asal_sekolah' => $this->request->getVar('asalSekolah'),
         ]);
 
         if ($query == 'login') {

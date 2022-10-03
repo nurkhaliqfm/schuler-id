@@ -236,7 +236,8 @@ function ButtonPagination(items, url, urlRedirect) {
 
     if (
       UserQuizStorage["session_timeout"] == 0 ||
-      UserQuizStorage["session_timeout"] == null
+      UserQuizStorage["session_timeout"] == null ||
+      UserQuizStorage["session_timeout"] < 0
     ) {
       UserQuizStorage["session_timeout"] = 10;
       localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
@@ -275,7 +276,8 @@ function ButtonPagination(items, url, urlRedirect) {
       xhttp.onreadystatechange = () => {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
           var response = JSON.parse(xhttp.responseText);
-          $(".txt_csrfname").val(response.token);
+          document.getElementById("txt_csrfname").value = response["value"];
+          document.getElementById("txt_csrfname").name = response["name"];
 
           if (response.status == "Success") {
             setTimeout(() => {

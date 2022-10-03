@@ -8,6 +8,8 @@ use App\Models\BankQuizModel;
 use App\Models\CategoryQuizModel;
 use App\Models\QuizModel;
 use App\Models\UniversitasModel;
+use App\Models\UserHistoryModel;
+use App\Models\UserHistoryUtbkModel;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -19,6 +21,8 @@ class Admin extends BaseController
     protected $categoryQuizModel;
     protected $quizModel;
     protected $universitasModel;
+    protected $userHistoryModel;
+    protected $userHistoryUtbkModel;
 
     public function __construct()
     {
@@ -28,6 +32,8 @@ class Admin extends BaseController
         $this->categoryQuizModel = new CategoryQuizModel();
         $this->quizModel = new QuizModel();
         $this->universitasModel = new UniversitasModel();
+        $this->userHistoryModel  = new UserHistoryModel();
+        $this->userHistoryUtbkModel  = new UserHistoryUtbkModel();
     }
 
     public function index()
@@ -809,7 +815,7 @@ class Admin extends BaseController
         }
 
         $remakBankSoal = [];
-        $getBankSoal = $this->bankSoalModel->orderBy('type_soal', 'sub_type_soal')->findAll();
+        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
         foreach ($getBankSoal as $bs) {
             for ($i = 0; $i < sizeof($subjectName); $i++) {
                 $cekSoal = $this->bankQuizModel->where(['quiz_question' => $bs['id_soal']])->findAll();
@@ -954,6 +960,26 @@ class Admin extends BaseController
         ])->first();
 
         if ($bankQuiz) {
+            $cekHistory = $this->userHistoryModel->where([
+                'quiz_id' => $bankQuiz['quiz_id'],
+            ])->findAll();
+
+            if ($cekHistory) {
+                foreach ($cekHistory as $h) {
+                    $this->userHistoryModel->delete($h['id']);
+                }
+            }
+
+            $cekHistoryUtbk = $this->userHistoryUtbkModel->where([
+                'quiz_id' => $bankQuiz['quiz_id'],
+            ])->findAll();
+
+            if ($cekHistoryUtbk) {
+                foreach ($cekHistoryUtbk as $h) {
+                    $this->userHistoryUtbkModel->delete($h['id']);
+                }
+            }
+
             $this->bankQuizModel->delete($bankQuiz['id']);
             return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '?slug=' . $slug . '&' . 'u=' . $u));
         } else {
@@ -993,6 +1019,26 @@ class Admin extends BaseController
             ]);
         }
 
+        $cekHistory = $this->userHistoryModel->where([
+            'quiz_id' => $bankQuiz['quiz_id'],
+        ])->findAll();
+
+        if ($cekHistory) {
+            foreach ($cekHistory as $h) {
+                $this->userHistoryModel->delete($h['id']);
+            }
+        }
+
+        $cekHistoryUtbk = $this->userHistoryUtbkModel->where([
+            'quiz_id' => $bankQuiz['quiz_id'],
+        ])->findAll();
+
+        if ($cekHistoryUtbk) {
+            foreach ($cekHistoryUtbk as $h) {
+                $this->userHistoryUtbkModel->delete($h['id']);
+            }
+        }
+
         return redirect()->to(base_url('admin/detail_quiz' . '/' . $quiz_id . '?slug=' . $slug . '&' . 'u=' . $u));
     }
 
@@ -1005,6 +1051,27 @@ class Admin extends BaseController
         $uri = $this->request->getVar('u');
         $slug = $this->request->getVar('slug');
         $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
+        $cekHistory = $this->userHistoryModel->where([
+            'quiz_id' => $bankQuiz[0]['quiz_id'],
+        ])->findAll();
+
+
+        if ($cekHistory) {
+            foreach ($cekHistory as $h) {
+                $this->userHistoryModel->delete($h['id']);
+            }
+        }
+
+        $cekHistoryUtbk = $this->userHistoryUtbkModel->where([
+            'quiz_id' => $bankQuiz[0]['quiz_id'],
+        ])->findAll();
+
+        if ($cekHistoryUtbk) {
+            foreach ($cekHistoryUtbk as $h) {
+                $this->userHistoryUtbkModel->delete($h['id']);
+            }
+        }
+
         foreach ($bankQuiz as $bq) {
             $this->bankQuizModel->delete($bq['id']);
         }

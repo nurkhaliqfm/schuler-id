@@ -6,6 +6,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
+                    <?php if (session()->getFlashdata('failed')) : ?>
+                        <div class="alert alert-danger" role="alert">
+                            <?= session()->getFlashdata('failed'); ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="head__simulationfree">
                         <h3 class="box-title simulation">Persiapan <span>Latihan</span></h3>
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Gunakan browser google chrome versi terbaru agar website dapat diakses dengan lancar tanpa masalah</div>

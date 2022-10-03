@@ -36,6 +36,12 @@ $routes->get('/', 'Login::index');
 $routes->get('latihan_home/(:any)', 'Home::latihan_home/$1');
 $routes->get('input_quiz/(:any)', 'Admin::input_quiz/$1');
 
+$routes->get('home/account-setting', 'Home::account/');
+$routes->post('home/update-universitas', 'Home::update_universitas/');
+$routes->post('home/update-password', 'Home::update_pass/');
+$routes->post('home/update-sekolah', 'Home::update_sekolah/');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

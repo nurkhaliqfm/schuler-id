@@ -239,37 +239,45 @@ function UserResult() {
   let allPart = [part_1, part_2];
 
   let resultData = {};
+  let allPartMode = 0;
   for (let x = 0; x < allPart.length; x++) {
     let benar = 0;
     let numberCategory = 0;
 
-    for (let i = 0; i < allPart[x].length; i++) {
-      let getType = typeSoal.find(
-        ({ id_main_type_soal }) => id_main_type_soal === allPart[x][i].id
-      );
-
-      let splitAllType = getType["list_type_soal_id"].split(",");
-      numberCategory = numberCategory + splitAllType.length;
-
-      let soalByCategory = dataQuiz.filter((obj) => {
-        return obj.quiz_subject == allPart[x][i].id;
-      });
-
-      for (let j = 0; j < soalByCategory.length; j++) {
-        let dataSoal = dataItems.find(
-          ({ id_soal }) => id_soal === soalByCategory[j].quiz_question
+    if (allPart[x].length > 0) {
+      for (let i = 0; i < allPart[x].length; i++) {
+        let getType = typeSoal.find(
+          ({ id_main_type_soal }) => id_main_type_soal === allPart[x][i].id
         );
 
-        if (dataSoal.jawaban == md5(userAnsware[dataSoal.id_soal])) {
-          benar++;
+        let splitAllType = getType["list_type_soal_id"].split(",");
+        numberCategory = numberCategory + splitAllType.length;
+
+        let soalByCategory = dataQuiz.filter((obj) => {
+          return obj.quiz_subject == allPart[x][i].id;
+        });
+
+        for (let j = 0; j < soalByCategory.length; j++) {
+          let dataSoal = dataItems.find(
+            ({ id_soal }) => id_soal === soalByCategory[j].quiz_question
+          );
+
+          if (dataSoal.jawaban == md5(userAnsware[dataSoal.id_soal])) {
+            benar++;
+          }
         }
       }
+      allPartMode++;
+      resultData[x] = [(benar * point) / numberCategory];
     }
-    resultData[x] = [(benar * point) / numberCategory];
   }
 
-  result =
-    (resultData[0] * 40) / 100 + (resultData[1] * 60) / 100 + defaulPoint;
+  if (allPartMode > 1) {
+    result =
+      (resultData[0] * 40) / 100 + (resultData[1] * 60) / 100 + defaulPoint;
+  } else {
+    result = (resultData[1] * 100) / 100 + defaulPoint;
+  }
 
   return result;
 }
