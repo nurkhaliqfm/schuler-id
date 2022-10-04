@@ -41,7 +41,7 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $getQuizSoal = $this->bankQuizModel->groupBy('quiz_id')->countAllResults();
+        $getQuizSoal = $this->utbkShopModel->countAllResults();
 
         $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
 
@@ -63,10 +63,10 @@ class Home extends BaseController
             }
 
             if ($hasil_tgl > 0) {
-                $getUserQuiz = $this->bankQuizModel->where(['quiz_category' => 'free_simulation'])->groupBy('quiz_id')->countAllResults();
+                $getUserQuiz = $this->utbkShopModel->where(['slug' => 'gratis'])->countAllResults();
             }
         } else {
-            $getUserQuiz = $this->bankQuizModel->where(['quiz_category' => 'free_simulation'])->groupBy('quiz_id')->countAllResults();
+            $getUserQuiz = $this->utbkShopModel->where(['slug' => 'gratis'])->countAllResults();
         }
 
         $data = [
