@@ -78,15 +78,24 @@
     function DefaultTabButton(typeItems, categoryItems) {
         document.getElementById(typeItems[0].slug).classList.add('active');
 
-        let data = categoryItems.filter(categoryItems => {
-            return categoryItems.group == typeItems[0].category_group
+        let categoryGroup = typeItems[0].category_group.split(',')
+        var all_data = [];
+        categoryGroup.forEach(element => {
+            let data = categoryItems.filter(categoryItems => {
+                return categoryItems.group == element
+            });
+
+            data.forEach(element => {
+                all_data.push(element)
+            });
+
         });
 
         let data_q = dataBankQuiz.filter(dataBankQuiz => {
             return dataBankQuiz.quiz_category == typeItems[0].slug
         });
 
-        CreateItemOption(data, typeItems[0], data_q);
+        CreateItemOption(all_data, typeItems[0], data_q);
     }
 
     function TabButtonControl(typeItems, categoryItems) {
@@ -100,15 +109,24 @@
 
                 document.getElementById(el.target.id).classList.add("active");
 
-                let data = categoryItems.filter(categoryItems => {
-                    return categoryItems.group == item.category_group
+                let categoryGroup = item.category_group.split(',')
+                var all_data = [];
+                categoryGroup.forEach(element => {
+                    let data = categoryItems.filter(categoryItems => {
+                        return categoryItems.group == element
+                    });
+
+                    data.forEach(element => {
+                        all_data.push(element)
+                    });
+
                 });
 
                 let data_q = dataBankQuiz.filter(dataBankQuiz => {
                     return dataBankQuiz.quiz_category == item.slug
                 });
 
-                CreateItemOption(data, item, data_q);
+                CreateItemOption(all_data, item, data_q);
             })
 
         }

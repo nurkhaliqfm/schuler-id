@@ -15,6 +15,7 @@
                                     <thead>
                                         <tr class="headings">
                                             <td class="text-center heading">Nama</td>
+                                            <td class="text-center heading">Jenis</td>
                                             <td class="text-center heading">Kategori</td>
                                             <td class="text-center heading">Action</td>
                                         </tr>
@@ -23,6 +24,7 @@
                                         <?php foreach ($data_user as $du) : ?>
                                             <tr class="result">
                                                 <td><?= $du['quiz_name']; ?></td>
+                                                <td><?= strtoupper(str_replace('_', ' ', $du['type'])); ?></td>
                                                 <td><?= ucwords($du['category']); ?></td>
                                                 <td>
                                                     <a class="table_button" href="<?= base_url('home/hasil_simulasi?query=') . $du['quiz_id']; ?>">Detail</a>

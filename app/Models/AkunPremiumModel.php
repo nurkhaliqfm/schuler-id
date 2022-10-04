@@ -8,5 +8,5 @@ class AkunPremiumModel extends Model
 {
     protected $table = 'akun_premium';
     protected $useTimestamps = true;
-    protected $allowedFields = ['user_id', 'tgl_mulai', 'tgl_berakhir'];
+    protected $allowedFields = ['user_id', 'paket_name', 'tgl_mulai', 'tgl_berakhir'];
 }

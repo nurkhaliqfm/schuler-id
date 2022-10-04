@@ -103,9 +103,7 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'group' => '0'
-        ])->findAll();
+        $cekCategoryQuiz = $this->categoryQuizModel->findAll();
 
         $typeSoalID = [];
         $filterCategory = [];
@@ -192,26 +190,33 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->findAll();
 
         if ($cekAccount) {
-            $split_deadline = explode("-", $cekAccount['tgl_berakhir']);
-            $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
+            $hasil_tgl = 0;
+            foreach ($cekAccount as $ca) {
+                $split_deadline = explode("-", $ca['tgl_berakhir']);
+                $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
 
-            $curret_date = date('Y-m-d');
-            $split_current_date = explode("-", $curret_date);
-            $tcurrent_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
+                $curret_date = date('Y-m-d');
+                $split_current_date = explode("-", $curret_date);
+                $tcurrent_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
 
-            $date_different = strtotime($tcurrent_date_time) - strtotime($deatline_time);
-            $selisih = $date_different / 86400;
+                $date_different = strtotime($tcurrent_date_time) - strtotime($deatline_time);
+                $selisih = $date_different / 86400;
 
-            if ($selisih < 0) {
-                $hasil_tgl = -1 * floor($selisih);
-            } else {
-                $hasil_tgl = 0;
+                if ($selisih < 0) {
+                    $hasil = -1 * floor($selisih);
+                } else {
+                    $hasil = 0;
+                }
+
+                if ($hasil > $hasil_tgl) {
+                    $hasil_tgl = $hasil;
+                }
             }
 
-            if ($hasil_tgl > 0) {
+            if ($hasil_tgl == 0) {
                 session()->setFlashdata('failed', "Masa Berlaku Akses Kelas Telah Usai.");
                 return redirect()->to(base_url('home/latihan_guide?id=' . $getId . '&query=' . $getQuery))->withInput();
             }
@@ -388,8 +393,7 @@ class Home extends BaseController
         }
 
         $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'group' => '0',
-            'slug' => 'basic'
+            'group' => '2',
         ])->findAll();
 
         $remakeBankQuiz = [];
@@ -397,12 +401,27 @@ class Home extends BaseController
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
+            $countPart = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_sub_subject')->countAllResults();
+            $quizSubject = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_subject')->findAll();
+            $text = "";
+            for ($i = 0; $i < sizeof($quizSubject); $i++) {
+                $data_text = $this->typeSoalModel->where(['id_main_type_soal' => $quizSubject[$i]['quiz_subject']])->first();
+                if ($i == 0) {
+                    $text = $data_text['main_type_soal'];
+                } else if ($i == sizeof($quizSubject) - 1) {
+                    $text = $text . ' & ' . $data_text['main_type_soal'];
+                } else if ($i < sizeof($quizSubject) - 1) {
+                    $text = $text . ', ' . $data_text['main_type_soal'];
+                }
+            }
+
             $dataremakeBankQuiz = array(
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
                 'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * 9,
+                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
 
@@ -414,7 +433,7 @@ class Home extends BaseController
             'user_name' => $user['username'],
             'type_soal' => $cekCategoryQuiz,
             'bank_quiz' => $remakeBankQuiz,
-            'filter_category' => $this->categoryQuizModel->where(['group' => '0'])->findAll()
+            'filter_category' => $this->categoryQuizModel->where(['group' => '2'])->findAll()
         ];
 
         return view('home/menu-utbk/simulasi-utbk/free-simulation/simulasi-home', $data);
@@ -431,6 +450,7 @@ class Home extends BaseController
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $dataQuiz[0]['quiz_category']])->first();
+        $countPart = $this->bankQuizModel->where(['quiz_id' => $query])->groupBy('quiz_sub_subject')->countAllResults();
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
 
@@ -441,6 +461,7 @@ class Home extends BaseController
             'jumlah_soal' => count($dataQuiz),
             'session_id' => $users['slug'],
             'timer' => $timer['quiz_timer'],
+            'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas']
         ];
 
@@ -583,8 +604,7 @@ class Home extends BaseController
         }
 
         $cekCategoryQuiz = $this->categoryQuizModel->where([
-            'group' => '0',
-            'slug' => 'basic'
+            'group' => '2',
         ])->findAll();
 
         $remakeBankQuiz = [];
@@ -592,12 +612,27 @@ class Home extends BaseController
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
+            $countPart = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_sub_subject')->countAllResults();
+            $quizSubject = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_subject')->findAll();
+            $text = "";
+            for ($i = 0; $i < sizeof($quizSubject); $i++) {
+                $data_text = $this->typeSoalModel->where(['id_main_type_soal' => $quizSubject[$i]['quiz_subject']])->first();
+                if ($i == 0) {
+                    $text = $data_text['main_type_soal'];
+                } else if ($i == sizeof($quizSubject) - 1) {
+                    $text = $text . ' & ' . $data_text['main_type_soal'];
+                } else if ($i < sizeof($quizSubject) - 1) {
+                    $text = $text . ', ' . $data_text['main_type_soal'];
+                }
+            }
+
             $dataremakeBankQuiz = array(
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
                 'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * 9,
+                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
 
@@ -609,7 +644,7 @@ class Home extends BaseController
             'user_name' => $user['username'],
             'type_soal' => $cekCategoryQuiz,
             'bank_quiz' => $remakeBankQuiz,
-            'filter_category' => $this->categoryQuizModel->where(['group' => '0'])->findAll()
+            'filter_category' => $this->categoryQuizModel->where(['group' => '2'])->findAll()
         ];
 
         return view('home/menu-utbk/simulasi-utbk/premium-simulation/simulasi-home', $data);
@@ -626,6 +661,7 @@ class Home extends BaseController
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
         $timer = $this->quizModel->where(['slug' => $dataQuiz[0]['quiz_category']])->first();
+        $countPart = $this->bankQuizModel->where(['quiz_id' => $query])->groupBy('quiz_sub_subject')->countAllResults();
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
 
@@ -636,6 +672,7 @@ class Home extends BaseController
             'jumlah_soal' => count($dataQuiz),
             'session_id' => $users['slug'],
             'timer' => $timer['quiz_timer'],
+            'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas']
         ];
 
@@ -653,7 +690,13 @@ class Home extends BaseController
         $query = $this->request->getVar('query');
         $getSession = $this->request->getVar('utbk_session');
 
-        $cekAccount = $this->akunPremiumModel->where(['user_id' => $user['slug']])->first();
+        $bankSoal = $this->bankSoalModel->findAll();
+        $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
+
+        $cekAccount = $this->akunPremiumModel->where([
+            'user_id' => $user['slug'],
+            'paket_name' => $categoryQuiz['slug']
+        ])->first();
 
         if ($cekAccount) {
             $split_deadline = explode("-", $cekAccount['tgl_berakhir']);
@@ -672,7 +715,7 @@ class Home extends BaseController
                 $hasil_tgl = 0;
             }
 
-            if ($hasil_tgl > 0) {
+            if ($hasil_tgl == 0) {
                 session()->setFlashdata('failed', "Masa Berlaku Akses Kelas Telah Usai.");
                 return redirect()->to(base_url('home/simulasi_premium_guide?id=' . $id . '&query=' . $query))->withInput();
             }
@@ -681,8 +724,6 @@ class Home extends BaseController
             return redirect()->to(base_url('home/simulasi_premium_guide?id=' . $id . '&query=' . $query))->withInput();
         }
 
-        $bankSoal = $this->bankSoalModel->findAll();
-        $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
         $subcategoryQuiz = explode(',', $categoryQuiz['category_item']);
         $remakeTypeSoal = [];
         foreach ($subcategoryQuiz as $scQ) {
@@ -1076,7 +1117,7 @@ class Home extends BaseController
         $getShopItem = $this->utbkShopModel->orderBy('id', 'DESC')->findAll();
 
         $data = [
-            'title' => 'Simulasi Schuler.id',
+            'title' => 'Beli Paket Schuler.id',
             'user_name' => $user['username'],
             'shop_item' => $getShopItem,
             'session_id' => $user['slug'],
@@ -1184,7 +1225,7 @@ class Home extends BaseController
             'id_user' => $user['slug'],
             'nama_user' => $user['username'],
             'id_item_beli' =>  $item['id_item'],
-            'paket_name' => ucfirst($item['slug']),
+            'paket_name' => $item['slug'],
             'price' => $price,
             'payment_type' => $data['payment_type'],
             'va_number' => $data['va_number'],
@@ -1285,11 +1326,12 @@ class Home extends BaseController
                     ]);
                 } else {
                     $tgl_start = date('d-m-Y');
-                    $year = mktime(0, 0, 0, date("n"), date("j") + 360, date('Y'));
+                    $year = mktime(0, 0, 0, date("n"), date("j") + 365, date('Y'));
                     $tgl_end = date("d-m-Y", $year);
 
                     $this->akunPremiumModel->save([
                         'user_id' => $user['slug'],
+                        'paket_name' => $transaksi['paket_name'],
                         'tgl_mulai' => $tgl_start,
                         'tgl_berakhir' => $tgl_end
                     ]);

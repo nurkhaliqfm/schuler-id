@@ -7,6 +7,7 @@ function CreateItemOption(typeItems, categoryItems, filter) {
   let filterArray = filterGroup["category_item"].split(",");
   for (let i = 0; i < Object.keys(categoryItems).length; i++) {
     if (filterArray.includes(categoryItems[i].quiz_subject)) {
+      console.log(categoryItems[i]);
       var container = document.getElementById("container_body");
       var boxItem = document.createElement("div");
       var boxHeader = document.createElement("div");
@@ -30,7 +31,7 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxBodySubtitle.className = "box_body__subtitle";
       boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
       boxBodyDesc.className = "box_body__desc";
-      boxBodyDesc.innerHTML = "Skolastik & Bahasa Inggris";
+      boxBodyDesc.innerHTML = categoryItems[i].desc;
       boxFooter.className = "box_item__footer simulasi_box_footer";
       boxFooterBtn.className = "box_item__Btn list_quiz_button-normal selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);

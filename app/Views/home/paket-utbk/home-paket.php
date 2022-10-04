@@ -118,8 +118,8 @@
                 let slug = itemClicked['slug'][0].toUpperCase() + itemClicked['slug'].substring(1);
                 let price = itemClicked['price'] - ((itemClicked['price'] * itemClicked['discount']) / 100);
 
-                document.getElementById('title_item').innerHTML = "Kumpulan Soal-Soal " + slug;
-                document.getElementById('discount_title').innerHTML = "Discount " + itemClicked['discount'] + '% ' + slug;
+                document.getElementById('title_item').innerHTML = "Kumpulan Soal-Soal " + slug.replaceAll("_", " ").toUpperCase();
+                document.getElementById('discount_title').innerHTML = "Discount " + itemClicked['discount'] + '% ' + slug.replaceAll("_", " ").toUpperCase();
                 document.getElementById('price').innerHTML = convertToRupiah(price) + ',00';
                 document.getElementById('real_price').innerHTML = convertToRupiah(itemClicked['price']) + ',00';
                 document.getElementById('total_price').innerHTML = convertToRupiah(price) + ',00';

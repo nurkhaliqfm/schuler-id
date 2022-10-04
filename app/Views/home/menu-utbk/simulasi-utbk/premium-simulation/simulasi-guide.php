@@ -35,7 +35,7 @@
                             <tr>
                                 <td>Waktu</td>
                                 <td>:</td>
-                                <td><?= ($timer / 60) * 9; ?> Menit</td>
+                                <td><?= ($timer / 60) * $quiz_part; ?> Menit</td>
                             </tr>
                             <tr>
                                 <td>PTN Pilihan</td>
