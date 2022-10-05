@@ -401,8 +401,14 @@ class Home extends BaseController
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_sub_subject')->countAllResults();
-            $quizSubject = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_subject')->findAll();
+            $countPart = $this->bankQuizModel->where([
+                'quiz_type' => $bq['quiz_type'],
+                'quiz_category' => 'free_simulation',
+            ])->groupBy('quiz_sub_subject')->countAllResults();
+            $quizSubject = $this->bankQuizModel->where([
+                'quiz_type' => $bq['quiz_type'],
+                'quiz_category' => 'free_simulation'
+            ])->groupBy('quiz_subject')->findAll();
             $text = "";
             for ($i = 0; $i < sizeof($quizSubject); $i++) {
                 $data_text = $this->typeSoalModel->where(['id_main_type_soal' => $quizSubject[$i]['quiz_subject']])->first();
@@ -612,8 +618,14 @@ class Home extends BaseController
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_sub_subject')->countAllResults();
-            $quizSubject = $this->bankQuizModel->where(['quiz_category' => 'premium_simulation'])->groupBy('quiz_subject')->findAll();
+            $countPart = $this->bankQuizModel->where([
+                'quiz_type' => $bq['quiz_type'],
+                'quiz_category' => 'premium_simulation',
+            ])->groupBy('quiz_sub_subject')->countAllResults();
+            $quizSubject = $this->bankQuizModel->where([
+                'quiz_type' => $bq['quiz_type'],
+                'quiz_category' => 'premium_simulation'
+            ])->groupBy('quiz_subject')->findAll();
             $text = "";
             for ($i = 0; $i < sizeof($quizSubject); $i++) {
                 $data_text = $this->typeSoalModel->where(['id_main_type_soal' => $quizSubject[$i]['quiz_subject']])->first();
