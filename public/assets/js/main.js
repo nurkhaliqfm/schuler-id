@@ -1,6 +1,6 @@
 $(window).on("load", function () {
   /*----------- Preloader ------------*/
-  $(".preloader").fadeOut("slow");
+  $(".loader-bg").fadeOut("slow");
 
   /*----------- Sidebar Responsive ------------*/
   var setsidebartype = function () {
@@ -97,6 +97,17 @@ $(window).on("load", function () {
           base_url + "/assets/img/schuler-logo-half.png";
         navbarBrand.classList.add("half-navbar-brand");
         navbarBrandImg.classList.add("half-logo");
+        function handleMousePos(event) {
+          var mouseClickWidth = event.clientX;
+          if (mouseClickWidth >= 270) {
+            menuBtn.classList.remove("open");
+            menuOpen = false;
+            sidebarnav.classList.remove("full");
+            sidebarnav.classList.remove("half");
+            sidebarnav.classList.add("hide");
+          }
+        }
+        document.addEventListener("click", handleMousePos);
       }
     }
   };

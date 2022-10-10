@@ -16,8 +16,6 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       var boxBodyDesc = document.createElement("div");
       var boxFooter = document.createElement("div");
       var boxFooterBtn = document.createElement("a");
-      var boxFooterBtn1 = document.createElement("a");
-      var boxFooterBtn2 = document.createElement("a");
 
       boxItem.className = "box_item__container";
       boxItem.setAttribute("data-box", categoryItems[i].quiz_type);
@@ -35,17 +33,11 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxFooterBtn.className = "box_item__Btn list_quiz_button-normal selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
       boxFooterBtn.innerHTML = "Kerjakan";
-      boxFooterBtn1.className = "box_item__Btn";
-      boxFooterBtn1.innerHTML = "Rangking Universitas";
-      boxFooterBtn2.className = "box_item__Btn";
-      boxFooterBtn2.innerHTML = "Rangking Nasional";
 
       boxBody.appendChild(boxBodyTitle);
       boxBody.appendChild(boxBodySubtitle);
       boxBody.appendChild(boxBodyDesc);
       boxFooter.appendChild(boxFooterBtn);
-      boxFooter.appendChild(boxFooterBtn1);
-      boxFooter.appendChild(boxFooterBtn2);
       boxItem.appendChild(boxHeader);
       boxItem.appendChild(boxBody);
       boxItem.appendChild(boxFooter);

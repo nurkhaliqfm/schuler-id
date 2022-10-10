@@ -8,7 +8,7 @@
                 <div class="white-box">
                     <div class="container_header_1 head__simulationfree">
                         <h3 class="box-title simulation">Simulasi UTBK <span>PREMIUM</span></h3>
-                        <p class="box__subtitle">Berikut Daftar Simulasi UTBK Gratis</p>
+                        <p class="box__subtitle">Berikut Daftar Simulasi UTBK Premium</p>
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Gunakan browser google chrome versi terbaru agar website dapat diakses dengan lancar tanpa masalah</div>
                         <div class="button__container">
                             <?php foreach ($type_soal as $ts) : ?>

@@ -1,6 +1,6 @@
 $(window).on("load", function () {
   /*----------- Preloader ------------*/
-  $(".preloader").fadeOut("slow");
+  $(".loader-bg").fadeOut("slow");
 
   /*----------- Sidebar Responsive ------------*/
   var setsidebartype = function () {

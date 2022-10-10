@@ -132,8 +132,37 @@
                 <li class="sidebar-item last-btn">
                     <a class="sidebar-link" href="#" aria-expanded="false">
                         <i class="fa-solid fa-magnifying-glass-chart"></i>
-                        <span class="hide-menu">Event Simulasi</span>
+                        <span class="hide-menu">
+                            Event Simulasi
+                            <i class="fas fa-angle-right"></i>
+                        </span>
                     </a>
+                    <ul class="nav-treeview collapse">
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/event_simulasi') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-file-pen"></i>
+                                <span class="hide-menu">
+                                    Event
+                                </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/event_rangking') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-globe"></i>
+                                <span class="hide-menu">
+                                    Rangking Nasional
+                                </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/event_rangking_universitas') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                                <span class="hide-menu">
+                                    Rangking Universitas
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="sidebar-item-title">
                     <span class="title-sidebar-item">AKUN</span>

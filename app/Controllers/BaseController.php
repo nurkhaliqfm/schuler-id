@@ -49,7 +49,9 @@ class BaseController extends Controller
         // User Model
         $this->usersModel = new \App\Models\UsersModel();
         $this->rangkingSimulasi = new \App\Models\RangkingSimulasi();
-
+        $this->eventReangkingSimulasi = new \App\Models\EventRangkingSimulasi();
+        $this->bankQuizModel = new \App\Models\BankQuizModel();
+        $this->bankSoalModel = new \App\Models\BankSoalModel();
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 
@@ -59,6 +61,7 @@ class BaseController extends Controller
         // TRANSAKSI
         $this->utbkShopModel = new \App\Models\UtbkShopModel();
         $this->akunPremiumModel = new \App\Models\AkunPremiumModel();
+        $this->akunEventModel = new \App\Models\AkunEventModel();
         $this->transaksiUserModel = new \App\Models\TransaksiUserModel();
 
         // E.g.: $this->session = \Config\Services::session();

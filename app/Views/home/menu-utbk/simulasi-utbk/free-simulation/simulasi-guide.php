@@ -10,7 +10,7 @@
                         <h3 class="box-title simulation">Persiapan <span>Simulasi</span></h3>
                         <div class="alert__box"><i class="fa-solid fa-circle-info"></i><span> Perhatian : </span>Gunakan browser google chrome versi terbaru agar website dapat diakses dengan lancar tanpa masalah</div>
                     </div>
-                    <div class="body__simulationfree">
+                    <div class="body__simulationfree" style="overflow-x: scroll;">
                         <table class="table">
                             <tr>
                                 <td></td>
@@ -18,31 +18,31 @@
                                 <td></td>
                             </tr>
                             <tr>
-                                <td>Simulasi</td>
-                                <td>:</td>
-                                <td><?= strtoupper($nama_quiz); ?></td>
+                                <td class="align-middle">Simulasi</td>
+                                <td class="align-middle">:</td>
+                                <td class="align-middle"><?= strtoupper($nama_quiz); ?></td>
                             </tr>
                             <tr>
-                                <td>Soal</td>
-                                <td>:</td>
-                                <td><?= $jumlah_soal; ?> Nomor</td>
+                                <td class="align-middle">Soal</td>
+                                <td class="align-middle">:</td>
+                                <td class="align-middle"><?= $jumlah_soal; ?> Nomor</td>
                             </tr>
                             <tr>
-                                <td>Waktu</td>
-                                <td>:</td>
-                                <td><?= ($timer / 60) * $quiz_part; ?> Menit</td>
+                                <td class="align-middle">Waktu</td>
+                                <td class="align-middle">:</td>
+                                <td class="align-middle"><?= ($timer / 60) * $quiz_part; ?> Menit</td>
                             </tr>
                             <tr>
-                                <td>PTN Pilihan</td>
-                                <td>:</td>
-                                <td><?= $universitas_pilihan; ?></td>
+                                <td class="align-middle">PTN Pilihan</td>
+                                <td class="align-middle">:</td>
+                                <td class="align-middle"><?= $universitas_pilihan; ?></td>
                             </tr>
                         </table>
                     </div>
                     <div class="footer__simulationfree">
                         <div class="button__container">
                             <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
-                                <i class="fa-solid fa-play"></i><span>Kerjakan</span>
+                                <i class="fa-solid fa-play"></i><span>Mulai</span>
                             </a>
                             <a href="<?= base_url('home/simulasi_gratis'); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>

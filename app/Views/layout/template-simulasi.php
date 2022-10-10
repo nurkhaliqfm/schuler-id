@@ -24,12 +24,16 @@
 </head>
 
 <body>
+    <div class="loader-bg">
+        <div class="loader"></div>
+    </div>
     <div id="main-wrapper">
         <?= $this->include('layout/navbar-simulasi'); ?>
         <?= $this->renderSection('content'); ?>
     </div>
 
 
+    <script src="<?= base_url('assets/js/prevent-access.js') ?>"></script>
     <!-- Sidebar Js -->
     <script src="<?= base_url('assets/js/sidebarmenu.js?v=') . time() ?>"></script>
     <!-- Main Js -->

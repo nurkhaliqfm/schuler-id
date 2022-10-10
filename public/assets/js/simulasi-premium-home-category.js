@@ -1,4 +1,5 @@
 const tabButton = document.querySelectorAll("div.tab_button_style");
+var base = window.location.origin;
 
 function CreateItemOption(typeItems, categoryItems, filter) {
   let filterGroup = filter.find(
@@ -7,7 +8,6 @@ function CreateItemOption(typeItems, categoryItems, filter) {
   let filterArray = filterGroup["category_item"].split(",");
   for (let i = 0; i < Object.keys(categoryItems).length; i++) {
     if (filterArray.includes(categoryItems[i].quiz_subject)) {
-      console.log(categoryItems[i]);
       var container = document.getElementById("container_body");
       var boxItem = document.createElement("div");
       var boxHeader = document.createElement("div");
@@ -38,8 +38,10 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxFooterBtn.innerHTML = "Kerjakan";
       boxFooterBtn1.className = "box_item__Btn";
       boxFooterBtn1.innerHTML = "Rangking Universitas";
+      boxFooterBtn1.setAttribute("href", base + "/home/rangking");
       boxFooterBtn2.className = "box_item__Btn";
       boxFooterBtn2.innerHTML = "Rangking Nasional";
+      boxFooterBtn2.setAttribute("href", base + "/home/rangking_universitas");
 
       boxBody.appendChild(boxBodyTitle);
       boxBody.appendChild(boxBodySubtitle);

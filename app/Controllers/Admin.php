@@ -1180,6 +1180,32 @@ class Admin extends BaseController
             $this->bankSoalModel->update(
                 $bs['id'],
                 [
+                    'option_a' => str_replace('<p id="isPasted">', '', $bs['option_a']),
+                    'option_b' => str_replace('<p id="isPasted">', '', $bs['option_b']),
+                    'option_c' => str_replace('<p id="isPasted">', '', $bs['option_c']),
+                    'option_d' => str_replace('<p id="isPasted">', '', $bs['option_d']),
+                    'option_e' => str_replace('<p id="isPasted">', '', $bs['option_e']),
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
+                    'option_a' => str_replace('</p>', '', $bs['option_a']),
+                    'option_b' => str_replace('</p>', '', $bs['option_b']),
+                    'option_c' => str_replace('</p>', '', $bs['option_c']),
+                    'option_d' => str_replace('</p>', '', $bs['option_d']),
+                    'option_e' => str_replace('</p>', '', $bs['option_e']),
+                ]
+            );
+        }
+
+        foreach ($bankSoal as $bs) {
+            $this->bankSoalModel->update(
+                $bs['id'],
+                [
                     'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_a']),
                     'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_b']),
                     'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $bs['option_c']),

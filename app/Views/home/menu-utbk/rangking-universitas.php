@@ -21,7 +21,7 @@
                                 </select>
                             </div>
                             <div class="button__container rangking_search_btn">
-                                <button type="submit" class="tab_button_style active text-center">Cara Kampus</button>
+                                <button type="submit" class="tab_button_style active text-center">Cari Kampus</button>
                             </div>
                         </form>
                         <div class="result-container">
