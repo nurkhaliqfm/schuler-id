@@ -25,10 +25,9 @@ class PdfController extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        $id = $this->request->getVar('id');
         $query = $this->request->getVar('query');
 
-        $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
+        $categoryQuiz = $this->categoryQuizModel->where(['group' => '3'])->first();
 
         $cekAccount = $this->akunEventModel->where([
             'user_id' => $user['slug'],
@@ -42,20 +41,19 @@ class PdfController extends BaseController
 
         $dataQuiz = $this->bankQuizModel->where([
             'quiz_id' => $query,
-        ])->first();
+        ])->orderBy('quiz_subject', 'quiz_sub_subject')->findAll();
 
         $dataJawaban = explode(',', $cekEventResult['answare']);
         $dataSoal = [];
         $dataYourAns = [];
         $x = 0;
-        foreach (explode(',', $cekEventResult['id_soal']) as $ds) {
+        foreach ($dataQuiz as $ds) {
             $bankSoal = $this->bankSoalModel->where([
-                'id_soal' => $ds
+                'id_soal' => $ds['quiz_question']
             ])->first();
-
             if ($bankSoal) {
                 array_push($dataSoal, $bankSoal);
-                $dataYourAns[$ds] = $dataJawaban[$x];
+                $dataYourAns[$ds['quiz_question']] = $dataJawaban[$x];
                 $x++;
             }
         }
@@ -72,9 +70,13 @@ class PdfController extends BaseController
 
         $filename = 'Pembahasan-Event-UTBK-2023-' . date('y-m-d-H-i-s');
         $dompdf = new Dompdf();
+        $option = new Options();
         $dompdf->loadHtml(view('pdf_pembahasan', $data));
         $dompdf->setPaper('Legal', 'portrait');
+        $option->set('isRemoteEnabled', true);
+        $dompdf->setOptions($option);
         $dompdf->render();
         $dompdf->stream($filename, array('Attachment' => 0));
+        exit();
     }
 }

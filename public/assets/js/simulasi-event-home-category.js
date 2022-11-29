@@ -1,7 +1,7 @@
 const tabButton = document.querySelectorAll("div.tab_button_style");
 var base_url = window.location.origin;
 
-function CreateItemOption(typeItems, categoryItems, filter, pembahasan) {
+function CreateItemOption(typeItems, categoryItems, filter) {
   let filterGroup = filter.find(
     ({ slug }) => slug === document.getElementById(typeItems[0].slug).id
   );
@@ -37,9 +37,6 @@ function CreateItemOption(typeItems, categoryItems, filter, pembahasan) {
       boxFooterBtn.className = "box_item__Btn list_quiz_button-normal selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
       boxFooterBtn.innerHTML = "Kerjakan";
-      boxFooterBtn1.id = "pembahasanBtn";
-      boxFooterBtn1.className = "box_item__Btn";
-      boxFooterBtn1.innerHTML = "Pembahasan";
       boxFooterBtn2.className = "box_item__Btn";
       boxFooterBtn2.innerHTML = "Rangking Universitas";
       boxFooterBtn2.setAttribute("href", base_url + "/home/event_rangking");
@@ -54,9 +51,6 @@ function CreateItemOption(typeItems, categoryItems, filter, pembahasan) {
       boxBody.appendChild(boxBodySubtitle);
       boxBody.appendChild(boxBodyDesc);
       boxFooter.appendChild(boxFooterBtn);
-      if (pembahasan == "show") {
-        boxFooter.appendChild(boxFooterBtn1);
-      }
       boxFooter.appendChild(boxFooterBtn2);
       boxFooter.appendChild(boxFooterBtn3);
       boxItem.appendChild(boxHeader);
@@ -101,17 +95,6 @@ function DefaultTabButton(typeItems, categoryItems) {
         "&query=" +
         item.getAttribute("data-button")
     );
-
-    document.querySelectorAll("#pembahasanBtn").forEach((items) => {
-      items.setAttribute(
-        "href",
-        base_url +
-          "/PdfController/cetak_pembahasan?id=" +
-          typeItems[0].category_id +
-          "&query=" +
-          item.getAttribute("data-button")
-      );
-    });
   });
 
   FilterCategoryOptions(categoryItems, typeItems[0]);

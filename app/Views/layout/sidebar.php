@@ -147,6 +147,14 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="<?= base_url('home/list_hasil_event') ?>" aria-expanded="false">
+                                <i class="fa-solid fa-file-circle-check"></i>
+                                <span class="hide-menu">
+                                    Hasil & Pembahasan
+                                </span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="<?= base_url('home/event_rangking') ?>" aria-expanded="false">
                                 <i class="fa-solid fa-globe"></i>
                                 <span class="hide-menu">

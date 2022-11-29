@@ -48,7 +48,7 @@
                                 <td class="align-middle" style="border-bottom: 0px;"><?= $jadwal_tgl[1] ?></td>
                             </tr>
                             <tr>
-                                <td class="align-middle"><?= $jadwal_waktu[1] . ' WITA' ?></td>
+                                <td class="align-middle"><?= $jadwal_waktu[1] ?><?= $jadwal_waktu[0] == '0' ? '' : ' WITA' ?></td>
                             </tr>
                         </table>
                     </div>

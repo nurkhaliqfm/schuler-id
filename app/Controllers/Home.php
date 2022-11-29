@@ -371,7 +371,7 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
-        $navbarTitle = "Hasil & Jawaban " . $quizData[0]['quiz_name'];
+        $navbarTitle = $quizData[0]['quiz_name'];
 
         $data = [
             'title' => 'Hasil Latihan Schuler.id',
@@ -617,7 +617,7 @@ class Home extends BaseController
         ])->findAll();
 
         $remakeBankQuiz = [];
-        $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'premium_simulation'])->groupBy(['quiz_id'])->findAll();
+        $bankQuiz = $this->bankQuizModel->orderBy('id')->where(['quiz_category' => 'premium_simulation'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
             $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
             $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
@@ -891,7 +891,7 @@ class Home extends BaseController
         };
 
         $data = [
-            'title' => 'Daftar Hasil Latihan Schuler.id',
+            'title' => 'Daftar Hasil Simulasi Schuler.id',
             'user_name' => $user['username'],
             'data_user' => $dataUser
         ];
@@ -973,7 +973,7 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
-        $navbarTitle = "Hasil & Jawaban " . $quizData[0]['quiz_name'];
+        $navbarTitle = $quizData[0]['quiz_name'];
 
         $data = [
             'title' => 'Hasil Simulasi Schuler.id',
@@ -1267,8 +1267,13 @@ class Home extends BaseController
             }
         }
 
-        $getJadwal = explode(',', $list_tgl[$cekEventAccount['tgl_mulai']]);
-        $getSesi = explode(',', $list_sesi[$cekEventAccount['sesi_pengerjaan']]);
+        if ($cekEventAccount) {
+            $getJadwal = explode(',', $list_tgl[$cekEventAccount['tgl_mulai']]);
+            $getSesi = explode(',', $list_sesi[$cekEventAccount['sesi_pengerjaan']]);
+        } else {
+            $getJadwal = ['0', 'Belum Dipilih'];
+            $getSesi = ['0', 'Belum Dipilih'];
+        }
 
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
@@ -1366,14 +1371,14 @@ class Home extends BaseController
             'sesi_2' => '15:30 - 23:30',
         ];
 
-        $sesiUser = explode(' - ', $list_sesi[$userScheduleSesi]);
-
-        $scheduled = DateTime::createFromFormat('H:i', date('H:i'));
-        $start = DateTime::createFromFormat('H:i', $sesiUser[0]);
-        $end = DateTime::createFromFormat('H:i', $sesiUser[1]);
-
         if ($cekAccount) {
             if ($cekAccount['tgl_mulai']) {
+                $sesiUser = explode(' - ', $list_sesi[$userScheduleSesi]);
+
+                $scheduled = DateTime::createFromFormat('H:i', date('H:i'));
+                $start = DateTime::createFromFormat('H:i', $sesiUser[0]);
+                $end = DateTime::createFromFormat('H:i', $sesiUser[1]);
+
                 $split_deadline = explode("-", $cekAccount['tgl_mulai']);
                 $deatline_time = $split_deadline[0] . "-" . $split_deadline[1] . "-" . $split_deadline[2];
 
@@ -1520,6 +1525,133 @@ class Home extends BaseController
         $response['quiz_sub_subject'] = $data['quiz_sub_subject'];
 
         return $this->response->setJSON($response);
+    }
+
+    // HASIL EVENT SIMULASI
+    public function list_hasil_event()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $userHistoryEvent = $this->userHistoryEventModel->where([
+            'user_id' => $user['slug'],
+        ])->findAll();
+
+        $dataUser = [];
+        foreach ($userHistoryEvent as $history) {
+            $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $history['quiz_id']])->first();
+            if ($bankQuiz['quiz_category'] == 'event') {
+                $data = array(
+                    'quiz_id' => $bankQuiz['quiz_id'],
+                    'quiz_name' => $bankQuiz['quiz_name'],
+                    'category' => "Event Simulasi",
+                    'type' => $bankQuiz['quiz_type']
+                );
+
+                array_push($dataUser, $data);
+            }
+        };
+
+        $data = [
+            'title' => 'Daftar Hasil Event Simulasi Schuler.id',
+            'user_name' => $user['username'],
+            'data_user' => $dataUser
+        ];
+
+        return view('home/event/hasil-simulasi-list', $data);
+    }
+
+    public function hasil_event()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $query = $this->request->getVar('query');
+        $id = $this->request->getVar('id');
+
+        if (!$query) {
+            return redirect()->to(base_url("home/list_hasil_simulasi"));
+        }
+
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $userHistoryEvent = $this->userHistoryEventModel->where([
+            'user_id' => $user['slug'],
+            'quiz_id' => $query
+        ])->first();
+
+        $idSoal = explode(',', $userHistoryEvent['id_soal']);
+        $userAns = explode(',', $userHistoryEvent['answare']);
+        $userAnsware = new stdClass;
+        for ($i = 0; $i < count($idSoal); $i++) {
+            $userAnsware->{$idSoal[$i]} = $userAns[$i];
+        }
+
+        $getQUizType = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->first();
+
+        $getcategorySoalData = $this->categoryQuizModel->where(['slug' => $getQUizType['quiz_type']])->first();
+        $categorySoal = explode(',', $getcategorySoalData['category_item']);
+
+        if ($id == null) {
+            $id = $categorySoal[0];
+        };
+
+        $quizData = [];
+        $quizDataSplit = [];
+        foreach ($categorySoal as $cs) {
+            $getTypesoalData = $this->typeSoalModel->where(['id_main_type_soal' => $cs])->first();
+            $typeSoal = explode(',', $getTypesoalData['list_type_soal_id']);
+            $remakeTypeSoal[] = [
+                'id' => $cs,
+                'name' => $getTypesoalData['main_type_soal'],
+                'slug' => $getTypesoalData['slug'],
+            ];
+
+            foreach ($typeSoal as $ts) {
+                $getQuizSoal = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts
+                ])->findAll();
+
+                $getQuizSplit = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $id,
+                    'quiz_sub_subject' => $ts
+                ])->orderBy('quiz_sub_subject')->findAll();
+
+                foreach ($getQuizSoal as $qQs) {
+                    array_push($quizData, $qQs);
+                }
+
+                foreach ($getQuizSplit as $qS) {
+                    array_push($quizDataSplit, $qS);
+                }
+            }
+        }
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = $quizData[0]['quiz_name'];
+
+        $data = [
+            'title' => 'Hasil Event Simulasi Schuler.id',
+            'user_name' => $user['username'],
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'bank_soal_remake' => $quizDataSplit,
+            'type_soal' => $typeSoal,
+            'type_soal_tab' => $remakeTypeSoal,
+            'navbar_title' => $navbarTitle,
+            'user_answare' => $userAnsware
+        ];
+
+        return view('home/event/hasil-simulasi', $data);
     }
 
     // RANGKING EVENT

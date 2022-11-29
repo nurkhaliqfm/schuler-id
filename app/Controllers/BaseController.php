@@ -52,6 +52,8 @@ class BaseController extends Controller
         $this->eventReangkingSimulasi = new \App\Models\EventRangkingSimulasi();
         $this->bankQuizModel = new \App\Models\BankQuizModel();
         $this->bankSoalModel = new \App\Models\BankSoalModel();
+        $this->typeSoalModel = new \App\Models\TypeSoalModel();
+
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 
