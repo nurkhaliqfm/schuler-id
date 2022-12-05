@@ -41,6 +41,9 @@ $routes->post('home/update-universitas', 'Home::update_universitas/');
 $routes->post('home/update-password', 'Home::update_pass/');
 $routes->post('home/update-sekolah', 'Home::update_sekolah/');
 
+$routes->post('home/xhttpOfflineSimulationStatus', 'Home::xhttpOfflineSimulationStatus');
+$routes->post('home/registerSimulasiOffline', 'Home::registerSimulasiOffline');
+
 
 /*
  * --------------------------------------------------------------------

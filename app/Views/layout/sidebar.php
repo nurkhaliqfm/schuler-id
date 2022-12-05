@@ -13,10 +13,16 @@
                 <li class="sidebar-item-title">
                     <span class="title-sidebar-item">PROGRAM KHUSUS</span>
                 </li>
-                <li class="sidebar-item last-btn">
+                <li class="sidebar-item">
                     <a class="sidebar-link" href="<?= base_url('home/super_camp_utbk'); ?>" aria-expanded="false">
                         <i class="fa-solid fa-laptop-code"></i>
                         <span class="hide-menu">Super Camp UTBK</span>
+                    </a>
+                </li>
+                <li class="sidebar-item last-btn">
+                    <a class="sidebar-link" href="<?= base_url('home/live_class'); ?>" aria-expanded="false">
+                        <i class="fa-solid fa-person-chalkboard"></i>
+                        <span class="hide-menu">Kelas Online</span>
                     </a>
                 </li>
                 <li class="sidebar-item-title">
@@ -129,11 +135,11 @@
                 <li class="sidebar-item-title">
                     <span class="title-sidebar-item">EVENT</span>
                 </li>
-                <li class="sidebar-item last-btn">
+                <li class="sidebar-item">
                     <a class="sidebar-link" href="#" aria-expanded="false">
                         <i class="fa-solid fa-magnifying-glass-chart"></i>
                         <span class="hide-menu">
-                            Event Simulasi
+                            Event TryOut
                             <i class="fas fa-angle-right"></i>
                         </span>
                     </a>
@@ -142,7 +148,7 @@
                             <a class="sidebar-link" href="<?= base_url('home/event_simulasi') ?>" aria-expanded="false">
                                 <i class="fa-solid fa-file-pen"></i>
                                 <span class="hide-menu">
-                                    Event
+                                    Simulasi
                                 </span>
                             </a>
                         </li>
@@ -154,6 +160,25 @@
                                 </span>
                             </a>
                         </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="<?= base_url('home/offline_simulation') ?>" aria-expanded="false">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <span class="hide-menu">
+                            Event UTBK SNBT
+                        </span>
+                    </a>
+                </li>
+                <li class="sidebar-item last-btn">
+                    <a class="sidebar-link" href="#" aria-expanded="false">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        <span class="hide-menu">
+                            Rangking UTBK
+                            <i class="fas fa-angle-right"></i>
+                        </span>
+                    </a>
+                    <ul class="nav-treeview collapse">
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="<?= base_url('home/event_rangking') ?>" aria-expanded="false">
                                 <i class="fa-solid fa-globe"></i>

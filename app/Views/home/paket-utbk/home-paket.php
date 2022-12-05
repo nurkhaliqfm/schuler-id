@@ -98,6 +98,7 @@
     let shopItem = <?= json_encode($shop_item); ?>;
     let urlPayMidtrans = "<?= base_url('home/payMidtrans') ?>";
     let urlMakeTransaksi = "<?= base_url('home/save_transaksi') ?>";
+    let urlConfirmation = "<?= base_url('home/transactionHandle') ?>";
     let urlRedirect = "<?= base_url('home/pembayaran') ?>";
 
     function convertToRupiah(angka) {
@@ -147,8 +148,10 @@
                                     let objResult = JSON.parse(dataResult);
 
                                     const data = {};
+                                    data['status'] = 'success';
                                     data[response['name']] = response['value'];
                                     data['id_item'] = itemClicked['id_item'];
+                                    data['transaction_id'] = objResult.transaction_id;
                                     data['order_id'] = objResult.order_id;
                                     data['payment_type'] = objResult.payment_type;
                                     data['transaction_time'] = objResult.transaction_time;
@@ -163,7 +166,28 @@
                                             var response = JSON.parse(xhttp.responseText);
                                             document.getElementById('txt_csrfname').value = response['value'];
                                             document.getElementById('txt_csrfname').name = response['name'];
-                                            window.location.href = urlRedirect;
+
+                                            var csrfName = document.getElementById('txt_csrfname').getAttribute('name');
+                                            var csrfHash = document.getElementById('txt_csrfname').value;
+
+                                            const dataConf = {};
+                                            dataConf["user_order"] = "cek_transaction";
+                                            dataConf['order_id'] = objResult.order_id;
+                                            dataConf[csrfName] = csrfHash;
+
+                                            var xhttpNew = new XMLHttpRequest();
+                                            xhttpNew.open("POST", urlConfirmation, true);
+                                            xhttpNew.onreadystatechange = () => {
+                                                if (xhttpNew.readyState == 4 && xhttpNew.status == 200) {
+                                                    var response = JSON.parse(xhttpNew.responseText);
+                                                    document.getElementById('txt_csrfname').value = response['value'];
+                                                    document.getElementById('txt_csrfname').name = response['name'];
+                                                    window.location.href = urlRedirect;
+                                                }
+                                            };
+                                            xhttpNew.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                                            xhttpNew.setRequestHeader("Content-Type", "application/json");
+                                            xhttpNew.send(JSON.stringify(dataConf));
                                         }
                                     };
                                     xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");

@@ -766,19 +766,22 @@ class Admin extends BaseController
             return redirect()->to(base_url('home/error_404'));
         }
 
+        $segment = current_url(true)->getSegment(4);
         $slug = $this->request->getVar('slug');
         $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->findAll();
         $number_soal = [];
         foreach ($quizListQuestion as $qlQ) {
-            $data_number = $this->bankQuizModel->where(['quiz_id' => $qlQ['quiz_id']])->countAllResults();
-            array_push($number_soal, $data_number);
+            if ($qlQ['quiz_category'] == $segment) {
+                $data_number = $this->bankQuizModel->where(['quiz_id' => $qlQ['quiz_id']])->countAllResults();
+                array_push($number_soal, $data_number);
+            }
         }
+
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
             'user_name' => $user['username'],
             'bankQuiz' => $quizListQuestion,
             'quiz_number' => $number_soal
-
         ];
 
         return view('admin/input-quiz/daftar-quiz', $data);
@@ -1054,7 +1057,6 @@ class Admin extends BaseController
         $cekHistory = $this->userHistoryModel->where([
             'quiz_id' => $bankQuiz[0]['quiz_id'],
         ])->findAll();
-
 
         if ($cekHistory) {
             foreach ($cekHistory as $h) {

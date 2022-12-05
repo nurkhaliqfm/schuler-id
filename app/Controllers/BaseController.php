@@ -66,6 +66,12 @@ class BaseController extends Controller
         $this->akunEventModel = new \App\Models\AkunEventModel();
         $this->transaksiUserModel = new \App\Models\TransaksiUserModel();
 
+        // Mitra
+        $this->mitraModel = new \App\Models\MitraModel();
+        $this->mitraStudentModel = new \App\Models\MitraStudentModel();
+        $this->mitraEventModel = new \App\Models\MitraEventModel();
+
+
         // E.g.: $this->session = \Config\Services::session();
     }
 }
