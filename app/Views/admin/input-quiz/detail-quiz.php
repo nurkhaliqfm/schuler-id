@@ -39,6 +39,7 @@
                                         <tr>
                                             <td style="border-bottom: 0px;" class="text-center">No</td>
                                             <td style="border-bottom: 0px;" class="text-center">Soal</td>
+                                            <td style="border-bottom: 0px;" class="text-center">Id</td>
                                             <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
                                             <td style="border-bottom: 0px;" class="text-center">Action</td>
                                         </tr>
@@ -121,6 +122,7 @@
             var itemNo = document.createElement("td");
             var itemSoal = document.createElement("td");
             var itemSoalBtn = document.createElement("a");
+            var itemIdSoal = document.createElement("td");
             var itemJenis = document.createElement("td");
             var itemAction = document.createElement("td");
             var itemActionBtn = document.createElement("a");
@@ -128,14 +130,16 @@
             itemNo.className = "text-center"
             itemJenis.className = "text-center"
             itemSoal.className = "text-center"
+            itemIdSoal.className = "text-center"
             itemAction.className = "text-center"
 
             itemNo.innerHTML = i + 1;
             itemJenis.innerHTML = query[categoryItems[i]['sub_type_soal']];
+            itemIdSoal.innerHTML = categoryItems[i]['id_soal'];
 
             itemSoalBtn.className = "preview_btn box_item__Btn list_quiz_button selected";
             itemSoalBtn.id = categoryItems[i]['id_soal'];
-            itemSoalBtn.innerHTML = "Preview Soal"
+            itemSoalBtn.innerHTML = "View"
             itemSoal.appendChild(itemSoalBtn);
 
             itemActionBtn.className = "box_item__Btn list_quiz_button delete__btn";
@@ -145,6 +149,7 @@
 
             itemBox.appendChild(itemNo);
             itemBox.appendChild(itemSoal);
+            itemBox.appendChild(itemIdSoal);
             itemBox.appendChild(itemJenis);
             itemBox.appendChild(itemAction);
 

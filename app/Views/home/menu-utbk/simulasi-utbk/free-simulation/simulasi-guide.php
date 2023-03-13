@@ -25,12 +25,12 @@
                             <tr>
                                 <td class="align-middle">Soal</td>
                                 <td class="align-middle">:</td>
-                                <td class="align-middle"><?= $jumlah_soal; ?> Nomor</td>
+                                <td class="align-middle">80 Nomor</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">Waktu</td>
                                 <td class="align-middle">:</td>
-                                <td class="align-middle"><?= ($timer / 60) * $quiz_part; ?> Menit</td>
+                                <td class="align-middle">90 Menit</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">PTN Pilihan</td>

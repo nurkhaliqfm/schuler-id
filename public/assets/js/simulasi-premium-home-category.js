@@ -26,10 +26,13 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxHeader.innerHTML = categoryItems[i].quiz_name.toUpperCase();
       boxBody.className = "box_item__body";
       boxBodyTitle.className = "box_body__title";
+    //   boxBodyTitle.innerHTML =
+    //     "Jumlah Soal = " + categoryItems[i].total_soal + " Nomor";
       boxBodyTitle.innerHTML =
-        "Jumlah Soal = " + categoryItems[i].total_soal + " Nomor";
+        "Jumlah Soal = " + 80 + " Nomor";
       boxBodySubtitle.className = "box_body__subtitle";
-      boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
+    //   boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
+      boxBodySubtitle.innerHTML = "Waktu: " + 90 + " Menit";
       boxBodyDesc.className = "box_body__desc";
       boxBodyDesc.innerHTML = categoryItems[i].desc;
       boxFooter.className = "box_item__footer simulasi_box_footer";
@@ -37,10 +40,10 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
       boxFooterBtn.innerHTML = "Kerjakan";
       boxFooterBtn1.className = "box_item__Btn";
-      boxFooterBtn1.innerHTML = "Rangking Universitas";
+      boxFooterBtn1.innerHTML = "Rangking Nasional";
       boxFooterBtn1.setAttribute("href", base + "/home/rangking");
       boxFooterBtn2.className = "box_item__Btn";
-      boxFooterBtn2.innerHTML = "Rangking Nasional";
+      boxFooterBtn2.innerHTML = "Rangking Univ";
       boxFooterBtn2.setAttribute("href", base + "/home/rangking_universitas");
 
       boxBody.appendChild(boxBodyTitle);

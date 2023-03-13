@@ -25,6 +25,7 @@
                                 <tr>
                                     <td class="text-center">No</td>
                                     <td class="text-center">Soal</td>
+                                    <td class="text-center">Id</td>
                                     <td class="text-center">Pembuatan</td>
                                     <td class="text-center">Update</td>
                                     <td class="text-center">Action</td>
@@ -34,8 +35,9 @@
                                     <tr>
                                         <td class="text-center"><?= $i++; ?></td>
                                         <td class="text-center">
-                                            <a id="<?= $bs['id_soal']; ?>" class="preview_btn box_item__Btn list_quiz_button selected">Preview Soal</a>
+                                            <a id="<?= $bs['id_soal']; ?>" class="preview_btn box_item__Btn list_quiz_button selected">View</a>
                                         </td>
+                                        <td class="text-center"><?= $bs['id_soal']; ?></td>
                                         <td class="text-center"><?= $bs['created_at']; ?></td>
                                         <td class="text-center"><?= $bs['updated_at']; ?></td>
                                         <td class="text-center">

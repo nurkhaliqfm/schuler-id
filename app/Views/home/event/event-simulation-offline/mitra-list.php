@@ -12,7 +12,7 @@
                         </div>
                     <?php endif; ?>
                     <div class="container_header_1 head__simulationfree">
-                        <h3 class="box-title simulation">Mitra Simulasi <span>SNBT OFFLINE</span></h3>
+                        <h3 class="box-title simulation">Mitra Simulasi <span>UTBK SNBT 2023</span></h3>
                         <p class="box__subtitle">Berikut Daftar Sekolah Penyelenggara Simulasi SNBT Offline</p>
                     </div>
                 </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pembahasan Event Simulasi SNBPT 2023 | Schuler.Id</title>
+    <title>Pembahasan Event Simulasi SNBT 2023 | Schuler.Id</title>
     <!-- Fav Icon -->
     <link rel="icon" type="image/x-icon" href="<?php echo base_url('assets/img/favicon.png') ?>">
 
@@ -101,7 +101,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </body>
 <script>
     document.querySelectorAll('p').forEach((el) => {

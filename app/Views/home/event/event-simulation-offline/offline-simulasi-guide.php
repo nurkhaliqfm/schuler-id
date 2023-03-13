@@ -54,10 +54,16 @@
                     </div>
                     <div class="footer__simulationfree">
                         <div class="button__container">
-                            <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
+                            <a disable class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
                                 <i class="fa-solid fa-play"></i><span>Mulai</span>
                             </a>
-                            <a href="<?= base_url('home/event_simulasi'); ?>" class="close__simulation__Btn">
+                            <a  href="<?= base_url('/PdfController/cetak_kartu_peserta?id=' . $_GET['id'] . '&query=' . $_GET['query'] . '&m=' . $_GET['m']) ?>" class="start__simulation__Btn" style="margin-left: 5px;">
+                                 <i class="fa-solid fa-download"></i> <span>Kartu Peserta</span>
+                            </a>
+                            <!--<a href="" class="start__simulation__Btn" style="margin-left: 5px;">-->
+                            <!--    <i class="fa-solid fa-download"></i><span>Sertifikat SNBT</span>-->
+                            <!--</a>-->
+                            <a href="<?= base_url('/home/offline_simulation_home?query=' . $_GET['m']); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>
                             </a>
                         </div>

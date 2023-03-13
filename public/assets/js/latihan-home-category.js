@@ -19,10 +19,13 @@ function CreateItemOption(categoryItems, filter) {
       boxHeader.innerHTML = categoryItems[i].quiz_name.toUpperCase();
       boxBody.className = "box_item__body";
       boxBodyTitle.className = "box_body__title";
+    //   boxBodyTitle.innerHTML =
+    //     "Jumlah Soal: " + categoryItems[i].total_soal + " Nomor";
       boxBodyTitle.innerHTML =
-        "Jumlah Soal: " + categoryItems[i].total_soal + " Nomor";
+        "Jumlah Soal: " + 20 + " Nomor";
       boxBodySubtitle.className = "box_body__subtitle";
-      boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
+    //   boxBodySubtitle.innerHTML = "Waktu: " + categoryItems[i].timer + " Menit";
+      boxBodySubtitle.innerHTML = "Waktu: " + 15 + " Menit";
       boxFooter.className = "box_item__footer quiz_footer";
       boxFooterBtn.className = "box_item__Btn list_quiz_button selected";
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);

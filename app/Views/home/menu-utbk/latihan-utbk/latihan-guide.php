@@ -30,7 +30,7 @@
                             <tr>
                                 <td>Soal</td>
                                 <td>:</td>
-                                <td><?= $jumlah_soal; ?> Nomor</td>
+                                <td>20 Nomor</td>
                             </tr>
                             <tr>
                                 <td>Waktu</td>

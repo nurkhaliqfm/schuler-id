@@ -44,6 +44,7 @@ $routes->post('home/update-sekolah', 'Home::update_sekolah/');
 $routes->post('home/xhttpOfflineSimulationStatus', 'Home::xhttpOfflineSimulationStatus');
 $routes->post('home/registerSimulasiOffline', 'Home::registerSimulasiOffline');
 
+$routes->get('home/pembahasan_yps', 'Home::pembahasan');
 
 /*
  * --------------------------------------------------------------------

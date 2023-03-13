@@ -197,7 +197,7 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     data = btn[4];
   }
 
-  document.getElementById("result_simulasi").innerHTML = UserResult();
+  document.getElementById("result_simulasi").innerHTML = UserResult().toFixed(2);
 
   document.getElementById("result_category__title").innerHTML =
     "HASIL " + tab.name.toUpperCase();

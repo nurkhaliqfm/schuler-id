@@ -37,19 +37,49 @@ function CreateOption(question_id, id, value, label_option) {
 }
 
 function SaveAnsware() {
-  var UserQuizStorage = localStorage.getItem(sessionID);
-  UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
-
   document.querySelectorAll("input.form-check-input").forEach((itemOption) => {
     if (itemOption.checked) {
+      var UserQuizStorage = localStorage.getItem(sessionID);
+      UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
+
+      var csrfName = document
+        .getElementById("txt_csrfname")
+        .getAttribute("name");
+      var csrfHash = document.getElementById("txt_csrfname").value;
+
       var new_data = itemOption.value;
       var id_soal = document
         .getElementById("question__part")
         .getAttribute("id-soal");
 
-      UserQuizStorage[id_soal] = new_data;
+      const data = {};
+      data["quiz_id"] = UserQuizStorage["quiz_id"];
+      data[csrfName] = csrfHash;
+      data["answare"] = itemOption.value;
+      data["id_soal"] = id_soal;
 
-      localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+      var xhttp = new XMLHttpRequest();
+      xhttp.open(
+        "POST",
+        window.location.origin + "/home/save_user_answare",
+        true
+      );
+      xhttp.onreadystatechange = () => {
+        if (xhttp.readyState == 4 && xhttp.status == 200) {
+          var response = JSON.parse(xhttp.responseText);
+          document.getElementById("txt_csrfname").value = response["value"];
+          document.getElementById("txt_csrfname").name = response["name"];
+
+          if (response.status == "Success") {
+            UserQuizStorage[id_soal] = new_data;
+
+            localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
+          }
+        }
+      };
+      xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+      xhttp.setRequestHeader("Content-Type", "application/json");
+      xhttp.send(JSON.stringify(data));
     }
   });
 }
@@ -70,6 +100,7 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     let dataSoal = dataItems.find(
       ({ id_soal }) => id_soal === item.quiz_question
     );
+
     let qSubject = typeSoal.find(
       ({ id_main_type_soal }) => id_main_type_soal === item.quiz_subject
     );

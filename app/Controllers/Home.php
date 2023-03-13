@@ -11,6 +11,7 @@ use App\Models\UserHistoryModel;
 use App\Models\UserHistoryUtbkModel;
 use App\Models\UserHistoryEventModel;
 use App\Models\UserHistoryEventOfflineModel;
+use App\Models\UserAnswareModel;
 use DateTime;
 use stdClass;
 
@@ -26,6 +27,8 @@ class Home extends BaseController
     protected $userHistoryUtbkModel;
     protected $userHistoryEventModel;
     protected $userHistoryEventOfflineModel;
+    protected $userAnswareModel;
+
 
     public function __construct()
     {
@@ -38,6 +41,7 @@ class Home extends BaseController
         $this->userHistoryUtbkModel  = new UserHistoryUtbkModel();
         $this->userHistoryEventModel  = new UserHistoryEventModel();
         $this->userHistoryEventOfflineModel  = new UserHistoryEventOfflineModel();
+        $this->userAnswareModel  = new UserAnswareModel();
     }
 
     public function index()
@@ -101,6 +105,21 @@ class Home extends BaseController
         return view('home/program-khusus/super-camp-utbk', $data);
     }
 
+    public function live_class()
+    {
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $data = [
+            'title' => 'Kelas Online SNBT Schuler.id',
+            'user_name' => $user['username']
+        ];
+
+        return view('home/program-khusus/online-class', $data);
+    }
+
     // MENU UTBK LATIHAN
     public function latihan_home()
     {
@@ -118,6 +137,9 @@ class Home extends BaseController
             foreach ($idCategoryQuiz as $id) {
                 if (!in_array($id, $typeSoalID)) {
                     $getTypeSoal = $this->typeSoalModel->where(['id_main_type_soal' => $id])->first();
+                    if (!$getTypeSoal) {
+                        dd($cC);
+                    }
                     $name = str_replace('_', ' ', $getTypeSoal['slug']);
                     $typeSoal[] = [
                         'id' => $id,
@@ -724,7 +746,7 @@ class Home extends BaseController
             $split_current_date = explode("-", $curret_date);
             $current_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
 
-            $date_different = strtotime($current_date_time) - strtotime($deatline_time);
+            $date_different = strtotime($deatline_time) - strtotime($current_date_time);
             $selisih = $date_different / 86400;
 
             if ($selisih >= 1) {
@@ -1186,8 +1208,7 @@ class Home extends BaseController
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
 
-
-        $split_deadline = explode("-", '19-10-2022');
+        $split_deadline = explode("-", '20-10-2022');
         $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
 
         $curret_date = date('Y-m-d');
@@ -1203,28 +1224,10 @@ class Home extends BaseController
             $hasil_tgl = 0;
         }
 
-        if ($hasil_tgl > 0) {
-            session()->setFlashdata('failed', "Masa Berlaku Pendaftaran Event Simulasi Ini Telah Selesai.");
-            return redirect()->to(base_url('home/event_simulasi'))->withInput();
-        }
-
-        $cekEventAccount = $this->akunEventModel->where([
-            'user_id' => $user['slug'],
-        ])->first();
-
-        $cekEventResult = $this->userHistoryEventModel->where([
-            'user_id' => $user['slug'],
-            'quiz_type' => $dataQuiz[0]['quiz_type'],
-        ])->first();
-
-        if (!$cekEventAccount) {
-            if (!$cekEventResult) {
-                $this->akunEventModel->save([
-                    'user_id' => $user['slug'],
-                    'paket_name' => $dataQuiz[0]['quiz_type'],
-                ]);
-            }
-        }
+        // if ($hasil_tgl > 0) {
+        //     session()->setFlashdata('failed', "Masa Berlaku Pendaftaran Event Simulasi Ini Telah Selesai.");
+        //     return redirect()->to(base_url('home/event_simulasi'))->withInput();
+        // }
 
         $list_tgl = [
             '21-10-2022' => '21-10-2022,21 Oktober 2022',
@@ -1244,6 +1247,37 @@ class Home extends BaseController
             'sesi_1' => 'sesi_1,07:30 - 15:30',
             'sesi_2' => 'sesi_2,15:30 - 23:30',
         ];
+
+        $cekEventAccount = $this->akunEventModel->where([
+            'user_id' => $user['slug'],
+        ])->first();
+
+        $cekEventResult = $this->userHistoryEventModel->where([
+            'user_id' => $user['slug'],
+            'quiz_type' => $dataQuiz[0]['quiz_type'],
+        ])->first();
+
+        if (!$cekEventAccount) {
+            if (!$cekEventResult) {
+                $this->akunEventModel->save([
+                    'user_id' => $user['slug'],
+                    'paket_name' => $dataQuiz[0]['quiz_type'],
+                ]);
+            }
+        }
+
+        if ($cekEventAccount) {
+            if ($cekEventAccount['tgl_mulai'] && $cekEventAccount['sesi_pengerjaan']) {
+                $getJadwal = explode(',', $list_tgl[$cekEventAccount['tgl_mulai']]);
+                $getSesi = explode(',', $list_sesi[$cekEventAccount['sesi_pengerjaan']]);
+            } else {
+                $getJadwal = ['0', 'Belum Dipilih'];
+                $getSesi = ['0', 'Belum Dipilih'];
+            }
+        } else {
+            $getJadwal = ['0', 'Belum Dipilih'];
+            $getSesi = ['0', 'Belum Dipilih'];
+        }
 
         $remakeList_tgl = [];
         $remakeList_sesi = [];
@@ -1268,14 +1302,6 @@ class Home extends BaseController
                     $x++;
                 }
             }
-        }
-
-        if ($cekEventAccount) {
-            $getJadwal = explode(',', $list_tgl[$cekEventAccount['tgl_mulai']]);
-            $getSesi = explode(',', $list_sesi[$cekEventAccount['sesi_pengerjaan']]);
-        } else {
-            $getJadwal = ['0', 'Belum Dipilih'];
-            $getSesi = ['0', 'Belum Dipilih'];
         }
 
         $data = [
@@ -1307,6 +1333,28 @@ class Home extends BaseController
         $id = $this->request->getVar('id');
         $tgl = $this->request->getVar('tgl_value');
         $sesi = $this->request->getVar('sesi_value');
+
+        $split_deadline = explode("-", '20-10-2022');
+        $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
+
+        $curret_date = date('Y-m-d');
+        $split_current_date = explode("-", $curret_date);
+        $current_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
+
+        $date_different = strtotime($current_date_time) - strtotime($deatline_time);
+        $selisih = $date_different / 86400;
+
+        if ($selisih >= 1) {
+            $hasil_tgl = floor($selisih);
+        } else {
+            $hasil_tgl = 0;
+        }
+
+        if ($hasil_tgl > 0) {
+            session()->setFlashdata('failed', "Mohon Maaf Jadwal Tidak Dapat Diubah.");
+            redirect()->to(base_url('home/event_simulasi_guide?id=' . $id . '&query=' . $query))->withInput();
+        }
+
         $dataQuiz = $this->bankQuizModel->where(['quiz_id' => $query])->findAll();
         $cekEventAccount = $this->akunEventModel->where([
             'user_id' => $user['slug'],
@@ -1390,8 +1438,11 @@ class Home extends BaseController
                 $current_date_time = $split_current_date[2] . "-" . $split_current_date[1] . "-" . $split_current_date[0];
 
                 if ($deatline_time == $current_date_time) {
-                    if ($scheduled < $start && $scheduled > $end) {
+                    if ($scheduled < $start) {
                         session()->setFlashdata('failed', "Masa Pengerjaan Belum Berlangsung.");
+                        return redirect()->to(base_url('home/event_simulasi_guide?id=' . $id . '&query=' . $query))->withInput();
+                    } else if ($scheduled > $end) {
+                        session()->setFlashdata('failed', "Masa Pengerjaan Telah Berlalu.");
                         return redirect()->to(base_url('home/event_simulasi_guide?id=' . $id . '&query=' . $query))->withInput();
                     }
                 } else {
@@ -1403,7 +1454,7 @@ class Home extends BaseController
                 return redirect()->to(base_url('home/event_simulasi_guide?id=' . $id . '&query=' . $query))->withInput();
             }
         } else {
-            session()->setFlashdata('failed', "Anda Tidak Memiliki Akses Ke Kelas Ini, Silahkan Melakukan Pembelian Paket Terlebih Dahulu.");
+            session()->setFlashdata('failed', "Anda Tidak Memiliki Akses Ke Event Ini");
             return redirect()->to(base_url('home/event_simulasi_guide?id=' . $id . '&query=' . $query))->withInput();
         }
 
@@ -1730,9 +1781,9 @@ class Home extends BaseController
         ])->countAllResults();
 
         if ($allMitraStudent == $cekStudentCount) {
-            $nomorPeserta = str_pad(1, 3, '0', STR_PAD_LEFT);
+            $nomorPeserta = str_pad(1, 4, '0', STR_PAD_LEFT);
         } else {
-            $nomorPeserta = str_pad($allMitraStudent - $cekStudentCount, 3, '0', STR_PAD_LEFT);
+            $nomorPeserta = str_pad($allMitraStudent - $cekStudentCount, 4, '0', STR_PAD_LEFT);
         }
 
         $mitraEvent = $this->mitraEventModel->where([
@@ -1741,8 +1792,8 @@ class Home extends BaseController
 
         $listSchedule = explode(',', $mitraEvent['list_schedule']);
         $listLimit = explode(',', $mitraEvent['list_limit']);
-        $userSchedule = '';
-        $location = '';
+        // $userSchedule = '';
+        // $location = '';
 
         for ($i = 0; $i < sizeof($listLimit); $i++) {
             if ($listLimit[$i] > 0) {
@@ -1762,8 +1813,8 @@ class Home extends BaseController
             'pass' => $user['password'],
             'nomor_peserta' => '0407-' . $nomorPeserta,
             'tgl_lahir' => $this->request->getVar('tanggal_lahir'),
-            'schedule' => $userSchedule,
-            'location' => $location,
+            // 'schedule' => $userSchedule,
+            // 'location' => $location,
         ]);
 
         return redirect()->to(base_url('home/offline_simulation'));
@@ -1925,7 +1976,7 @@ class Home extends BaseController
             'November',
             'Desember'
         );
-        $split       = explode('-', $mitraEvent['tgl_mulai']);
+        $split = explode('-', $mitraEvent['tgl_mulai']);
         $num = date('N', strtotime($mitraEvent['tgl_mulai']));
         $schedule = $hari[$num] . ', ' . $split[2] . ' ' . $bulan[(int)$split[1]] . ' ' . $split[0];
 
@@ -1940,6 +1991,7 @@ class Home extends BaseController
             'universitas_pilihan' => $getUniversitas['nama_universitas'],
             'jadwal_tgl' => $schedule,
             'jadwal_waktu' => $cekEventAccount['schedule'],
+            // $cekEventAccount['schedule']
         ];
 
         return view('home/event/event-simulation-offline/offline-simulasi-guide', $data);
@@ -1980,26 +2032,36 @@ class Home extends BaseController
         $userScheduleSesi = $cekAccount['schedule'];
 
         if ($cekAccount) {
-            $sesiUser = explode(' - ', $userScheduleSesi);
+            if (date('Y-m-d') == $mitraEvent['tgl_mulai']) {
+                $sesiUser = explode(' - ', $userScheduleSesi);
 
-            $scheduled = DateTime::createFromFormat('H:i', date('H:i'));
-            $start = DateTime::createFromFormat('H:i', $sesiUser[0]);
-            $end = DateTime::createFromFormat('H:i', $sesiUser[1]);
+                $scheduled = DateTime::createFromFormat('H:i', date('H:i'));
+                $start = DateTime::createFromFormat('H:i', $sesiUser[0]);
+                $end = DateTime::createFromFormat('H:i', $sesiUser[1]);
 
-            $split_deadline = explode("-", $mitraEvent['tgl_mulai']);
-            $deatline_time = $split_deadline[0] . "-" . $split_deadline[1] . "-" . $split_deadline[2];
+                $split_deadline = explode("-", $mitraEvent['tgl_mulai']);
+                $deatline_time = $split_deadline[0] . "-" . $split_deadline[1] . "-" . $split_deadline[2];
 
-            $curret_date = date('Y-m-d');
-            $split_current_date = explode("-", $curret_date);
-            $current_date_time = $split_current_date[0] . "-" . $split_current_date[1] . "-" . $split_current_date[2];
+                $curret_date = date('Y-m-d');
+                $split_current_date = explode("-", $curret_date);
+                $current_date_time = $split_current_date[0] . "-" . $split_current_date[1] . "-" . $split_current_date[2];
 
-            if ($deatline_time == $current_date_time) {
-                if ($scheduled < $start && $scheduled > $end) {
-                    session()->setFlashdata('failed', "Masa Pengerjaan Belum Berlangsung.");
+                if ($deatline_time == $current_date_time) {
+                    if ($scheduled < $start) {
+                        session()->setFlashdata('failed', "Masa Pengerjaan Belum Berlangsung.");
+                        return redirect()->to(base_url('home/offline_simulasi_guide?id=' . $id . '&query=' . $query . '&m=' . $mitraID))->withInput();
+                    }
+
+                    // else if($scheduled > $end){
+                    //     session()->setFlashdata('failed', "Masa Pengerjaan Telah Berlalu.");
+                    //     return redirect()->to(base_url('home/offline_simulasi_guide?id=' . $id . '&query=' . $query . '&m=' . $mitraID))->withInput();
+                    // }
+                } else {
+                    session()->setFlashdata('failed', "Jadwal Pengerjaan Belum Berlangsung.");
                     return redirect()->to(base_url('home/offline_simulasi_guide?id=' . $id . '&query=' . $query . '&m=' . $mitraID))->withInput();
                 }
             } else {
-                session()->setFlashdata('failed', "Jadwal Pengerjaan Belum Berlangsung.");
+                session()->setFlashdata('failed', "Simulasi Dapat Dikerjakan Sesuai Jadwal Simulasi.");
                 return redirect()->to(base_url('home/offline_simulasi_guide?id=' . $id . '&query=' . $query . '&m=' . $mitraID))->withInput();
             }
         } else {
@@ -2072,6 +2134,48 @@ class Home extends BaseController
         ];
 
         return view('home/event/event-simulation-offline/simulasi-main', $data);
+    }
+
+    public function save_user_answare()
+    {
+        if (session()->get('user_level') != 'users') {
+            return redirect()->to(base_url('admin/error_404'));
+        }
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $quizId = $data['quiz_id'];
+        $soalId = $data['id_soal'];
+        $userAnsware = $data['answare'];
+        $users = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $cekHistoryAnsware = $this->userAnswareModel->where([
+            'user_id' => $users['slug'],
+            'quiz_id' => $quizId,
+            'id_soal' => $soalId
+        ])->first();
+
+        if ($cekHistoryAnsware) {
+            $this->userAnswareModel->update($cekHistoryAnsware['id'], [
+                'answare' => $userAnsware
+            ]);
+        } else {
+            $this->userAnswareModel->save([
+                'user_id' => $users['slug'],
+                'quiz_id' => $quizId,
+                'id_soal' => $soalId,
+                'answare' => $userAnsware
+            ]);
+        }
+
+        $response = array();
+        $response['name'] = csrf_token();
+        $response['value'] = csrf_hash();
+        $response['status'] = "Success";
+        $response['quiz_id'] = $data['quiz_id'];
+
+        return $this->response->setJSON($response);
     }
 
     public function save_offline_simulasi()
@@ -2258,7 +2362,6 @@ class Home extends BaseController
         return view('home/event/event-simulation-offline/hasil-simulasi', $data);
     }
 
-
     // RANGKING EVENT
     public function save_event_rangking()
     {
@@ -2428,8 +2531,8 @@ class Home extends BaseController
             $price = $item['price'];
         }
 
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$serverKey = 'Mid-server-DjgpetlV68OoHGTcJQcFMkHz';
+        \Midtrans\Config::$isProduction = true;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
@@ -2484,8 +2587,8 @@ class Home extends BaseController
             $price = $item['price'];
         }
 
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$serverKey = 'Mid-server-DjgpetlV68OoHGTcJQcFMkHz';
+        \Midtrans\Config::$isProduction = true;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
@@ -2535,11 +2638,6 @@ class Home extends BaseController
             return redirect()->to(base_url('admin/error_404'));
         }
 
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
-        \Midtrans\Config::$isProduction = false;
-        \Midtrans\Config::$isSanitized = true;
-        \Midtrans\Config::$is3ds = true;
-
         $transaksi = $this->transaksiUserModel->where(['id_user' => $user['slug']])->findAll();
         $pending = $this->transaksiUserModel->where([
             'id_user' => $user['slug'],
@@ -2584,8 +2682,8 @@ class Home extends BaseController
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$serverKey = 'Mid-server-DjgpetlV68OoHGTcJQcFMkHz';
+        \Midtrans\Config::$isProduction = true;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
@@ -2647,8 +2745,8 @@ class Home extends BaseController
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
 
-        \Midtrans\Config::$serverKey = 'SB-Mid-server-6FN2MeuPD9HI0q9MDl4E8_6b';
-        \Midtrans\Config::$isProduction = false;
+        \Midtrans\Config::$serverKey = 'Mid-server-DjgpetlV68OoHGTcJQcFMkHz';
+        \Midtrans\Config::$isProduction = true;
         \Midtrans\Config::$isSanitized = true;
         \Midtrans\Config::$is3ds = true;
 
@@ -2790,9 +2888,233 @@ class Home extends BaseController
         return redirect()->to(base_url('home/account-setting'))->withInput();
     }
 
+    public function pembahasan()
+    {
+        $query = $this->request->getVar('query');
+        $id = $this->request->getVar('id');
+
+        if (!$query) {
+            return redirect()->to(base_url("home/list_hasil_offline_event"));
+        }
+
+        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $userHistoryEvent = $this->userHistoryEventOfflineModel->where([
+            // 'user_id' => $user['slug'],
+            'quiz_id' => $query
+        ])->first();
+
+        $idSoal = explode(',', $userHistoryEvent['id_soal']);
+        // $userAns = explode(',', $userHistoryEvent['answare']);
+        // $userAnsware = new stdClass;
+        // for ($i = 0; $i < count($idSoal); $i++) {
+        //     $userAnsware->{$idSoal[$i]} = $userAns[$i];
+        // }
+
+        $getQUizType = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->first();
+
+        $getcategorySoalData = $this->categoryQuizModel->where(['slug' => $getQUizType['quiz_type']])->first();
+        $categorySoal = explode(',', $getcategorySoalData['category_item']);
+
+        if ($id == null) {
+            $id = $categorySoal[0];
+        };
+
+        $quizData = [];
+        $quizDataSplit = [];
+        foreach ($categorySoal as $cs) {
+            $getTypesoalData = $this->typeSoalModel->where(['id_main_type_soal' => $cs])->first();
+            $typeSoal = explode(',', $getTypesoalData['list_type_soal_id']);
+            $remakeTypeSoal[] = [
+                'id' => $cs,
+                'name' => $getTypesoalData['main_type_soal'],
+                'slug' => $getTypesoalData['slug'],
+            ];
+
+            foreach ($typeSoal as $ts) {
+                $getQuizSoal = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts
+                ])->findAll();
+
+                $getQuizSplit = $this->bankQuizModel->where([
+                    'quiz_id' => $query,
+                    'quiz_subject' => $id,
+                    'quiz_sub_subject' => $ts
+                ])->orderBy('quiz_sub_subject')->findAll();
+
+                foreach ($getQuizSoal as $qQs) {
+                    array_push($quizData, $qQs);
+                }
+
+                foreach ($getQuizSplit as $qS) {
+                    array_push($quizDataSplit, $qS);
+                }
+            }
+        }
+
+        $bankSoal = $this->bankSoalModel->findAll();
+        $typeSoal = $this->typeSoalModel->findAll();
+        $navbarTitle = $quizData[0]['quiz_name'];
+
+        $data = [
+            'title' => 'Hasil Simulasi UTBK-SNBT Schuler.id',
+            'user_name' => 'GUEST',
+            'bank_soal' => $bankSoal,
+            'quiz_data' => $quizData,
+            'bank_soal_remake' => $quizDataSplit,
+            'type_soal' => $typeSoal,
+            'type_soal_tab' => $remakeTypeSoal,
+            'navbar_title' => $navbarTitle,
+            // 'user_answare' => $userAnsware
+        ];
+
+        return view('home/pembahasan', $data);
+    }
+
     // ERROR
     public function error_404()
     {
         return view('errors/html/error_404');
+    }
+
+    public function exp_data_yps()
+    {
+
+        $dataMIPA = [
+            ['Nama', 'Kelas', 'Penalaran Umum (B)', 'Penalaran Umum (S)', 'Penalaran Umum (K)', 'Penalaran Umum (P)', 'Pemahaman Bacaan & Menulis (B)', 'Pemahaman Bacaan & Menulis (S)', 'Pemahaman Bacaan & Menulis (K)', 'Pemahaman Bacaan & Menulis (P)', 'Pengetahuan & Pemahaman Umum (B)', 'Pengetahuan & Pemahaman Umum (S)', 'Pengetahuan & Pemahaman Umum (K)', 'Pengetahuan & Pemahaman Umum (P)', 'Pengetahuan Kuantitatif (B)', 'Pengetahuan Kuantitatif (S)', 'Pengetahuan Kuantitatif (K)', 'Pengetahuan Kuantitatif (P)', 'Literasi Bahasa Indonesia (B)', 'Literasi Bahasa Indonesia (S)', 'Literasi Bahasa Indonesia (K)', 'Literasi Bahasa Indonesia (P)', 'Literasi Bahasa Inggris (B)', 'Literasi Bahasa Inggris (S)', 'Literasi Bahasa Inggris (K)', 'Literasi Bahasa Inggris (P)', 'Penalaran Matematika (B)', 'Penalaran Matematika (S)', 'Penalaran Matematika (K)', 'Penalaran Matematika (P)']
+        ];
+        $dataIPS = [
+            ['Nama', 'Kelas', 'Penalaran Umum (B)', 'Penalaran Umum (S)', 'Penalaran Umum (K)', 'Penalaran Umum (P)', 'Pemahaman Bacaan & Menulis (B)', 'Pemahaman Bacaan & Menulis (S)', 'Pemahaman Bacaan & Menulis (K)', 'Pemahaman Bacaan & Menulis (P)', 'Pengetahuan & Pemahaman Umum (B)', 'Pengetahuan & Pemahaman Umum (S)', 'Pengetahuan & Pemahaman Umum (K)', 'Pengetahuan & Pemahaman Umum (P)', 'Pengetahuan Kuantitatif (B)', 'Pengetahuan Kuantitatif (S)', 'Pengetahuan Kuantitatif (K)', 'Pengetahuan Kuantitatif (P)', 'Literasi Bahasa Indonesia (B)', 'Literasi Bahasa Indonesia (S)', 'Literasi Bahasa Indonesia (K)', 'Literasi Bahasa Indonesia (P)', 'Literasi Bahasa Inggris (B)', 'Literasi Bahasa Inggris (S)', 'Literasi Bahasa Inggris (K)', 'Literasi Bahasa Inggris (P)', 'Penalaran Matematika (B)', 'Penalaran Matematika (S)', 'Penalaran Matematika (K)', 'Penalaran Matematika (P)']
+        ];
+
+        $AllCategoryQuiz = $this->categoryQuizModel->where(['slug' => 'snbt_utbk_2023'])->first();
+        $listCategory = explode(',', $AllCategoryQuiz['category_item']);
+
+        $userHistoryEvent = $this->userHistoryEventOfflineModel->where([
+            'quiz_id' => "566cf1a1-c0f4-4d16-9dbf-9ad9beb39b00"
+        ])->findAll();
+
+        foreach ($userHistoryEvent as $uHV) {
+            $explodeSoalID = explode(",", $uHV['id_soal']);
+            $explodeSoalAns = explode(",", $uHV['answare']);
+
+            $cekEventAccount = $this->mitraStudentModel->where([
+                'user_id' => $uHV['user_id'],
+            ])->first();
+
+            foreach ($listCategory as $lC) {
+                $getTestCategory = $this->typeSoalModel->where([
+                    'id_main_type_soal' => $lC
+                ])->first();
+
+                $dataSubtestID = explode(',', $getTestCategory['list_type_soal_id']);
+                $dataSubtestName = explode(',', $getTestCategory['list_type_soal']);
+
+                $dataEachSubsubject = [];
+
+                for ($j = 0; $j < sizeof($dataSubtestID); $j++) {
+                    $namaSubjectSoal = $dataSubtestName[$j];
+
+                    $benar = 0;
+                    $salah = 0;
+                    $kosong = 0;
+
+                    $cekBankQuiz = $this->bankQuizModel->where([
+                        'quiz_id' => "566cf1a1-c0f4-4d16-9dbf-9ad9beb39b00",
+                        'quiz_sub_subject' => $dataSubtestID[$j]
+                    ])->findAll();
+
+                    foreach ($cekBankQuiz as $cBQ) {
+                        $quiz_id = $cBQ['quiz_question'];
+                        $userAnsId = array_search($quiz_id, $explodeSoalID);
+                        $cekSoalId = $this->bankSoalModel->where([
+                            'id_soal' => $quiz_id,
+                        ])->first();
+
+                        if ($explodeSoalAns[$userAnsId] == $cekSoalId['ans_id']) {
+                            $benar++;
+                        } elseif ($explodeSoalAns[$userAnsId] != $cekSoalId['ans_id']) {
+                            $salah++;
+                        } elseif ($explodeSoalAns[$userAnsId] == 0) {
+                            $kosong++;
+                        }
+                    }
+
+                    $dataAnsCategory[$namaSubjectSoal] = [
+                        'Benar' => $benar,
+                        'Salah' => $salah,
+                        'Kosong' => $kosong,
+                        'Poin' => $benar * 50
+                    ];
+
+                    array_push($dataEachSubsubject, $dataAnsCategory);
+                }
+            }
+
+            $pesertaName = $cekEventAccount['peserta_name'];
+            $pesertaKelas = $cekEventAccount['peserta_info'];
+
+            $kelasExplode = explode(" ", $pesertaKelas);
+            $kelasCategory = $kelasExplode[1];
+
+            $listUserEventData = [
+                'Nama' => $pesertaName,
+                'Kelas' => $pesertaKelas,
+                'Penalaran Umum (B)' => $dataEachSubsubject[0]['Penalaran Umum']['Benar'],
+                'Penalaran Umum (S)' => $dataEachSubsubject[0]['Penalaran Umum']['Salah'],
+                'Penalaran Umum (K)' => $dataEachSubsubject[0]['Penalaran Umum']['Kosong'],
+                'Penalaran Umum (P)' => $dataEachSubsubject[0]['Penalaran Umum']['Poin'],
+                'Pemahaman Bacaan & Menulis (B)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Benar'],
+                'Pemahaman Bacaan & Menulis (S)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Salah'],
+                'Pemahaman Bacaan & Menulis (K)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Kosong'],
+                'Pemahaman Bacaan & Menulis (P)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Poin'],
+                'Pengetahuan & Pemahaman Umum (B)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Benar'],
+                'Pengetahuan & Pemahaman Umum (S)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Salah'],
+                'Pengetahuan & Pemahaman Umum (K)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Kosong'],
+                'Pengetahuan & Pemahaman Umum (P)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Poin'],
+                'Pengetahuan Kuantitatif (B)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Benar'],
+                'Pengetahuan Kuantitatif (S)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Salah'],
+                'Pengetahuan Kuantitatif (K)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Kosong'],
+                'Pengetahuan Kuantitatif (P)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Poin'],
+                'Literasi Bahasa Indonesia (B)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Benar'],
+                'Literasi Bahasa Indonesia (S)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Salah'],
+                'Literasi Bahasa Indonesia (K)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Kosong'],
+                'Literasi Bahasa Indonesia (P)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Poin'],
+                'Literasi Bahasa Inggris (B)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Benar'],
+                'Literasi Bahasa Inggris (S)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Salah'],
+                'Literasi Bahasa Inggris (K)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Kosong'],
+                'Literasi Bahasa Inggris (P)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Poin'],
+                'Penalaran Matematika (B)' => $dataEachSubsubject[0]['Penalaran Matematika']['Benar'],
+                'Penalaran Matematika (S)' => $dataEachSubsubject[0]['Penalaran Matematika']['Salah'],
+                'Penalaran Matematika (K)' => $dataEachSubsubject[0]['Penalaran Matematika']['Kosong'],
+                'Penalaran Matematika (P)' => $dataEachSubsubject[0]['Penalaran Matematika']['Poin'],
+            ];
+
+
+            if ($kelasCategory == 'MIPA') {
+                array_push($dataMIPA, $listUserEventData);
+            } elseif ($kelasCategory == 'IPS') {
+                array_push($dataIPS, $listUserEventData);
+            }
+        }
+        $fp_mipa = fopen('Data-Kelas-MIPA.csv', 'w');
+        foreach ($dataMIPA as $fields) {
+            fputcsv($fp_mipa, $fields);
+        }
+
+        fclose($fp_mipa);
+
+        $fp_ips = fopen('Data-Kelas-IPS.csv', 'w');
+        foreach ($dataIPS as $fields) {
+            fputcsv($fp_ips, $fields);
+        }
+
+        fclose($fp_ips);
+
+        dd('Done');
     }
 }

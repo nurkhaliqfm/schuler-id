@@ -7,7 +7,7 @@
             <div class="col-md-12">
                 <div class="white-box invoice_white-box">
                     <div class="head__simulationfree">
-                        <h3 class="box-title">Persiapan <span>Latihan</span></h3>
+                        <h3 class="box-title">Invoice <span>Pembelian</span></h3>
                         <div class="alert__box invoice_alert"><i class="fa-solid fa-circle-info"></i>
                             <span> Perhatian : </span>
                             <ul>

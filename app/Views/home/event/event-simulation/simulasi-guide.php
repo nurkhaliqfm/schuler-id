@@ -30,12 +30,12 @@
                             <tr>
                                 <td class="align-middle">Soal</td>
                                 <td class="align-middle">:</td>
-                                <td class="align-middle"><?= $jumlah_soal; ?> Nomor</td>
+                                <td class="align-middle">80 Nomor</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">Waktu</td>
                                 <td class="align-middle">:</td>
-                                <td class="align-middle"><?= ($timer / 60) * $quiz_part; ?> Menit</td>
+                                <td class="align-middle">90 Menit</td>
                             </tr>
                             <tr>
                                 <td class="align-middle">PTN Pilihan</td>
@@ -57,9 +57,9 @@
                             <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
                                 <i class="fa-solid fa-play"></i><span>Mulai</span>
                             </a>
-                            <a class="middle__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalSchedule">
-                                <i class="fa-solid fa-clock"></i><span>Jadwal</span>
-                            </a>
+                            <!--<a class="middle__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalSchedule">-->
+                            <!--    <i class="fa-solid fa-clock"></i><span>Jadwal</span>-->
+                            <!--</a>-->
                             <a href="<?= base_url('home/event_simulasi'); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>
                             </a>

@@ -37,10 +37,10 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxFooterBtn.setAttribute("data-button", categoryItems[i].quiz_id);
       boxFooterBtn.innerHTML = "Kerjakan";
       boxFooterBtn2.className = "box_item__Btn";
-      boxFooterBtn2.innerHTML = "Rangking Universitas";
+      boxFooterBtn2.innerHTML = "Rangking Nasional";
       boxFooterBtn2.setAttribute("href", base_url + "/home/event_rangking");
       boxFooterBtn3.className = "box_item__Btn";
-      boxFooterBtn3.innerHTML = "Rangking Nasional";
+      boxFooterBtn3.innerHTML = "Rangking Univ";
       boxFooterBtn3.setAttribute(
         "href",
         base_url + "/home/event_rangking_universitas"
@@ -50,8 +50,8 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxBody.appendChild(boxBodySubtitle);
       boxBody.appendChild(boxBodyDesc);
       boxFooter.appendChild(boxFooterBtn);
-      boxFooter.appendChild(boxFooterBtn2);
-      boxFooter.appendChild(boxFooterBtn3);
+    //   boxFooter.appendChild(boxFooterBtn2);
+    //   boxFooter.appendChild(boxFooterBtn3);
       boxItem.appendChild(boxHeader);
       boxItem.appendChild(boxBody);
       boxItem.appendChild(boxFooter);

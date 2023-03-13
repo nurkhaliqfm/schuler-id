@@ -37,10 +37,10 @@ class Login extends BaseController
     {
         $session_id = Uuid::uuid4();
         $users = $this->usersModel;
-        $cek = $users->where(['email' => $this->request->getVar('email')])->first();
+        $cek = $users->where(['email' => strtolower($this->request->getVar('email'))])->first();
         if ($cek) {
             $user_level = $cek['level_user'];
-            $cek_password = $users->where(['email' => $cek['email'], 'password' => $this->request->getVar('password')])->first();
+            $cek_password = $users->where(['email' => strtolower($cek['email']), 'password' => $this->request->getVar('password')])->first();
             if ($cek_password) {
                 if ($user_level == 'users') {
                     if ($cek_password['universitas_pilihan'] == "") {
@@ -50,7 +50,7 @@ class Login extends BaseController
 
                 session()->set([
                     'session_id' => $session_id,
-                    'username' => $this->request->getVar('email'),
+                    'username' => strtolower($this->request->getVar('email')),
                     'password' => $this->request->getVar('password'),
                     'logged_in' => true,
                     'user_level' => $user_level
@@ -81,7 +81,7 @@ class Login extends BaseController
     {
         $username = $this->request->getVar("username");
         $phoneNumber = $this->request->getVar("phoneNumber");
-        $email = $this->request->getVar("email");
+        $email = strtolower($this->request->getVar("email"));
         $password = $this->request->getVar("password");
         $passwordConfrm = $this->request->getVar("passwordConfrm");
         $referalCode = $this->request->getVar('referalCode');
@@ -151,8 +151,11 @@ class Login extends BaseController
     {
         $slug = $this->request->getVar('slug');
         if ($slug == null) return redirect()->to(base_url('login'));
+        
+        $getUser = $this->usersModel->where(['slug' => $slug])->first();
 
         $data = [
+            'asal_sekolah' => $getUser['asal_sekolah'],
             'kampus' => $this->universitasModel->findAll(),
             'validation' => \Config\Services::validation()
         ];

@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <div class="input-group mb-3">
-                            <input type="text" class="input__form checked form-control <?= ($validation->hasError('asalSekolah')) ? 'is-invalid' : ''; ?>" name="asalSekolah" placeholder="Masukkan Asal Sekolah">
+                            <input type="text" class="input__form checked form-control <?= ($validation->hasError('asalSekolah')) ? 'is-invalid' : ''; ?>" value="<?= ($asal_sekolah) ? $asal_sekolah : '' ?>" name="asalSekolah" placeholder="Masukkan Asal Sekolah">
                             <div class="invalid-feedback">
                                 <?= $validation->getError('asalSekolah'); ?>
                             </div>

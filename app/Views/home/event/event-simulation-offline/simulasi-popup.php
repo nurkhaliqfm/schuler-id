@@ -28,7 +28,7 @@
                 <h5 class="modal-logo notif-style"><i class="fa-solid fa-check-circle"></i></h5>
             </div>
             <div class="modal-body notif-style">
-                <span class="text-notif">Terimakasih telah melakakuan simulasi UTBK Premium di schuler.id...</span>
+                <span class="text-notif">Terimakasih telah melakakuan simulasi UTBK UNBT 2023 di schuler.id...</span>
             </div>
             <div class="modal-footer">
                 <a style="display: none;" class="modal-style close__simulation__Btn" data-bs-dismiss="modal"><i class="fa-solid fa-times-circle"></i><span>Batal</span></a>

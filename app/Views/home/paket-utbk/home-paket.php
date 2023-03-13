@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-d8PDMaeTqOQtxy6E"></script>
+<script src="https://app.midtrans.com/snap/snap.js" data-client-key="Mid-client-KzP6dvkpW5QvBuX1"></script>
 <script>
     let shopItem = <?= json_encode($shop_item); ?>;
     let urlPayMidtrans = "<?= base_url('home/payMidtrans') ?>";
@@ -166,7 +166,7 @@
                                             var response = JSON.parse(xhttp.responseText);
                                             document.getElementById('txt_csrfname').value = response['value'];
                                             document.getElementById('txt_csrfname').name = response['name'];
-
+                                            
                                             var csrfName = document.getElementById('txt_csrfname').getAttribute('name');
                                             var csrfHash = document.getElementById('txt_csrfname').value;
 

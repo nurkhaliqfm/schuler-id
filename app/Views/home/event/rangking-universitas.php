@@ -39,19 +39,21 @@
                                     <tbody>
                                         <?php $i = 1; ?>
                                         <?php foreach ($data_rangking as $dr) : ?>
-                                            <tr class="result">
-                                                <td><?= $i++; ?></td>
-                                                <td><?= ucwords($dr['user_name']); ?></td>
-                                                <td><?= ucwords($dr['universitas_pilihan']); ?></td>
-                                                <td><?= ucwords($dr['asal_sekolah']); ?></td>
-                                                <td><?= ucwords($dr['skor']); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                            </tr>
+                                            <?php if($i < 11){ ?>
+                                                <tr class="result">
+                                                    <td><?= $i++; ?></td>
+                                                    <td><?= ucwords($dr['user_name']); ?></td>
+                                                    <td><?= ucwords($dr['universitas_pilihan']); ?></td>
+                                                    <td><?= ucwords($dr['asal_sekolah']); ?></td>
+                                                    <td><?= ucwords($dr['skor']); ?></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            <?php } ?>
                                         <?php endforeach; ?>
                                     </tbody>
                                     <tfoot>
@@ -74,13 +76,15 @@
                                             <td></td>
                                         </tr>
                                         <?php if ($data_user != null) { ?>
-                                            <tr class="result">
-                                                <td><?= $user_rank; ?></td>
-                                                <td><?= ucwords($data_user['user_name']); ?></td>
-                                                <td><?= ucwords($data_user['universitas_pilihan']); ?></td>
-                                                <td><?= ucwords($data_user['asal_sekolah']); ?></td>
-                                                <td><?= ucwords($data_user['skor']); ?></td>
-                                            </tr>
+                                            <?php if($user_rank > 10){ ?>
+                                                <tr class="result">
+                                                    <td><?= $user_rank; ?></td>
+                                                    <td><?= ucwords($data_user['user_name']); ?></td>
+                                                    <td><?= ucwords($data_user['universitas_pilihan']); ?></td>
+                                                    <td><?= ucwords($data_user['asal_sekolah']); ?></td>
+                                                    <td><?= ucwords($data_user['skor']); ?></td>
+                                                </tr>
+                                            <?php } ?>
                                         <?php } ?>
                                     </tfoot>
                                 </table>

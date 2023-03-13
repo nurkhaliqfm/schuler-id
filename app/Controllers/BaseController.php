@@ -40,6 +40,20 @@ class BaseController extends Controller
     /**
      * Constructor.
      */
+
+    protected $usersModel;
+    protected $rangkingSimulasi;
+    protected $eventReangkingSimulasi;
+    protected $bankQuizModel;
+    protected $bankSoalModel;
+    protected $universitasModel;
+    protected $utbkShopModel;
+    protected $akunPremiumModel;
+    protected $akunEventModel;
+    protected $transaksiUserModel;
+    protected $mitraModel;
+    protected $mitraStudentModel;
+    protected $mitraEventModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
         // Do Not Edit This Line
@@ -52,13 +66,11 @@ class BaseController extends Controller
         $this->eventReangkingSimulasi = new \App\Models\EventRangkingSimulasi();
         $this->bankQuizModel = new \App\Models\BankQuizModel();
         $this->bankSoalModel = new \App\Models\BankSoalModel();
-        $this->typeSoalModel = new \App\Models\TypeSoalModel();
-
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 
         // Shop
-        $this->UtbkShopModel = new \App\Models\UtbkShopModel();
+        // $this->UtbkShopModel = new \App\Models\UtbkShopModel();
 
         // TRANSAKSI
         $this->utbkShopModel = new \App\Models\UtbkShopModel();
