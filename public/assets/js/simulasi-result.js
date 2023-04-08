@@ -197,7 +197,8 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     data = btn[4];
   }
 
-  document.getElementById("result_simulasi").innerHTML = UserResult().toFixed(2);
+  document.getElementById("result_simulasi").innerHTML =
+    UserResult().toFixed(2);
 
   document.getElementById("result_category__title").innerHTML =
     "HASIL " + tab.name.toUpperCase();
@@ -226,7 +227,7 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
 function UserResult() {
   let defaulPoint = 150;
   let allTrue = 1000;
-  let point = allTrue / 20;
+  let point = allTrue / 20; // Dibagi Jumlah Soal
 
   let part_1 = typeSoalTab.filter((obj) => {
     return obj.slug == dataQuiz[0].quiz_type;

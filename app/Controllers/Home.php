@@ -2995,7 +2995,7 @@ class Home extends BaseController
         $listCategory = explode(',', $AllCategoryQuiz['category_item']);
 
         $userHistoryEvent = $this->userHistoryEventOfflineModel->where([
-            'quiz_id' => "566cf1a1-c0f4-4d16-9dbf-9ad9beb39b00"
+            'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8"
         ])->findAll();
 
         foreach ($userHistoryEvent as $uHV) {
@@ -3024,7 +3024,7 @@ class Home extends BaseController
                     $kosong = 0;
 
                     $cekBankQuiz = $this->bankQuizModel->where([
-                        'quiz_id' => "566cf1a1-c0f4-4d16-9dbf-9ad9beb39b00",
+                        'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8",
                         'quiz_sub_subject' => $dataSubtestID[$j]
                     ])->findAll();
 
@@ -3101,14 +3101,14 @@ class Home extends BaseController
                 array_push($dataIPS, $listUserEventData);
             }
         }
-        $fp_mipa = fopen('Data-Kelas-MIPA.csv', 'w');
+        $fp_mipa = fopen('Data-Kelas-MIPA-YPS-WOTU.csv', 'w');
         foreach ($dataMIPA as $fields) {
             fputcsv($fp_mipa, $fields);
         }
 
         fclose($fp_mipa);
 
-        $fp_ips = fopen('Data-Kelas-IPS.csv', 'w');
+        $fp_ips = fopen('Data-Kelas-IPS-YPS-WOTU.csv', 'w');
         foreach ($dataIPS as $fields) {
             fputcsv($fp_ips, $fields);
         }
@@ -3116,5 +3116,126 @@ class Home extends BaseController
         fclose($fp_ips);
 
         dd('Done');
+    }
+
+    public function fixData()
+    {
+        $dataMitra = $this->mitraStudentModel->where(['mitra_id' => '848fcf3a-63b6-47ea-b8d4-9932d7c1d60b'])->findAll();
+        foreach ($dataMitra as $x) {
+            $getHistory = $this->userHistoryEventOfflineModel->where([
+                'user_id' => $x['user_id'],
+                'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8"
+            ])->first();
+            if ($getHistory) {
+                if (str_contains($getHistory['answare'], '0')) {
+                    $cek = explode(',', $getHistory['id_soal']);
+                    $cekAns = explode(',', $getHistory['answare']);
+                    $index = 0;
+                    foreach ($cekAns as $key) {
+                        if ($key == '0') {
+                            $getAnsw = $this->userAnswareModel->where(['user_id' => $x['user_id'], 'id_soal' => $cek[$index]])->first();
+                            if ($getAnsw) {
+                                $cekAns[$index] = $getAnsw['answare'];
+                            }
+                        }
+                        $index++;
+                    }
+
+                    $idSoal = [];
+                    $answare = [];
+                    $benar = 0;
+                    $idCount = 0;
+                    foreach ($cek as $soalId) {
+                        $cekSoalId = $this->bankSoalModel->where([
+                            'id_soal' => $soalId,
+                        ])->first();
+
+                        if ($cekAns[$idCount] == $cekSoalId['ans_id']) {
+                            $benar++;
+                        }
+
+                        array_push($idSoal, $soalId);
+                        array_push($answare, $cekAns[$idCount]);
+
+                        $idCount++;
+                    }
+
+                    $cekRangking = $this->eventReangkingSimulasi->where(['id_user' => $x['user_id']])->first();
+                    if ($cekRangking) {
+                        $this->eventReangkingSimulasi->update($cekRangking['id'], [
+                            'skor' => round(($benar * 50) / 7 + 150)
+                        ]);
+                    } else {
+                        $user = $this->usersModel->where(['slug' => $x['user_id']])->first();
+                        $kampus = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+                        $this->eventReangkingSimulasi->save([
+                            'id_user' => $user['slug'],
+                            'user_name' => $user['username'],
+                            'email' => $user['email'],
+                            'id_universitas' => $kampus['id_universitas'],
+                            'universitas_pilihan' => $kampus['nama_universitas'],
+                            'asal_sekolah' => $user['asal_sekolah'],
+                            'skor' => round(($benar * 50) / 7 + 150)
+                        ]);
+                    }
+
+                    $this->userHistoryEventOfflineModel->update($getHistory['id'], [
+                        'id_soal' => join(',', $idSoal),
+                        'answare' => join(',', $answare),
+                    ]);
+                    // dd($getHistory);
+                }
+            } else {
+                $cekUserAns = $this->userAnswareModel->where(['user_id' => $x['user_id']])->findAll();
+                if (sizeof($cekUserAns) > 0) {
+                    $idSoal = [];
+                    $answare = [];
+                    $benar = 0;
+                    foreach ($cekUserAns as $dataAns) {
+                        $cekSoalId = $this->bankSoalModel->where([
+                            'id_soal' => $dataAns['id_soal'],
+                        ])->first();
+
+                        if ($dataAns['answare'] == $cekSoalId['ans_id']) {
+                            $benar++;
+                        }
+
+                        array_push($idSoal, $dataAns['id_soal']);
+                        array_push($answare, $dataAns['answare']);
+                    }
+
+                    $cekRangking = $this->eventReangkingSimulasi->where(['id_user' => $x['user_id']])->first();
+                    if ($cekRangking) {
+                        $this->eventReangkingSimulasi->update($cekRangking['id'], [
+                            'skor' => round(($benar * 50) / 7 + 150)
+                        ]);
+                    } else {
+                        $user = $this->usersModel->where(['slug' => $x['user_id']])->first();
+                        $kampus = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+                        $this->eventReangkingSimulasi->save([
+                            'id_user' => $user['slug'],
+                            'user_name' => $user['username'],
+                            'email' => $user['email'],
+                            'id_universitas' => $kampus['id_universitas'],
+                            'universitas_pilihan' => $kampus['nama_universitas'],
+                            'asal_sekolah' => $user['asal_sekolah'],
+                            'skor' => round(($benar * 50) / 7 + 150)
+                        ]);
+                    }
+
+                    $this->userHistoryEventOfflineModel->save([
+                        'user_id' => $x['user_id'],
+                        'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8",
+                        'id_soal' => join(',', $idSoal),
+                        'quiz_type' => 'snbt_utbk_2023',
+                        'quiz_category' => 'offline',
+                        'answare' => join(',', $answare),
+                    ]);
+                    // dd($cekUserAns);
+                }
+            }
+        }
     }
 }
