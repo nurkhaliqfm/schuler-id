@@ -427,12 +427,25 @@ class Home extends BaseController
         $remakeBankQuiz = [];
         $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'free_simulation'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
-            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
-            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where([
+            $getPart = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
                 'quiz_category' => 'free_simulation',
-            ])->groupBy('quiz_sub_subject')->countAllResults();
+            ])->groupBy('quiz_sub_subject')->findAll();
+
+            $timer = 0;
+            $totalSoal = 0;
+            foreach ($getPart as $part) {
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+                $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+                $timer += $explodeTiemerSubpart[$cekResultIndex];
+                $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+            }
+
             $quizSubject = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
                 'quiz_category' => 'free_simulation'
@@ -453,8 +466,8 @@ class Home extends BaseController
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
-                'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'total_soal' => $totalSoal,
+                'timer' => ($timer / 60),
                 'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
@@ -488,13 +501,31 @@ class Home extends BaseController
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
 
+        $getPart = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->groupBy('quiz_sub_subject')->findAll();
+
+        $timer = 0;
+        $totalSoal = 0;
+        foreach ($getPart as $part) {
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+            $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+            $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+            $timer += $explodeTiemerSubpart[$cekResultIndex];
+            $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+        }
+
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
             'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
-            'jumlah_soal' => count($dataQuiz),
+            'jumlah_soal' => $totalSoal,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer / 60,
             'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas']
         ];
@@ -546,17 +577,31 @@ class Home extends BaseController
                 'quiz_subject' => $listSession[0]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[0]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $listSession[0]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[0]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         } else {
             $quizData = $this->bankQuizModel->where([
                 'quiz_id' => $query,
                 'quiz_subject' => $listSession[$getSession]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[$getSession]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $listSession[$getSession]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[$getSession]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         }
 
         $navbarTitle = strtoupper($quizData[0]['quiz_name']);
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
-        $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
+
 
         $data = [
             'title' => 'Simulasi Schuler.id',
@@ -566,7 +611,7 @@ class Home extends BaseController
             'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer,
             'utbk_session' => $getSession,
             'utbk_session_limit' => sizeof($listSession)
         ];
@@ -644,12 +689,25 @@ class Home extends BaseController
         $remakeBankQuiz = [];
         $bankQuiz = $this->bankQuizModel->orderBy('id')->where(['quiz_category' => 'premium_simulation'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
-            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
-            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where([
+            $getPart = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
-                'quiz_category' => 'premium_simulation',
-            ])->groupBy('quiz_sub_subject')->countAllResults();
+                'quiz_category' => 'free_simulation',
+            ])->groupBy('quiz_sub_subject')->findAll();
+
+            $timer = 0;
+            $totalSoal = 0;
+            foreach ($getPart as $part) {
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+                $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+                $timer += $explodeTiemerSubpart[$cekResultIndex];
+                $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+            }
+
             $quizSubject = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
                 'quiz_category' => 'premium_simulation'
@@ -670,8 +728,8 @@ class Home extends BaseController
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
-                'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'total_soal' => $totalSoal,
+                'timer' => ($timer / 60),
                 'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
@@ -705,13 +763,31 @@ class Home extends BaseController
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
 
+        $getPart = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->groupBy('quiz_sub_subject')->findAll();
+
+        $timer = 0;
+        $totalSoal = 0;
+        foreach ($getPart as $part) {
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+            $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+            $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+            $timer += $explodeTiemerSubpart[$cekResultIndex];
+            $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+        }
+
         $data = [
             'title' => 'Petunjuk Simulasi Schuler.id',
             'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
-            'jumlah_soal' => count($dataQuiz),
+            'jumlah_soal' => $totalSoal,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer / 60,
             'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas']
         ];
@@ -732,6 +808,7 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
+        if (!$categoryQuiz) return redirect()->to(base_url('home'));
 
         $cekAccount = $this->akunPremiumModel->where([
             'user_id' => $user['slug'],
@@ -785,6 +862,20 @@ class Home extends BaseController
                 ];
 
                 array_push($listSession, $listSessionItem);
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $selectedType['id_main_type_soal']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($stid, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $selectedType['id_main_type_soal'],
+                    'quiz_sub_subject' => $stid,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -795,17 +886,31 @@ class Home extends BaseController
                 'quiz_subject' => $listSession[0]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[0]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $listSession[0]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[0]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         } else {
             $quizData = $this->bankQuizModel->where([
                 'quiz_id' => $query,
                 'quiz_subject' => $listSession[$getSession]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[$getSession]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $listSession[$getSession]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[$getSession]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         }
 
         $navbarTitle = strtoupper($quizData[0]['quiz_name']);
         $users = $this->usersModel->where(['email' => session()->get('username')])->first();
-        $timer = $this->quizModel->where(['slug' => $quizData[0]['quiz_category']])->first();
+
 
         $allQuizData = $this->bankQuizModel->where([
             'quiz_id' => $query,
@@ -822,8 +927,9 @@ class Home extends BaseController
             'all_type_soal' => $alltypeSoal,
             'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
+            'question_number' => $questionNumber,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer,
             'utbk_session' => $getSession,
             'utbk_session_limit' => sizeof($listSession)
         ];
@@ -993,6 +1099,20 @@ class Home extends BaseController
                 foreach ($getQuizSplit as $qS) {
                     array_push($quizDataSplit, $qS);
                 }
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $cs])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($ts, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -1008,6 +1128,7 @@ class Home extends BaseController
             'bank_soal_remake' => $quizDataSplit,
             'type_soal' => $typeSoal,
             'type_soal_tab' => $remakeTypeSoal,
+            'question_number' => $questionNumber,
             'navbar_title' => $navbarTitle,
             'user_answare' => $userAnsware
         ];
@@ -1143,12 +1264,25 @@ class Home extends BaseController
         $remakeBankQuiz = [];
         $bankQuiz = $this->bankQuizModel->orderBy('quiz_name')->where(['quiz_category' => 'event'])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
-            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
-            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where([
+            $getPart = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
-                'quiz_category' => 'event',
-            ])->groupBy('quiz_sub_subject')->countAllResults();
+                'quiz_category' => 'free_simulation',
+            ])->groupBy('quiz_sub_subject')->findAll();
+
+            $timer = 0;
+            $totalSoal = 0;
+            foreach ($getPart as $part) {
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+                $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+                $timer += $explodeTiemerSubpart[$cekResultIndex];
+                $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+            }
+
             $quizSubject = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
                 'quiz_category' => 'event'
@@ -1169,8 +1303,8 @@ class Home extends BaseController
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
-                'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'total_soal' => $totalSoal,
+                'timer' => ($timer / 60),
                 'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
@@ -1207,6 +1341,24 @@ class Home extends BaseController
         $countPart = $this->bankQuizModel->where(['quiz_id' => $query])->groupBy('quiz_sub_subject')->countAllResults();
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+        $getPart = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->groupBy('quiz_sub_subject')->findAll();
+
+        $timer = 0;
+        $totalSoal = 0;
+        foreach ($getPart as $part) {
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+            $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+            $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+            $timer += $explodeTiemerSubpart[$cekResultIndex];
+            $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+        }
 
         $split_deadline = explode("-", '20-10-2022');
         $deatline_time = $split_deadline[2] . "-" . $split_deadline[1] . "-" . $split_deadline[0];
@@ -1308,9 +1460,9 @@ class Home extends BaseController
             'title' => 'Petunjuk Simulasi Schuler.id',
             'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
-            'jumlah_soal' => count($dataQuiz),
+            'jumlah_soal' => $totalSoal,
             'session_id' => $user['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer / 60,
             'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas'],
             'jadwal_tgl' => $getJadwal,
@@ -1399,6 +1551,7 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $categoryQuiz = $this->categoryQuizModel->where(['category_id' => $id])->first();
+        if (!$categoryQuiz) return redirect()->to(base_url('home'));
 
         $cekAccount = $this->akunEventModel->where([
             'user_id' => $user['slug'],
@@ -1479,6 +1632,20 @@ class Home extends BaseController
                 ];
 
                 array_push($listSession, $listSessionItem);
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $selectedType['id_main_type_soal']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($stid, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $selectedType['id_main_type_soal'],
+                    'quiz_sub_subject' => $stid,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -1489,12 +1656,26 @@ class Home extends BaseController
                 'quiz_subject' => $listSession[0]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[0]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $listSession[0]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[0]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         } else {
             $quizData = $this->bankQuizModel->where([
                 'quiz_id' => $query,
                 'quiz_subject' => $listSession[$getSession]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[$getSession]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $listSession[$getSession]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[$getSession]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         }
 
         $navbarTitle = strtoupper($quizData[0]['quiz_name']);
@@ -1516,8 +1697,9 @@ class Home extends BaseController
             'all_type_soal' => $alltypeSoal,
             'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
+            'question_number' => $questionNumber,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer,
             'utbk_session' => $getSession,
             'utbk_session_limit' => sizeof($listSession)
         ];
@@ -1686,6 +1868,20 @@ class Home extends BaseController
                 foreach ($getQuizSplit as $qS) {
                     array_push($quizDataSplit, $qS);
                 }
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $cs])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($ts, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -1701,6 +1897,7 @@ class Home extends BaseController
             'bank_soal_remake' => $quizDataSplit,
             'type_soal' => $typeSoal,
             'type_soal_tab' => $remakeTypeSoal,
+            'question_number' => $questionNumber,
             'navbar_title' => $navbarTitle,
             'user_answare' => $userAnsware
         ];
@@ -1882,12 +2079,24 @@ class Home extends BaseController
             'quiz_id' => $mitraEvent['quiz_id']
         ])->groupBy(['quiz_id'])->findAll();
         foreach ($bankQuiz as  $bq) {
-            $count = $this->bankQuizModel->where(['quiz_id' => $bq['quiz_id']])->findAll();
-            $timer = $this->quizModel->where(['slug' => $bq['quiz_category']])->first();
-            $countPart = $this->bankQuizModel->where([
+            $getPart = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
-                'quiz_category' => 'offline',
-            ])->groupBy('quiz_sub_subject')->countAllResults();
+                'quiz_category' => 'free_simulation',
+            ])->groupBy('quiz_sub_subject')->findAll();
+
+            $timer = 0;
+            $totalSoal = 0;
+            foreach ($getPart as $part) {
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+                $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+                $timer += $explodeTiemerSubpart[$cekResultIndex];
+                $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+            }
 
             $quizSubject = $this->bankQuizModel->where([
                 'quiz_type' => $bq['quiz_type'],
@@ -1909,8 +2118,8 @@ class Home extends BaseController
                 'quiz_id' => $bq['quiz_id'],
                 'quiz_subject' => $bq['quiz_subject'],
                 'quiz_name' => $bq['quiz_name'],
-                'total_soal' => count($count),
-                'timer' => ($timer['quiz_timer'] / 60) * $countPart,
+                'total_soal' => $totalSoal,
+                'timer' => ($timer / 60),
                 'desc' => $text,
                 'quiz_type' => $bq['quiz_type']
             );
@@ -1943,6 +2152,24 @@ class Home extends BaseController
         $countPart = $this->bankQuizModel->where(['quiz_id' => $query])->groupBy('quiz_sub_subject')->countAllResults();
 
         $getUniversitas = $this->universitasModel->where(['id_universitas' => $user['universitas_pilihan']])->first();
+
+        $getPart = $this->bankQuizModel->where([
+            'quiz_id' => $query
+        ])->groupBy('quiz_sub_subject')->findAll();
+
+        $timer = 0;
+        $totalSoal = 0;
+        foreach ($getPart as $part) {
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $part['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+            $explodeQuestNumbSubpart = explode(',', $searchPart['event_quest_numb']);
+
+            $cekResultIndex = array_search($part['quiz_sub_subject'], array_column($explodeSubpart, null));
+
+            $timer += $explodeTiemerSubpart[$cekResultIndex];
+            $totalSoal += $explodeQuestNumbSubpart[$cekResultIndex];
+        }
 
         $mitraEvent = $this->mitraEventModel->where([
             'mitra_id' => $mitraID,
@@ -1984,9 +2211,9 @@ class Home extends BaseController
             'title' => 'Petunjuk Simulasi Schuler.id',
             'user_name' => $user['username'],
             'nama_quiz' => $dataQuiz[0]['quiz_name'],
-            'jumlah_soal' => count($dataQuiz),
+            'jumlah_soal' => $totalSoal,
             'session_id' => $user['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer / 60,
             'quiz_part' => $countPart,
             'universitas_pilihan' => $getUniversitas['nama_universitas'],
             'jadwal_tgl' => $schedule,
@@ -2090,6 +2317,20 @@ class Home extends BaseController
                 ];
 
                 array_push($listSession, $listSessionItem);
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $selectedType['id_main_type_soal']])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($stid, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $selectedType['id_main_type_soal'],
+                    'quiz_sub_subject' => $stid,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -2100,12 +2341,26 @@ class Home extends BaseController
                 'quiz_subject' => $listSession[0]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[0]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' => $listSession[0]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[0]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         } else {
             $quizData = $this->bankQuizModel->where([
                 'quiz_id' => $query,
                 'quiz_subject' => $listSession[$getSession]['quiz_subject'],
                 'quiz_sub_subject' => $listSession[$getSession]['quiz_sub_subject']
             ])->findAll();
+
+            $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $listSession[$getSession]['quiz_subject']])->first();
+            $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+            $explodeTiemerSubpart = explode(',', $searchPart['event_timer']);
+
+            $cekResultIndex = array_search($listSession[$getSession]['quiz_sub_subject'], array_column($explodeSubpart, null));
+            $timer = $explodeTiemerSubpart[$cekResultIndex];
         }
 
         $navbarTitle = strtoupper($quizData[0]['quiz_name']);
@@ -2127,8 +2382,9 @@ class Home extends BaseController
             'all_type_soal' => $alltypeSoal,
             'type_soal' => $remakeTypeSoal,
             'navbar_title' => $navbarTitle,
+            'question_number' => $questionNumber,
             'session_id' => $users['slug'],
-            'timer' => $timer['quiz_timer'],
+            'timer' => $timer,
             'utbk_session' => $getSession,
             'utbk_session_limit' => sizeof($listSession)
         ];
@@ -2340,6 +2596,20 @@ class Home extends BaseController
                 foreach ($getQuizSplit as $qS) {
                     array_push($quizDataSplit, $qS);
                 }
+
+                $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $cs])->first();
+                $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
+                $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
+
+                $cekResultIndex = array_search($ts, array_column($explodeSubpart, null));
+
+                $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
+
+                $questionNumber[] = [
+                    'quiz_subject' => $cs,
+                    'quiz_sub_subject' => $ts,
+                    'quest_number' => $questNumber
+                ];
             }
         }
 
@@ -2355,6 +2625,7 @@ class Home extends BaseController
             'bank_soal_remake' => $quizDataSplit,
             'type_soal' => $typeSoal,
             'type_soal_tab' => $remakeTypeSoal,
+            'question_number' => $questionNumber,
             'navbar_title' => $navbarTitle,
             'user_answare' => $userAnsware
         ];

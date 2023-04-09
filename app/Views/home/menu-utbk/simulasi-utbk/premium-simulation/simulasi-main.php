@@ -70,6 +70,7 @@
     let sessionID = <?= json_encode($session_id); ?>;
     let id = <?= json_encode($_GET['id']); ?>;
     let query = <?= json_encode($_GET['query']); ?>;
+    let allQuizQuestNumber = <?= json_encode($question_number); ?>;
     let urlRedirect = "<?= base_url('home/hasil_simulasi'); ?>";
     let urlDone = "<?= base_url('home/save_simulasi_premium') ?>";
     let urlRanking = "<?= base_url('home/save_simulasi_rangking') ?>";

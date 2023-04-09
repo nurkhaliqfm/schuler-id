@@ -119,6 +119,8 @@ class Admin extends BaseController
             'sub_type_soal' => $submenuSoal
         ])->findAll();
 
+        // dd($bankSoalModel);
+
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
@@ -130,24 +132,31 @@ class Admin extends BaseController
         return view('admin/bank-soal/daftar-soal', $data);
     }
 
-    public function input_soal($id, $type)
+    public function input_soal($id, $type, $style)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'admin super') {
             return redirect()->to(base_url('home/error_404'));
         }
 
+
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
             'menu_soal' => $id,
             'submenu_soal' => $type,
+            'soal_style' => $style,
             'validation' => \Config\Services::validation()
         ];
 
-        return view('admin/bank-soal/input-soal', $data);
+        if ($style == 'normal') {
+            return view('admin/bank-soal/input-soal', $data);
+        } else {
+            return view('admin/bank-soal/input-soal-truefalse', $data);
+        }
     }
 
+    // Soal Normal
     public function edit_soal($idSoal)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
@@ -188,8 +197,111 @@ class Admin extends BaseController
         $menuSoal = $this->request->getVar('MenuSoal');
         $submenuSoal = $this->request->getVar('SubmenuSoal');
 
-        $soal  = $this->request->getVar('editorQuestion');
-        $soal = str_replace("Love", "Sarange", $soal);
+        if (!$this->validate([
+            'editorQuestion' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Soal Harus Diisi',
+                ]
+            ],
+            'option_a' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilihan A Harus Diisi',
+                ]
+            ],
+            'option_b' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilihan B Harus Diisi',
+                ]
+            ],
+            'option_c' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilihan C Harus Diisi',
+                ]
+            ],
+            'option_d' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilihan D Harus Diisi',
+                ]
+            ],
+            'option_e' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pilihan E Harus Diisi',
+                ]
+            ],
+            'checkbox' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Jawaban Soal Belum Dipilih',
+                ]
+            ],
+            'questionValue' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Point Soal Harus Diisi',
+                ]
+            ],
+            'editorExplanation' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Pembahasan Harus Diisi',
+                ]
+            ],
+        ])) {
+            session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
+            return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+        }
+
+        $questionAns = $this->request->getVar('checkbox');
+        $bankSoalModel = $this->bankSoalModel;
+        $bankSoalModel->save([
+            'type_soal' => $menuSoal,
+            'sub_type_soal' => $submenuSoal,
+            'id_soal' => uniqid(),
+            'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
+            'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_a')),
+            'option_b' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_b')),
+            'option_c' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_c')),
+            'option_d' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_d')),
+            'option_e' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_e')),
+            'jawaban' => md5($questionAns[0]),
+            'ans_id' => $questionAns[0],
+            'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
+            'value' => $this->request->getVar('questionValue')
+        ]);
+
+        $TypeSoalModel = $this->typeSoalModel;
+        $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
+        $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
+        $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
+        $arrayLong = sizeof($valueSoal);
+        for ($i = 0; $i < $arrayLong; $i++) {
+            if ($typeSoalId[$i] == $submenuSoal) {
+                $valueSoal[$i] = $valueSoal[$i] + 1;
+            }
+        };
+
+        $TypeSoalModel->update($getTypeSoal['id'], [
+            'list_type_soal_jumlah' => join(",", $valueSoal)
+        ]);
+
+        session()->setFlashdata('success', "Soal Berhasil Ditambahkan.");
+        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+    }
+
+    public function save_soal_truefalse()
+    {
+        if (session()->get('user_level') != 'admin super') {
+            return redirect()->to(base_url('home/error_404'));
+        }
+
+        $menuSoal = $this->request->getVar('MenuSoal');
+        $submenuSoal = $this->request->getVar('SubmenuSoal');
 
         if (!$this->validate([
             'editorQuestion' => [

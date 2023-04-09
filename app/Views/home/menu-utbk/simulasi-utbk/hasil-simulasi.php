@@ -134,6 +134,7 @@
     let dataQuizRemake = <?= json_encode($bank_soal_remake); ?>;
     let typeSoal = <?= json_encode($type_soal); ?>;
     let typeSoalTab = <?= json_encode($type_soal_tab); ?>;
+    let allQuizQuestNumber = <?= json_encode($question_number); ?>;
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let userAnsware = <?= json_encode($user_answare); ?>;
     let urltab = "<?= base_url('home/hasil_simulasi?query=' . $_GET['query']); ?>"

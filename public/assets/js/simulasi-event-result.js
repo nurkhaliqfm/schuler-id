@@ -5,6 +5,9 @@ const list_element = document.getElementById("question__part"),
   question_num_btn = document.getElementById("question__number_side"),
   tabButton = document.querySelectorAll("div.tab-category");
 
+var defaulPoint = 150;
+var allTrue = 1000;
+
 function CreateOption(question_id, id, value, label_option) {
   var radiobox = document.createElement("input");
   radiobox.type = "radio";
@@ -197,7 +200,8 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     data = btn[4];
   }
 
-  document.getElementById("result_simulasi").innerHTML = UserResult().toFixed(2);
+  document.getElementById("result_simulasi").innerHTML =
+    UserResult().toFixed(0);
 
   document.getElementById("result_category__title").innerHTML =
     "HASIL " + tab.name.toUpperCase();
@@ -209,7 +213,7 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
     line.className = "line-separator";
     title.className = "box_body__title";
     subtitle.className = "box_body__subtitle";
-    title.innerHTML = data[x]["value"] * 50;
+    title.innerHTML = data[x]["value"].toFixed(0);
     subtitle.innerHTML = data[x]["nama"];
 
     document.getElementById("result_base_category").appendChild(subtitle);
@@ -224,9 +228,7 @@ function PaginationListNumber(items, row_per_page, userAnsware, tab) {
 }
 
 function UserResult() {
-  let defaulPoint = 150;
-  let allTrue = 1000;
-  let point = allTrue / 20;
+  // let point = allTrue / 20;
 
   let part_1 = typeSoalTab.filter((obj) => {
     return obj.slug == dataQuiz[0].quiz_type;
@@ -241,8 +243,9 @@ function UserResult() {
   let resultData = {};
   let allPartMode = 0;
   for (let x = 0; x < allPart.length; x++) {
-    let benar = 0;
+    // let benar = 0;
     let numberCategory = 0;
+    let countResult = 0;
 
     if (allPart[x].length > 0) {
       for (let i = 0; i < allPart[x].length; i++) {
@@ -262,13 +265,20 @@ function UserResult() {
             ({ id_soal }) => id_soal === soalByCategory[j].quiz_question
           );
 
+          let getQuestNumb = allQuizQuestNumber.find(
+            ({ quiz_sub_subject }) =>
+              quiz_sub_subject === soalByCategory[j].quiz_sub_subject
+          );
+
           if (dataSoal.jawaban == md5(userAnsware[dataSoal.id_soal])) {
-            benar++;
+            // benar++;
+            countResult += allTrue / getQuestNumb.quest_number;
           }
         }
       }
+
       allPartMode++;
-      resultData[x] = [(benar * point) / numberCategory];
+      resultData[x] = [countResult / numberCategory];
     }
   }
 
@@ -337,6 +347,10 @@ function BtnNumberPagination(
     ({ id_soal }) => id_soal === items[index].quiz_question
   );
 
+  let getQuestNumb = allQuizQuestNumber.find(
+    ({ quiz_sub_subject }) => quiz_sub_subject === items[index].quiz_sub_subject
+  );
+
   if (userAnsware[dataSoal.id_soal] == "0") {
     btn__side.classList.add("normal");
     kosongAns++;
@@ -348,7 +362,7 @@ function BtnNumberPagination(
       .map((object) => object.id)
       .indexOf(dataSoal["sub_type_soal"]);
 
-    let value = data[index]["value"] + 1;
+    let value = data[index]["value"] + allTrue / getQuestNumb.quest_number;
     data = data.map((obj) => {
       if (obj.id === dataSoal["sub_type_soal"]) {
         return { ...obj, value: value };

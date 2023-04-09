@@ -8,6 +8,13 @@ const list_element = document.getElementById("question__part"),
   notif_button = document.getElementById("notif_btn"),
   question_num_btn = document.getElementById("question__number_side");
 
+function convertToTitleCase(str) {
+  let newStr = str.replace(/_/g, " "); // Replace all underscores with spaces
+  return newStr.replace(/\w\S*/g, (txt) => {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
 function CreateOption(question_id, id, value, label_option) {
   var radiobox = document.createElement("input");
   radiobox.type = "radio";
@@ -123,8 +130,7 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
       .setAttribute("id-soal", dataSoal.id_soal);
     document.getElementById("simulation__title").innerHTML = navbarTitle;
     document.getElementById("simulation__subtitle").innerHTML =
-      simulation_subtitle.charAt(0).toUpperCase() +
-      simulation_subtitle.slice(1);
+      convertToTitleCase(simulation_subtitle);
     if (document.querySelector('p[data-f-id="pbf"]'))
       document
         .querySelector('p[data-f-id="pbf"]')

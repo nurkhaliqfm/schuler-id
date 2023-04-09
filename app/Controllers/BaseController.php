@@ -46,6 +46,7 @@ class BaseController extends Controller
     protected $eventReangkingSimulasi;
     protected $bankQuizModel;
     protected $bankSoalModel;
+    protected $bankSoalTrueFalseModel;
     protected $universitasModel;
     protected $utbkShopModel;
     protected $akunPremiumModel;
@@ -66,6 +67,7 @@ class BaseController extends Controller
         $this->eventReangkingSimulasi = new \App\Models\EventRangkingSimulasi();
         $this->bankQuizModel = new \App\Models\BankQuizModel();
         $this->bankSoalModel = new \App\Models\BankSoalModel();
+        $this->bankSoalTrueFalseModel = new \App\Models\BankSoalTrueFalseModel();
         // Kampus
         $this->universitasModel = new \App\Models\UniversitasModel();
 

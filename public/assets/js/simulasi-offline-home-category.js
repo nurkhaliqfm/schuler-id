@@ -50,8 +50,8 @@ function CreateItemOption(typeItems, categoryItems, filter) {
       boxBody.appendChild(boxBodySubtitle);
       boxBody.appendChild(boxBodyDesc);
       boxFooter.appendChild(boxFooterBtn);
-    //   boxFooter.appendChild(boxFooterBtn2);
-    //   boxFooter.appendChild(boxFooterBtn3);
+      //   boxFooter.appendChild(boxFooterBtn2);
+      //   boxFooter.appendChild(boxFooterBtn3);
       boxItem.appendChild(boxHeader);
       boxItem.appendChild(boxBody);
       boxItem.appendChild(boxFooter);

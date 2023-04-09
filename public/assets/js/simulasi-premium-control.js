@@ -8,6 +8,16 @@ const list_element = document.getElementById("question__part"),
   notif_button = document.getElementById("notif_btn"),
   question_num_btn = document.getElementById("question__number_side");
 
+var defaulPoint = 150;
+var allTrue = 1000;
+
+function convertToTitleCase(str) {
+  let newStr = str.replace(/_/g, " "); // Replace all underscores with spaces
+  return newStr.replace(/\w\S*/g, (txt) => {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+  });
+}
+
 function CreateOption(question_id, id, value, label_option) {
   var radiobox = document.createElement("input");
   radiobox.type = "radio";
@@ -123,8 +133,7 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
       .setAttribute("id-soal", dataSoal.id_soal);
     document.getElementById("simulation__title").innerHTML = navbarTitle;
     document.getElementById("simulation__subtitle").innerHTML =
-      simulation_subtitle.charAt(0).toUpperCase() +
-      simulation_subtitle.slice(1);
+      convertToTitleCase(simulation_subtitle);
     if (document.querySelector('p[data-f-id="pbf"]'))
       document
         .querySelector('p[data-f-id="pbf"]')
@@ -172,9 +181,7 @@ function UserResult() {
   var UserQuizStorage = localStorage.getItem(sessionID);
   UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
 
-  let defaulPoint = 150;
-  let allTrue = 1000;
-  let point = allTrue / 20;
+  // let point = allTrue / 20;
 
   let part_1 = typeSoal.filter((obj) => {
     return obj.slug == allQuizData[0].quiz_type;
@@ -189,8 +196,9 @@ function UserResult() {
   let resultData = {};
   let allPartMode = 0;
   for (let x = 0; x < allPart.length; x++) {
-    let benar = 0;
+    // let benar = 0;
     let numberCategory = 0;
+    let countResult = 0;
 
     if (allPart[x].length > 0) {
       for (let i = 0; i < allPart[x].length; i++) {
@@ -211,13 +219,20 @@ function UserResult() {
             ({ id_soal }) => id_soal === soalByCategory[j].quiz_question
           );
 
+          let getQuestNumb = allQuizQuestNumber.find(
+            ({ quiz_sub_subject }) =>
+              quiz_sub_subject === soalByCategory[j].quiz_sub_subject
+          );
+
           if (dataSoal.jawaban == md5(UserQuizStorage[dataSoal.id_soal])) {
-            benar++;
+            // benar++;
+            countResult += allTrue / getQuestNumb.quest_number;
           }
         }
       }
+
       allPartMode++;
-      resultData[x] = [(benar * point) / numberCategory];
+      resultData[x] = [countResult / numberCategory];
     }
   }
 
