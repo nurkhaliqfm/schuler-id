@@ -57,9 +57,9 @@
                             <a class="start__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalGuide">
                                 <i class="fa-solid fa-play"></i><span>Mulai</span>
                             </a>
-                            <!--<a class="middle__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalSchedule">-->
-                            <!--    <i class="fa-solid fa-clock"></i><span>Jadwal</span>-->
-                            <!--</a>-->
+                            <a class="middle__simulation__Btn" data-bs-toggle="modal" data-bs-target="#modalSchedule">
+                                <i class="fa-solid fa-clock"></i><span>Jadwal</span>
+                            </a>
                             <a href="<?= base_url('home/event_simulasi'); ?>" class="close__simulation__Btn">
                                 <i class="fa-solid fa-times-circle"></i><span>Batal</span>
                             </a>

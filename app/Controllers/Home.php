@@ -1471,7 +1471,7 @@ class Home extends BaseController
             'list_sesi' => $remakeList_sesi,
         ];
 
-        return view('home/event/event-simulation//simulasi-guide', $data);
+        return view('home/event/event-simulation/simulasi-guide', $data);
     }
 
     public function event_simulasi_schedule()
