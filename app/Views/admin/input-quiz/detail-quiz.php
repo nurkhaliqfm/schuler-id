@@ -93,6 +93,7 @@
                             <tr>
                                 <td style="border-bottom: 0px;" class="text-center"></td>
                                 <td style="border-bottom: 0px;" class="text-center">Soal</td>
+                                <td style="border-bottom: 0px;" class="text-center">Id Soal</td>
                                 <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
                             </tr>
                         </thead>
@@ -113,6 +114,13 @@
     let dataType = <?= json_encode($soal_subject); ?>;
     let dataCategory = <?= json_encode($bank_soal); ?>;
     let dataCategoryOption = <?= json_encode($bank_soal_option); ?>;
+
+    function convertToTitleCase(str) {
+        let newStr = str.replace(/_/g, " "); // Replace all underscores with spaces
+        return newStr.replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    }
 
     function CreateItem(categoryItems, query) {
         var container = document.getElementById("item-table");
@@ -228,10 +236,12 @@
                 var checkbox = document.createElement('input');
                 var itemSoal = document.createElement("td");
                 var itemSoalBtn = document.createElement("a");
+                var itemIdSoal = document.createElement("td");
                 var itemJenis = document.createElement("td");
 
                 itemCheckbox.className = "text-center"
                 itemJenis.className = "text-center"
+                itemIdSoal.className = "text-center"
                 itemSoal.className = "text-center"
 
                 checkbox.className = "custom-control-input";
@@ -241,6 +251,9 @@
                 itemCheckbox.appendChild(checkbox);
                 itemJenis.innerHTML = query[categoryItems[i]['sub_type_soal']];
 
+
+                itemIdSoal.innerHTML = convertToTitleCase(categoryItems[i]['soal_style']);
+
                 itemSoalBtn.className = "preview_modal_btn box_item__Btn list_quiz_button selected";
                 itemSoalBtn.id = categoryItems[i]['id_soal'];
                 itemSoalBtn.innerHTML = "Preview Soal"
@@ -248,6 +261,7 @@
 
                 itemBox.appendChild(itemCheckbox);
                 itemBox.appendChild(itemSoal);
+                itemBox.appendChild(itemIdSoal);
                 itemBox.appendChild(itemJenis);
 
                 container.appendChild(itemBox);

@@ -34,6 +34,34 @@ function CreateOption(question_id, id, value, label_option) {
   container.appendChild(newline);
 }
 
+function CreateOptionTrueFalse(question_id, id, value, label_option) {
+  var radiobox = document.createElement("input");
+  radiobox.type = "radio";
+  radiobox.id = id;
+  radiobox.value = value;
+  radiobox.name = "flexRadioDefault";
+  radiobox.className = "form-check-input";
+
+  var label = document.createElement("label");
+  label.htmlFor = id;
+  label.className = "form-check-label";
+
+  var descLabel = document.createTextNode(label_option + ". ");
+  var descText = document.createElement("span");
+  descText.id = value;
+  // descText.setAttribute("style", "display: inherit;");
+
+  label.appendChild(descLabel);
+  label.appendChild(descText);
+
+  var newline = document.createElement("br");
+
+  var container = document.getElementById(question_id);
+  container.appendChild(radiobox);
+  container.appendChild(label);
+  container.appendChild(newline);
+}
+
 function SaveAnsware() {
   var UserQuizStorage = localStorage.getItem(sessionID);
   UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
@@ -99,47 +127,98 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     document.getElementById("simulation__subtitle").innerHTML =
       simulation_subtitle.charAt(0).toUpperCase() +
       simulation_subtitle.slice(1);
+
     if (document.querySelector('p[data-f-id="pbf"]'))
       document
         .querySelector('p[data-f-id="pbf"]')
         .setAttribute("style", "display:none");
 
-    if (document.querySelectorAll("input.form-check-input").length == 0) {
+    if (dataSoal.soal_style === "normal") {
+      document.querySelector(
+        ".question__answer__part-truefalse"
+      ).style.display = "none";
+
+      document.querySelector(".question__answer__part").style.display = "";
+
+      if (document.querySelectorAll(".input.form-check-input").length == 0) {
+        document
+          .querySelectorAll(".question__answer__part .form-check")
+          .forEach((item) => {
+            let labelOption = item.getAttribute("option-name");
+            CreateOption(
+              item.id,
+              "option" + labelOption,
+              "option_" + labelOption.toLowerCase(),
+              labelOption
+            );
+          });
+      }
+
       document
-        .querySelectorAll(".question__answer__part .form-check")
-        .forEach((item) => {
-          let labelOption = item.getAttribute("option-name");
-          CreateOption(
-            item.id,
-            "option" + labelOption,
-            "option_" + labelOption.toLowerCase(),
-            labelOption
-          );
+        .querySelectorAll("input.form-check-input")
+        .forEach((itemOption) => {
+          document.querySelector(
+            'span[id="' + itemOption.value + '"]'
+          ).innerHTML = dataSoal[itemOption.value];
+
+          if (window.MathJax) {
+            let math = document.querySelector("math");
+            if (math != null) {
+              let node = document.querySelector(
+                'span[id="' + itemOption.value + '"]'
+              );
+              MathJax.typesetPromise([node]).then(() => {});
+            }
+          }
+
+          itemOption.checked = false;
+          if (itemOption.value == UserQuizStorage[dataSoal.id_soal]) {
+            itemOption.checked = true;
+          }
+        });
+    } else {
+      document.querySelector(".question__answer__part").style.display = "none";
+      document.querySelector(
+        ".question__answer__part-truefalse"
+      ).style.display = "";
+
+      if (document.querySelectorAll("input.form-check-input").length == 0) {
+        document
+          .querySelectorAll(".question__answer__part-truefalse .form-check")
+          .forEach((item) => {
+            let labelOption = item.getAttribute("option-name");
+            CreateOptionTrueFalse(
+              item.id,
+              "option" + labelOption,
+              "option_" + labelOption.toLowerCase(),
+              labelOption
+            );
+          });
+      }
+
+      document
+        .querySelectorAll("input.form-check-input")
+        .forEach((itemOption) => {
+          document.querySelector(
+            'span[id="' + itemOption.value + '"]'
+          ).innerHTML = dataSoal[itemOption.value];
+
+          if (window.MathJax) {
+            let math = document.querySelector("math");
+            if (math != null) {
+              let node = document.querySelector(
+                'span[id="' + itemOption.value + '"]'
+              );
+              MathJax.typesetPromise([node]).then(() => {});
+            }
+          }
+
+          itemOption.checked = false;
+          if (itemOption.value == UserQuizStorage[dataSoal.id_soal]) {
+            itemOption.checked = true;
+          }
         });
     }
-
-    document
-      .querySelectorAll("input.form-check-input")
-      .forEach((itemOption) => {
-        document.querySelector(
-          'span[id="' + itemOption.value + '"]'
-        ).innerHTML = dataSoal[itemOption.value];
-
-        if (window.MathJax) {
-          let math = document.querySelector("math");
-          if (math != null) {
-            let node = document.querySelector(
-              'span[id="' + itemOption.value + '"]'
-            );
-            MathJax.typesetPromise([node]).then(() => {});
-          }
-        }
-
-        itemOption.checked = false;
-        if (itemOption.value == UserQuizStorage[dataSoal.id_soal]) {
-          itemOption.checked = true;
-        }
-      });
   }
 }
 

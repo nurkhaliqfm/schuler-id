@@ -55,7 +55,7 @@
                                         <form action="<?= base_url("admin/deleted_soal/" . $bs['id_soal']); ?>" method="post" class="d-inline">
                                             <?= csrf_field(); ?>
                                             <button type="submit" type="submit" class="box_item__Btn list_quiz_button delete__btn"><i class="fa-solid fa-trash-alt"></i></button>
-                                            <a href="<?= base_url('admin/edit_soal/' . $bs['id_soal']); ?>" class="box_item__Btn list_quiz_button edit__btn"><i class="fa-solid fa-pen-alt"></i></a>
+                                            <a href="<?= $bs['soal_style'] == 'normal' ? base_url('admin/edit_soal/' . $bs['id_soal']) : base_url('admin/edit_soal_truefalse/' . $bs['id_soal'] . '/' . $bs['soal_style']); ?>" class="box_item__Btn list_quiz_button edit__btn"><i class="fa-solid fa-pen-alt"></i></a>
                                             <a href="<?= base_url('admin/duplicat_soal/' . $bs['id_soal']); ?>" class="box_item__Btn list_quiz_button selected"><i class="fa-solid fa-copy"></i></a>
                                         </form>
                                     </td>

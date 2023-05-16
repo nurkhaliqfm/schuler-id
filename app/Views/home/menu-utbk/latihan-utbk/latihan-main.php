@@ -24,6 +24,13 @@
                                             <div class="form-check" id="option_4" option-name='D'></div>
                                             <div class="form-check" id="option_5" option-name='E'></div>
                                         </div>
+                                        <div class="question__answer__part-truefalse">
+                                            <div class="form-check" id="option_1" option-name='A'></div>
+                                            <div class="form-check" id="option_2" option-name='B'></div>
+                                            <div class="form-check" id="option_3" option-name='C'></div>
+                                            <div class="form-check" id="option_4" option-name='D'></div>
+                                            <div class="form-check" id="option_5" option-name='E'></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

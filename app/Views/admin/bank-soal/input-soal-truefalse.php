@@ -16,9 +16,10 @@
                         <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                         <input hidden type="text" name="MenuSoal" value="<?= $menu_soal; ?>">
                         <input hidden type="text" name="SubmenuSoal" value="<?= $submenu_soal; ?>">
+                        <input hidden type="text" name="SoalStyle" value="<?= $soal_style; ?>">
 
                         <!-- Pertanyaan -->
-                        <h3 class="custom-box-title">True False</h3>
+                        <h3 class="custom-box-title">Soal True False</h3>
                         <div class="mb-3">
                             <textarea rows="10" name="editorQuestion" type="text" class="form-control <?= ($validation->hasError('editorQuestion')) ? 'is-invalid' : ''; ?>" id="editorQuestion"><?= old('editorQuestion'); ?></textarea>
                             <div class="invalid-feedback">
@@ -26,88 +27,129 @@
                             </div>
                         </div>
 
-                        <!-- Pertanyaan -->
+                        <!-- Soal Tag -->
                         <h3 class="custom-box-title">Jenis Pilihan</h3>
                         <div class="mb-3">
                             <select name="jenisPilihan" class="form-select <?= ($validation->hasError('jenisPilihan')) ? 'is-invalid' : ''; ?>" aria-label="Default select example">
-                                <option disabled selected></option>
-                                <option <?= old('jenisPilihan') == "true_false" ? "selected" : ""; ?> value="true_false">Ture-False</option>
-                                <option <?= old('jenisPilihan') == "menguatkan_melemahkan" ? "selected" : ""; ?> value="menguatkan_melemahkan">Menguatkan-Melemahkan</option>
+                                <option disabled selected> Pilih Tag Soal</option>
+                                <option <?= old('jenisPilihan') == "true_false" ? "selected" : ""; ?> value="true_false">Ture/False</option>
+                                <option <?= old('jenisPilihan') == "memperlemah_nonmemperlemah" ? "selected" : ""; ?> value="memperlemah_nonmemperlemah">Memperlemah/Tidak Memperlemah</option>
+                                <option <?= old('jenisPilihan') == "mendukung_nonmendukung" ? "selected" : ""; ?> value="mendukung_nonmendukung">Mendukung/Tidak Mendukung </option>
                             </select>
                             <div class="invalid-feedback">
-                                <?= $validation->getError('questionValue'); ?>
+                                <?= $validation->getError('jenisPilihan'); ?>
                             </div>
                         </div>
 
                         <!-- Option -->
                         <h3 class="custom-box-title">Input Option</h3>
                         <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input checked type="checkbox" value="option_a" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                            <div>
+                                <div class="checkbox checkbox__form">
+                                    <input checked type="checkbox" value="option_1_true" name="checkbox_1[]" id="checkbox_1">
+                                    <div class="box">
+                                        T
+                                    </div>
+                                </div>
+                                <div class="checkbox checkbox__form">
+                                    <input type="checkbox" value="option_1_false" name="checkbox_1[]" id="checkbox_1">
+                                    <div class="box">
+                                        F
+                                    </div>
                                 </div>
                             </div>
                             <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_a')) ? 'is-invalid' : ''; ?>" name="option_a" id="option_a" ; ?><?= old('option_a'); ?></textarea>
+                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_1')) ? 'is-invalid' : ''; ?>" name="option_1" id="option_1" ; ?><?= old('option_1'); ?></textarea>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('option_a'); ?>
+                                    <?= $validation->getError('option_1'); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input type="checkbox" value="option_b" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                            <div>
+                                <div class="checkbox checkbox__form">
+                                    <input checked type="checkbox" value="option_2_true" name="checkbox_2[]" id="checkbox_2">
+                                    <div class="box">
+                                        T
+                                    </div>
+                                </div>
+                                <div class="checkbox checkbox__form">
+                                    <input type="checkbox" value="option_2_false" name="checkbox_2[]" id="checkbox_2">
+                                    <div class="box">
+                                        F
+                                    </div>
                                 </div>
                             </div>
                             <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_b')) ? 'is-invalid' : ''; ?>" name="option_b" id="option_b" ; ?><?= old('option_b'); ?></textarea>
+                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_2')) ? 'is-invalid' : ''; ?>" name="option_2" id="option_2" ; ?><?= old('option_2'); ?></textarea>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('option_b'); ?>
+                                    <?= $validation->getError('option_2'); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input type="checkbox" value="option_c" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                            <div>
+                                <div class="checkbox checkbox__form">
+                                    <input checked type="checkbox" value="option_3_true" name="checkbox_3[]" id="checkbox_3">
+                                    <div class="box">
+                                        T
+                                    </div>
+                                </div>
+                                <div class="checkbox checkbox__form">
+                                    <input type="checkbox" value="option_3_false" name="checkbox_3[]" id="checkbox_3">
+                                    <div class="box">
+                                        F
+                                    </div>
                                 </div>
                             </div>
                             <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_c')) ? 'is-invalid' : ''; ?>" name="option_c" id="option_c" ; ?><?= old('option_c'); ?></textarea>
+                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_3')) ? 'is-invalid' : ''; ?>" name="option_3" id="option_3" ; ?><?= old('option_3'); ?></textarea>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('option_c'); ?>
+                                    <?= $validation->getError('option_3'); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input type="checkbox" value="option_d" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                            <div>
+                                <div class="checkbox checkbox__form">
+                                    <input type="checkbox" value="option_4_true" name="checkbox_4[]" id="checkbox_4">
+                                    <div class="box">
+                                        T
+                                    </div>
+                                </div>
+                                <div class="checkbox checkbox__form">
+                                    <input checked type="checkbox" value="option_4_false" name="checkbox_4[]" id="checkbox_4">
+                                    <div class="box">
+                                        F
+                                    </div>
                                 </div>
                             </div>
                             <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_d')) ? 'is-invalid' : ''; ?>" name="option_d" id="option_d" ; ?><?= old('option_d'); ?></textarea>
+                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_4')) ? 'is-invalid' : ''; ?>" name="option_4" id="option_4" ; ?><?= old('option_4'); ?></textarea>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('option_d'); ?>
+                                    <?= $validation->getError('option_4'); ?>
                                 </div>
                             </div>
                         </div>
                         <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input type="checkbox" value="option_e" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                            <div>
+                                <div class="checkbox checkbox__form">
+                                    <input checked type="checkbox" value="option_5_true" name="checkbox_5[]" id="checkbox_5">
+                                    <div class="box">
+                                        T
+                                    </div>
+                                </div>
+                                <div class="checkbox checkbox__form">
+                                    <input type="checkbox" value="option_5_false" name="checkbox_5[]" id="checkbox_5">
+                                    <div class="box">
+                                        F
+                                    </div>
                                 </div>
                             </div>
                             <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_e')) ? 'is-invalid' : ''; ?>" name="option_e" id="option_e" ; ?><?= old('option_e'); ?></textarea>
+                                <textarea rows="10" type="text" class="input__form checked form-control <?= ($validation->hasError('option_5')) ? 'is-invalid' : ''; ?>" name="option_5" id="option_5" ; ?><?= old('option_5'); ?></textarea>
                                 <div class="invalid-feedback">
-                                    <?= $validation->getError('option_e'); ?>
+                                    <?= $validation->getError('option_5'); ?>
                                 </div>
                             </div>
                         </div>
@@ -146,17 +188,59 @@
 </div>
 
 <script>
-    const inputForm = document.querySelectorAll('.input__form');
+    const inputForm1 = document.querySelectorAll('input[type="checkbox"]#checkbox_1');
+    const inputForm2 = document.querySelectorAll('input[type="checkbox"]#checkbox_2');
+    const inputForm3 = document.querySelectorAll('input[type="checkbox"]#checkbox_3');
+    const inputForm4 = document.querySelectorAll('input[type="checkbox"]#checkbox_4');
+    const inputForm5 = document.querySelectorAll('input[type="checkbox"]#checkbox_5');
 
-    function resetOption() {
-        inputForm.forEach(inputForm => {
-            inputForm.classList.remove('checked');
-        })
-    }
-    $('input[type="checkbox"]').on('change', function() {
+    $('input[type="checkbox"]#checkbox_1').on('change', function() {
         $('input[name="' + this.name + '"]').not(this).prop('checked', false);
 
-        resetOption();
+        inputForm1.forEach(obj => {
+            obj.classList.remove('checked');
+        })
+
+        var inputValue = $(this).attr("value");
+        $('#optionEditor #' + inputValue).addClass("checked");
+    });
+
+    $('input[type="checkbox"]#checkbox_2').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+
+        inputForm2.forEach(obj => {
+            obj.classList.remove('checked');
+        })
+        var inputValue = $(this).attr("value");
+        $('#optionEditor #' + inputValue).addClass("checked");
+    });
+
+    $('input[type="checkbox"]#checkbox_3').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+
+        inputForm3.forEach(obj => {
+            obj.classList.remove('checked');
+        })
+        var inputValue = $(this).attr("value");
+        $('#optionEditor #' + inputValue).addClass("checked");
+    });
+
+    $('input[type="checkbox"]#checkbox_4').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+
+        inputForm4.forEach(obj => {
+            obj.classList.remove('checked');
+        })
+        var inputValue = $(this).attr("value");
+        $('#optionEditor #' + inputValue).addClass("checked");
+    });
+
+    $('input[type="checkbox"]#checkbox_5').on('change', function() {
+        $('input[name="' + this.name + '"]').not(this).prop('checked', false);
+
+        inputForm5.forEach(obj => {
+            obj.classList.remove('checked');
+        })
         var inputValue = $(this).attr("value");
         $('#optionEditor #' + inputValue).addClass("checked");
     });
@@ -390,7 +474,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_a', {
+    new FroalaEditor('#option_1', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -503,7 +587,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_b', {
+    new FroalaEditor('#option_2', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -613,7 +697,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_c', {
+    new FroalaEditor('#option_3', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -723,7 +807,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_d', {
+    new FroalaEditor('#option_4', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -833,7 +917,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_e', {
+    new FroalaEditor('#option_5', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],

@@ -11,14 +11,16 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="white-box">
-                    <form action="<?= base_url('admin/update_soal'); ?>" method="POST">
+                    <form action="<?= base_url('admin/update_soal_truefalse'); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                         <input hidden type="text" name="id" value="<?= $bank_soal['id']; ?>">
                         <input hidden type="text" name="MenuSoal" value="<?= $menu_soal; ?>">
                         <input hidden type="text" name="SubmenuSoal" value="<?= $submenu_soal; ?>">
+                        <input hidden type="text" name="SoalStyle" value="<?= $soal_style; ?>">
+
                         <!-- Pertanyaan -->
-                        <h3 class="custom-box-title">Edit Soal</h3>
+                        <h3 class="custom-box-title">Edit Soal True False</h3>
                         <div class="mb-3">
                             <textarea rows="10" name="editorQuestion" type="text" class="form-control <?= ($validation->hasError('editorQuestion')) ? 'is-invalid' : ''; ?>" id="editorQuestion"><?= old('editorQuestion') ? old('editorQuestion') : $bank_soal['soal']; ?></textarea>
                             <div class="invalid-feedback">
@@ -26,78 +28,48 @@
                             </div>
                         </div>
 
+                        <!-- Soal Tag -->
+                        <h3 class="custom-box-title">Jenis Pilihan</h3>
+                        <div class="mb-3">
+                            <select name="jenisPilihan" class="form-select <?= ($validation->hasError('jenisPilihan')) ? 'is-invalid' : ''; ?>" aria-label="Default select example">
+                                <option disabled selected> Pilih Tag Soal</option>
+                                <option <?= old('jenisPilihan') ? (old('jenisPilihan') == "true_false" ? "selected" : "") : ($jenis_pilihan['soal_tag'] == "true_false" ? "selected" : ""); ?> value="true_false">Ture/False</option>
+                                <option <?= old('jenisPilihan') ? (old('jenisPilihan') == "memperlemah_nonmemperlemah" ? "selected" : "") : ($jenis_pilihan['soal_tag'] == "memperlemah_nonmemperlemah" ? "selected" : ""); ?> value="memperlemah_nonmemperlemah">Memperlemah/Tidak Memperlemah</option>
+                                <option <?= old('jenisPilihan') ? (old('jenisPilihan') == "mendukung_nonmendukung" ? "selected" : "") : ($jenis_pilihan['soal_tag'] == "mendukung_nonmendukung" ? "selected" : ""); ?> value="mendukung_nonmendukung">Mendukung/Tidak Mendukung </option>
+                            </select>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('jenisPilihan'); ?>
+                            </div>
+                        </div>
+
                         <!-- Option -->
                         <h3 class="custom-box-title">Input Option</h3>
-                        <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input <?= $answer_quest == "option_a" ?  "checked" : ""; ?> type="checkbox" value="option_a" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
+                        <?php $i = 1; ?>
+                        <?php foreach ($answer_quest as $ans) : ?>
+                            <div class="grid-container option__style">
+                                <div>
+                                    <div class="checkbox checkbox__form">
+                                        <input <?= $ans['ans_id'] == "option_" . $i . "_true" ?  "checked" : ""; ?> type="checkbox" value="<?= 'option_' . $i . '_true' ?>" name="<?= 'checkbox_' . $i . '[]' ?>" id="<?= 'checkbox_' . $i ?>">
+                                        <div class="box">
+                                            T
+                                        </div>
+                                    </div>
+                                    <div class="checkbox checkbox__form">
+                                        <input <?= $ans['ans_id'] == "option_" . $i . "_false" ?  "checked" : ""; ?> type="checkbox" value="<?= 'option_' . $i . '_false' ?>" name="<?= 'checkbox_' . $i . '[]' ?>" id="<?= 'checkbox_' . $i ?>">
+                                        <div class="box">
+                                            F
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3" id="optionEditor">
+                                    <textarea rows="10" type="text" class="input__form form-control <?= ($validation->hasError('option_' . $i)) ? 'is-invalid' : ''; ?>" name="<?= 'option_' . $i ?>" id="<?= 'option_' . $i ?>" ; ?><?= old('option_' . $i) ? old('option_' . $i) : $ans['sub_soal_slug']; ?></textarea>
+                                    <div class="invalid-feedback">
+                                        <?= $validation->getError('option_' . $i); ?>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form <?= $answer_quest == "option_a" ?  "checked" : ""; ?> form-control <?= ($validation->hasError('option_a')) ? 'is-invalid' : ''; ?>" name="option_a" id="option_a" ; ?><?= old('option_a') ? old('option_a') : $bank_soal['option_a']; ?></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('option_a'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input <?= $answer_quest == "option_b" ?  "checked" : ""; ?> type="checkbox" value="option_b" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
-                                </div>
-                            </div>
-                            <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form <?= $answer_quest == "option_b" ?  "checked" : ""; ?> form-control <?= ($validation->hasError('option_b')) ? 'is-invalid' : ''; ?>" name="option_b" id="option_b" ; ?><?= old('option_b') ? old('option_b') : $bank_soal['option_b']; ?></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('option_b'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input <?= $answer_quest == "option_c" ?  "checked" : ""; ?> type="checkbox" value="option_c" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
-                                </div>
-                            </div>
-                            <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form <?= $answer_quest == "option_c" ?  "checked" : ""; ?> form-control <?= ($validation->hasError('option_c')) ? 'is-invalid' : ''; ?>" name="option_c" id="option_c" ; ?><?= old('option_c') ? old('option_c') : $bank_soal['option_c']; ?></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('option_c'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input <?= $answer_quest == "option_d" ?  "checked" : ""; ?> type="checkbox" value="option_d" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
-                                </div>
-                            </div>
-                            <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form <?= $answer_quest == "option_d" ?  "checked" : ""; ?> form-control <?= ($validation->hasError('option_d')) ? 'is-invalid' : ''; ?>" name="option_d" id="option_d" ; ?><?= old('option_d') ? old('option_d') : $bank_soal['option_d']; ?></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('option_d'); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-container option__style">
-                            <div class="checkbox checkbox__form">
-                                <input <?= $answer_quest == "option_e" ?  "checked" : ""; ?> type="checkbox" value="option_e" name="checkbox[]" id="checkbox">
-                                <div class="box">
-                                    A
-                                </div>
-                            </div>
-                            <div class="input-group mb-3" id="optionEditor">
-                                <textarea rows="10" type="text" class="input__form <?= $answer_quest == "option_e" ?  "checked" : ""; ?> form-control <?= ($validation->hasError('option_e')) ? 'is-invalid' : ''; ?>" name="option_e" id="option_e" ; ?><?= old('option_e') ? old('option_e') : $bank_soal['option_e']; ?></textarea>
-                                <div class="invalid-feedback">
-                                    <?= $validation->getError('option_e'); ?>
-                                </div>
-                            </div>
-                        </div>
+                            <?php $i++ ?>
+                        <?php endforeach; ?>
 
                         <!-- Pertanyaan -->
                         <h3 class="custom-box-title">Input Nilai</h3>
@@ -372,7 +344,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_a', {
+    new FroalaEditor('#option_1', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -482,7 +454,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_b', {
+    new FroalaEditor('#option_2', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -592,7 +564,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_c', {
+    new FroalaEditor('#option_3', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -702,7 +674,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_d', {
+    new FroalaEditor('#option_4', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
@@ -812,7 +784,7 @@
         htmlAllowedEmptyTags: ['mprescripts', 'none'],
     })
 
-    new FroalaEditor('#option_e', {
+    new FroalaEditor('#option_5', {
         toolbarButtons: {
             moreText: {
                 buttons: ['bold', 'italic', 'underline', 'clearFormatting', 'fontSize', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle'],
