@@ -10,9 +10,6 @@ use App\Models\QuizModel;
 use App\Models\UniversitasModel;
 use App\Models\UserHistoryModel;
 use App\Models\UserHistoryUtbkModel;
-use App\Models\UserHistoryEventModel;
-use App\Models\UserHistoryEventOfflineModel;
-use App\Models\UserAnswareModel;
 use Exception;
 use Ramsey\Uuid\Uuid;
 
@@ -26,9 +23,6 @@ class Admin extends BaseController
     protected $universitasModel;
     protected $userHistoryModel;
     protected $userHistoryUtbkModel;
-    protected $userHistoryEventModel;
-    protected $userHistoryEventOfflineModel;
-    protected $userAnswareModel;
 
     public function __construct()
     {
@@ -40,9 +34,6 @@ class Admin extends BaseController
         $this->universitasModel = new UniversitasModel();
         $this->userHistoryModel  = new UserHistoryModel();
         $this->userHistoryUtbkModel  = new UserHistoryUtbkModel();
-        $this->userHistoryEventModel  = new UserHistoryEventModel();
-        $this->userHistoryEventOfflineModel  = new UserHistoryEventOfflineModel();
-        $this->userAnswareModel  = new UserAnswareModel();
     }
 
     public function index()
@@ -128,8 +119,6 @@ class Admin extends BaseController
             'sub_type_soal' => $submenuSoal
         ])->findAll();
 
-        // dd($bankSoalModel);
-
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
@@ -141,31 +130,24 @@ class Admin extends BaseController
         return view('admin/bank-soal/daftar-soal', $data);
     }
 
-    public function input_soal($id, $type, $style)
+    public function input_soal($id, $type)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'admin super') {
             return redirect()->to(base_url('home/error_404'));
         }
 
-
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
             'menu_soal' => $id,
             'submenu_soal' => $type,
-            'soal_style' => $style,
             'validation' => \Config\Services::validation()
         ];
 
-        if ($style == 'normal') {
-            return view('admin/bank-soal/input-soal', $data);
-        } else {
-            return view('admin/bank-soal/input-soal-truefalse', $data);
-        }
+        return view('admin/bank-soal/input-soal', $data);
     }
 
-    // Soal Normal
     public function edit_soal($idSoal)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
@@ -205,6 +187,9 @@ class Admin extends BaseController
 
         $menuSoal = $this->request->getVar('MenuSoal');
         $submenuSoal = $this->request->getVar('SubmenuSoal');
+
+        $soal  = $this->request->getVar('editorQuestion');
+        $soal = str_replace("Love", "Sarange", $soal);
 
         if (!$this->validate([
             'editorQuestion' => [
@@ -581,271 +566,6 @@ class Admin extends BaseController
         return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
     }
 
-    // Soal True-False
-    public function edit_soal_truefalse($idSoal, $soalStyle)
-    {
-        $user = $this->usersModel->where(['email' => session()->get('username')])->first();
-        if (session()->get('user_level') != 'admin super') {
-            return redirect()->to(base_url('home/error_404'));
-        }
-
-        $bankSoalModel = $this->bankSoalModel->where([
-            'id_soal' => $idSoal
-        ])->first();
-
-        $getTrueFlaseQuest = $this->bankSoalTrueFalseModel->where(['soal_id' => $idSoal])->findAll();
-
-        $data = [
-            'title' => 'Edit Soal Schuler.id',
-            'user_name' => $user['username'],
-            'menu_soal' => $bankSoalModel['type_soal'],
-            'submenu_soal' => $bankSoalModel['sub_type_soal'],
-            'bank_soal' => $bankSoalModel,
-            'soal_style' => $soalStyle,
-            'jenis_pilihan' => $getTrueFlaseQuest[0],
-            'answer_quest' => $getTrueFlaseQuest,
-            'validation' => \Config\Services::validation()
-        ];
-
-        return view('admin/bank-soal/edit-soal-truefalse', $data);
-    }
-
-    public function save_soal_truefalse()
-    {
-        if (session()->get('user_level') != 'admin super') {
-            return redirect()->to(base_url('home/error_404'));
-        }
-
-        $menuSoal = $this->request->getVar('MenuSoal');
-        $submenuSoal = $this->request->getVar('SubmenuSoal');
-        $soalStyle = $this->request->getVar('SoalStyle');
-
-        if (!$this->validate([
-            'editorQuestion' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Soal Harus Diisi',
-                ]
-            ],
-            'jenisPilihan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Tag Soal Harus Dipilih',
-                ]
-            ],
-            'option_1' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan 1 Harus Diisi',
-                ]
-            ],
-            'option_2' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan 2 Harus Diisi',
-                ]
-            ],
-            'option_3' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan 3 Harus Diisi',
-                ]
-            ],
-            'option_4' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan 4 Harus Diisi',
-                ]
-            ],
-            'option_5' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan 5 Harus Diisi',
-                ]
-            ],
-            'questionValue' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Point Soal Harus Diisi',
-                ]
-            ],
-            'editorExplanation' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pembahasan Harus Diisi',
-                ]
-            ],
-        ])) {
-            session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
-            return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal . '/' . $soalStyle))->withInput();
-        }
-
-        $bankSoalModel = $this->bankSoalModel;
-        $bankSoalTruefalse = $this->bankSoalTrueFalseModel;
-        $soalId = uniqid();
-
-        $bankSoalModel->save([
-            'type_soal' => $menuSoal,
-            'sub_type_soal' => $submenuSoal,
-            'id_soal' => $soalId,
-            'soal_style' => 'true_false',
-            'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
-            'option_1' => null,
-            'option_2' => null,
-            'option_3' => null,
-            'option_4' => null,
-            'option_5' => null,
-            'jawaban' => null,
-            'ans_id' => null,
-            'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
-            'value' => $this->request->getVar('questionValue')
-        ]);
-
-        for ($i = 1; $i < 6; $i++) {
-            $checkBoxValue = $this->request->getVar('checkbox_' . $i);
-            $checkBoxSlug = str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_' . $i));
-
-            if ($checkBoxValue) {
-                $bankSoalTruefalse->save([
-                    'soal_id' => $soalId,
-                    'soal_tag' => $this->request->getVar('jenisPilihan'),
-                    'sub_soal_id' => uniqid(),
-                    'sub_soal_slug' => $checkBoxSlug,
-                    'jawaban' => md5($checkBoxValue[0]),
-                    'ans_id' => $checkBoxValue
-                ]);
-            }
-        }
-
-
-        $TypeSoalModel = $this->typeSoalModel;
-        $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
-        $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
-        $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
-        $arrayLong = sizeof($valueSoal);
-        for ($i = 0; $i < $arrayLong; $i++) {
-            if ($typeSoalId[$i] == $submenuSoal) {
-                $valueSoal[$i] = $valueSoal[$i] + 1;
-            }
-        };
-
-        $TypeSoalModel->update($getTypeSoal['id'], [
-            'list_type_soal_jumlah' => join(",", $valueSoal)
-        ]);
-
-        session()->setFlashdata('success', "Soal Berhasil Ditambahkan.");
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
-    }
-
-    public function update_soal_truefalse()
-    {
-        if (session()->get('user_level') != 'admin super') {
-            return redirect()->to(base_url('home/error_404'));
-        }
-
-        $menuSoal = $this->request->getVar('MenuSoal');
-        $submenuSoal = $this->request->getVar('SubmenuSoal');
-        $soalStyle = $this->request->getVar('SoalStyle');
-
-        if (!$this->validate([
-            'editorQuestion' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Soal Harus Diisi',
-                ]
-            ],
-            'jenisPilihan' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Tag Soal Harus Dipilih',
-                ]
-            ],
-            'option_1' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan A Harus Diisi',
-                ]
-            ],
-            'option_2' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan B Harus Diisi',
-                ]
-            ],
-            'option_3' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan C Harus Diisi',
-                ]
-            ],
-            'option_4' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan D Harus Diisi',
-                ]
-            ],
-            'option_5' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pilihan E Harus Diisi',
-                ]
-            ],
-            'questionValue' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Point Soal Harus Diisi',
-                ]
-            ],
-            'editorExplanation' => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Pembahasan Harus Diisi',
-                ]
-            ],
-        ])) {
-            session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
-            return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal . '/' . $soalStyle))->withInput();
-        }
-
-        $bankSoalModel = $this->bankSoalModel;
-        $bankSoalTruefalse = $this->bankSoalTrueFalseModel;
-
-        $bankSoalModel->update($this->request->getVar('id'), [
-            'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
-            'option_1' => null,
-            'option_2' => null,
-            'option_3' => null,
-            'option_4' => null,
-            'option_5' => null,
-            'jawaban' => null,
-            'ans_id' => null,
-            'pembahasan' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorExplanation')),
-            'value' => $this->request->getVar('questionValue')
-        ]);
-
-        $getBankSoal = $this->bankSoalModel->where(['id' => $this->request->getVar('id')])->first();
-        $getBankSoalTruefalse = $this->bankSoalTrueFalseModel->where(['soal_id' => $getBankSoal['id_soal']])->findAll();
-
-        $i = 1;
-        foreach ($getBankSoalTruefalse as $btf) {
-            $checkBoxValue = $this->request->getVar('checkbox_' . $i);
-            $checkBoxSlug = str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_' . $i));
-
-            if ($checkBoxValue) {
-                $bankSoalTruefalse->update($btf['id'], [
-                    'soal_tag' => $this->request->getVar('jenisPilihan'),
-                    'sub_soal_slug' => $checkBoxSlug,
-                    'jawaban' => md5($checkBoxValue[0]),
-                    'ans_id' => $checkBoxValue
-                ]);
-            }
-            $i++;
-        }
-
-        session()->setFlashdata('success_ubah', "Soal Berhasil Diubah.");
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
-    }
-
     public function upload_image()
     {
         if (session()->get('user_level') != 'admin super') {
@@ -1047,18 +767,23 @@ class Admin extends BaseController
         }
 
         $slug = $this->request->getVar('slug');
-        $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->findAll();
-        $number_soal = [];
+        $quizListQuestion = $this->bankQuizModel->groupBy(['quiz_id'])->where(['quiz_type' => $slug])->orderBy('id')->findAll();
+
         foreach ($quizListQuestion as $qlQ) {
             $data_number = $this->bankQuizModel->where(['quiz_id' => $qlQ['quiz_id']])->countAllResults();
-            array_push($number_soal, $data_number);
+            $remakeBankQuiz[] = [
+                'quiz_id' => $qlQ['quiz_id'],
+                'quiz_name' => $qlQ['quiz_name'],
+                'quiz_category' => $qlQ['quiz_category'],
+                'number_soal' => $data_number,
+            ];
         }
+
+
         $data = [
             'title' => 'Daftar Quiz Schuler.id',
             'user_name' => $user['username'],
-            'bankQuiz' => $quizListQuestion,
-            'quiz_number' => $number_soal
-
+            'bankQuiz' => $remakeBankQuiz,
         ];
 
         return view('admin/input-quiz/daftar-quiz', $data);
@@ -1106,6 +831,14 @@ class Admin extends BaseController
                 }
             }
         }
+
+        usort($remakBankSoal, function ($a, $b) {
+            if ($a['sub_type_soal'] === $b['sub_type_soal']) {
+                return strtotime($a['created_at']) - strtotime($b['created_at']);
+            } else {
+                return strcmp($a['sub_type_soal'], $b['sub_type_soal']);
+            }
+        });
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
@@ -1172,13 +905,14 @@ class Admin extends BaseController
 
         $bankQuiz = $this->bankQuizModel->where(['quiz_id' => $quiz_id])->findAll();
         $slug = $this->request->getVar('slug');
-        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
+        $getBankSoal = $this->bankSoalModel->orderBy('created_at')->findAll();
         $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
         if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
         $quiz_name = $bankQuiz[0]['quiz_name'];
         $bank_quiz_soal = [];
         $bankSoal = [];
         $bankSoalOption = [];
+
         foreach ($bankQuiz as $bq) {
             array_push($bank_quiz_soal, $bq['quiz_question']);
         }
@@ -1209,6 +943,22 @@ class Admin extends BaseController
                 $subjectName[$j][$subTypeListId[$i]] = $subTypeListName[$i];
             }
         }
+
+        usort($bankSoal, function ($a, $b) {
+            if ($a['sub_type_soal'] === $b['sub_type_soal']) {
+                return strtotime($a['created_at']) - strtotime($b['created_at']);
+            } else {
+                return strcmp($a['sub_type_soal'], $b['sub_type_soal']);
+            }
+        });
+
+        usort($bankSoalOption, function ($a, $b) {
+            if ($a['sub_type_soal'] === $b['sub_type_soal']) {
+                return strtotime($a['created_at']) - strtotime($b['created_at']);
+            } else {
+                return strcmp($a['sub_type_soal'], $b['sub_type_soal']);
+            }
+        });
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
@@ -1440,16 +1190,6 @@ class Admin extends BaseController
         return view('errors/html/error_404');
     }
 
-    public function xx_Soal()
-    {
-        $bankSoal = $this->bankSoalModel->findAll();
-        foreach ($bankSoal as $b) {
-            if (str_contains($b['soal'], '6f769a47107e5d576a3264153369566dc16eba5b')) {
-                dd($b);
-            }
-        }
-    }
-
     public function clean()
     {
         $bankSoal = $this->bankSoalModel->findAll();
@@ -1545,268 +1285,5 @@ class Admin extends BaseController
                 ]
             );
         }
-    }
-
-    public function exp_data_yps()
-    {
-
-        $dataMIPA = [
-            ['Nama', 'Kelas', 'Penalaran Umum (B)', 'Penalaran Umum (S)', 'Penalaran Umum (K)', 'Penalaran Umum (P)', 'Pemahaman Bacaan & Menulis (B)', 'Pemahaman Bacaan & Menulis (S)', 'Pemahaman Bacaan & Menulis (K)', 'Pemahaman Bacaan & Menulis (P)', 'Pengetahuan & Pemahaman Umum (B)', 'Pengetahuan & Pemahaman Umum (S)', 'Pengetahuan & Pemahaman Umum (K)', 'Pengetahuan & Pemahaman Umum (P)', 'Pengetahuan Kuantitatif (B)', 'Pengetahuan Kuantitatif (S)', 'Pengetahuan Kuantitatif (K)', 'Pengetahuan Kuantitatif (P)', 'Literasi Bahasa Indonesia (B)', 'Literasi Bahasa Indonesia (S)', 'Literasi Bahasa Indonesia (K)', 'Literasi Bahasa Indonesia (P)', 'Literasi Bahasa Inggris (B)', 'Literasi Bahasa Inggris (S)', 'Literasi Bahasa Inggris (K)', 'Literasi Bahasa Inggris (P)', 'Penalaran Matematika (B)', 'Penalaran Matematika (S)', 'Penalaran Matematika (K)', 'Penalaran Matematika (P)']
-        ];
-        $dataIPS = [
-            ['Nama', 'Kelas', 'Penalaran Umum (B)', 'Penalaran Umum (S)', 'Penalaran Umum (K)', 'Penalaran Umum (P)', 'Pemahaman Bacaan & Menulis (B)', 'Pemahaman Bacaan & Menulis (S)', 'Pemahaman Bacaan & Menulis (K)', 'Pemahaman Bacaan & Menulis (P)', 'Pengetahuan & Pemahaman Umum (B)', 'Pengetahuan & Pemahaman Umum (S)', 'Pengetahuan & Pemahaman Umum (K)', 'Pengetahuan & Pemahaman Umum (P)', 'Pengetahuan Kuantitatif (B)', 'Pengetahuan Kuantitatif (S)', 'Pengetahuan Kuantitatif (K)', 'Pengetahuan Kuantitatif (P)', 'Literasi Bahasa Indonesia (B)', 'Literasi Bahasa Indonesia (S)', 'Literasi Bahasa Indonesia (K)', 'Literasi Bahasa Indonesia (P)', 'Literasi Bahasa Inggris (B)', 'Literasi Bahasa Inggris (S)', 'Literasi Bahasa Inggris (K)', 'Literasi Bahasa Inggris (P)', 'Penalaran Matematika (B)', 'Penalaran Matematika (S)', 'Penalaran Matematika (K)', 'Penalaran Matematika (P)']
-        ];
-
-        $AllCategoryQuiz = $this->categoryQuizModel->where(['slug' => 'snbt_utbk_2023'])->first();
-        $listCategory = explode(',', $AllCategoryQuiz['category_item']);
-
-        $userHistoryEvent = $this->userHistoryEventOfflineModel->where([
-            'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8"
-        ])->findAll();
-
-        foreach ($userHistoryEvent as $uHV) {
-            $explodeSoalID = explode(",", $uHV['id_soal']);
-            $explodeSoalAns = explode(",", $uHV['answare']);
-
-            $cekEventAccount = $this->mitraStudentModel->where([
-                'user_id' => $uHV['user_id'],
-            ])->first();
-
-            foreach ($listCategory as $lC) {
-                $getTestCategory = $this->typeSoalModel->where([
-                    'id_main_type_soal' => $lC
-                ])->first();
-
-                $dataSubtestID = explode(',', $getTestCategory['list_type_soal_id']);
-                $dataSubtestName = explode(',', $getTestCategory['list_type_soal']);
-
-                $dataEachSubsubject = [];
-
-                for ($j = 0; $j < sizeof($dataSubtestID); $j++) {
-                    $namaSubjectSoal = $dataSubtestName[$j];
-
-                    $benar = 0;
-                    $salah = 0;
-                    $kosong = 0;
-
-                    $cekBankQuiz = $this->bankQuizModel->where([
-                        'quiz_id' => "bd30bbba-f5c5-4dac-89ff-43a5073bc9c8",
-                        'quiz_sub_subject' => $dataSubtestID[$j]
-                    ])->findAll();
-
-                    foreach ($cekBankQuiz as $cBQ) {
-                        $quiz_id = $cBQ['quiz_question'];
-                        $userAnsId = array_search($quiz_id, $explodeSoalID);
-                        $cekSoalId = $this->bankSoalModel->where([
-                            'id_soal' => $quiz_id,
-                        ])->first();
-
-                        if ($explodeSoalAns[$userAnsId] == $cekSoalId['ans_id']) {
-                            $benar++;
-                        } elseif ($explodeSoalAns[$userAnsId] != $cekSoalId['ans_id']) {
-                            $salah++;
-                        } elseif ($explodeSoalAns[$userAnsId] == 0) {
-                            $kosong++;
-                        }
-                    }
-
-                    $dataAnsCategory[$namaSubjectSoal] = [
-                        'Benar' => $benar,
-                        'Salah' => $salah,
-                        'Kosong' => $kosong,
-                        'Poin' => $benar * 50
-                    ];
-
-                    array_push($dataEachSubsubject, $dataAnsCategory);
-                }
-            }
-
-            $pesertaName = $cekEventAccount['peserta_name'];
-            $pesertaKelas = $cekEventAccount['peserta_info'];
-
-            $kelasExplode = explode(" ", $pesertaKelas);
-            $kelasCategory = $kelasExplode[1];
-
-            $listUserEventData = [
-                'Nama' => $pesertaName,
-                'Kelas' => $pesertaKelas,
-                'Penalaran Umum (B)' => $dataEachSubsubject[0]['Penalaran Umum']['Benar'],
-                'Penalaran Umum (S)' => $dataEachSubsubject[0]['Penalaran Umum']['Salah'],
-                'Penalaran Umum (K)' => $dataEachSubsubject[0]['Penalaran Umum']['Kosong'],
-                'Penalaran Umum (P)' => $dataEachSubsubject[0]['Penalaran Umum']['Poin'],
-                'Pemahaman Bacaan & Menulis (B)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Benar'],
-                'Pemahaman Bacaan & Menulis (S)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Salah'],
-                'Pemahaman Bacaan & Menulis (K)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Kosong'],
-                'Pemahaman Bacaan & Menulis (P)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Poin'],
-                'Pengetahuan & Pemahaman Umum (B)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Benar'],
-                'Pengetahuan & Pemahaman Umum (S)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Salah'],
-                'Pengetahuan & Pemahaman Umum (K)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Kosong'],
-                'Pengetahuan & Pemahaman Umum (P)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Poin'],
-                'Pengetahuan Kuantitatif (B)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Benar'],
-                'Pengetahuan Kuantitatif (S)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Salah'],
-                'Pengetahuan Kuantitatif (K)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Kosong'],
-                'Pengetahuan Kuantitatif (P)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Poin'],
-                'Literasi Bahasa Indonesia (B)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Benar'],
-                'Literasi Bahasa Indonesia (S)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Salah'],
-                'Literasi Bahasa Indonesia (K)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Kosong'],
-                'Literasi Bahasa Indonesia (P)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Poin'],
-                'Literasi Bahasa Inggris (B)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Benar'],
-                'Literasi Bahasa Inggris (S)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Salah'],
-                'Literasi Bahasa Inggris (K)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Kosong'],
-                'Literasi Bahasa Inggris (P)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Poin'],
-                'Penalaran Matematika (B)' => $dataEachSubsubject[0]['Penalaran Matematika']['Benar'],
-                'Penalaran Matematika (S)' => $dataEachSubsubject[0]['Penalaran Matematika']['Salah'],
-                'Penalaran Matematika (K)' => $dataEachSubsubject[0]['Penalaran Matematika']['Kosong'],
-                'Penalaran Matematika (P)' => $dataEachSubsubject[0]['Penalaran Matematika']['Poin'],
-            ];
-
-
-            if ($kelasCategory == 'MIPA') {
-                array_push($dataMIPA, $listUserEventData);
-            } elseif ($kelasCategory == 'IPS') {
-                array_push($dataIPS, $listUserEventData);
-            }
-        }
-        $fp_mipa = fopen('Data-Kelas-MIPA-YPS-WOTU.csv', 'w');
-        foreach ($dataMIPA as $fields) {
-            fputcsv($fp_mipa, $fields);
-        }
-
-        fclose($fp_mipa);
-
-        $fp_ips = fopen('Data-Kelas-IPS-YPS-WOTU.csv', 'w');
-        foreach ($dataIPS as $fields) {
-            fputcsv($fp_ips, $fields);
-        }
-
-        fclose($fp_ips);
-
-        dd('Done');
-    }
-
-    public function exp_data_event()
-    {
-
-        $idSoal = "9023cabe-2448-4e8c-aa4b-6ece072d06f7";
-        $dataSiswaMedc = [
-            ['Nama', 'Email', 'Asal Sekolah', 'Penalaran Umum (B)', 'Penalaran Umum (S)', 'Penalaran Umum (K)', 'Penalaran Umum (P)', 'Pemahaman Bacaan & Menulis (B)', 'Pemahaman Bacaan & Menulis (S)', 'Pemahaman Bacaan & Menulis (K)', 'Pemahaman Bacaan & Menulis (P)', 'Pengetahuan & Pemahaman Umum (B)', 'Pengetahuan & Pemahaman Umum (S)', 'Pengetahuan & Pemahaman Umum (K)', 'Pengetahuan & Pemahaman Umum (P)', 'Pengetahuan Kuantitatif (B)', 'Pengetahuan Kuantitatif (S)', 'Pengetahuan Kuantitatif (K)', 'Pengetahuan Kuantitatif (P)', 'Literasi Bahasa Indonesia (B)', 'Literasi Bahasa Indonesia (S)', 'Literasi Bahasa Indonesia (K)', 'Literasi Bahasa Indonesia (P)', 'Literasi Bahasa Inggris (B)', 'Literasi Bahasa Inggris (S)', 'Literasi Bahasa Inggris (K)', 'Literasi Bahasa Inggris (P)', 'Penalaran Matematika (B)', 'Penalaran Matematika (S)', 'Penalaran Matematika (K)', 'Penalaran Matematika (P)']
-        ];
-
-        $AllCategoryQuiz = $this->categoryQuizModel->where(['slug' => 'snbt_utbk_2023'])->first();
-        $listCategory = explode(',', $AllCategoryQuiz['category_item']);
-
-        $userHistoryEvent = $this->userHistoryEventModel->where([
-            'quiz_id' => $idSoal
-        ])->findAll();
-
-        foreach ($userHistoryEvent as $uHV) {
-            $explodeSoalID = explode(",", $uHV['id_soal']);
-            $explodeSoalAns = explode(",", $uHV['answare']);
-
-            $cekEventAccount = $this->usersModel->where([
-                'slug' => $uHV['user_id'],
-            ])->first();
-
-            foreach ($listCategory as $lC) {
-                $getTestCategory = $this->typeSoalModel->where([
-                    'id_main_type_soal' => $lC
-                ])->first();
-
-                $dataSubtestID = explode(',', $getTestCategory['list_type_soal_id']);
-                $dataSubtestName = explode(',', $getTestCategory['list_type_soal']);
-
-                $dataEachSubsubject = [];
-
-                for ($j = 0; $j < sizeof($dataSubtestID); $j++) {
-                    $namaSubjectSoal = $dataSubtestName[$j];
-
-                    $searchPart = $this->typeSoalModel->where(['id_main_type_soal' =>  $lC])->first();
-                    $explodeSubpart = explode(',', $searchPart['list_type_soal_id']);
-                    $explodeQuestNumberSubpart = explode(',', $searchPart['event_quest_numb']);
-
-                    $cekResultIndex = array_search($dataSubtestID[$j], array_column($explodeSubpart, null));
-                    $questNumber = $explodeQuestNumberSubpart[$cekResultIndex];
-
-                    $benar = 0;
-                    $salah = 0;
-                    $kosong = 0;
-
-                    $cekBankQuiz = $this->bankQuizModel->where([
-                        'quiz_id' => $idSoal,
-                        'quiz_sub_subject' => $dataSubtestID[$j]
-                    ])->findAll();
-
-                    foreach ($cekBankQuiz as $cBQ) {
-                        $quiz_id = $cBQ['quiz_question'];
-                        $userAnsId = array_search($quiz_id, $explodeSoalID);
-                        $cekSoalId = $this->bankSoalModel->where([
-                            'id_soal' => $quiz_id,
-                        ])->first();
-
-                        if ($explodeSoalAns[$userAnsId] == $cekSoalId['ans_id']) {
-                            $benar++;
-                        } elseif ($explodeSoalAns[$userAnsId] != $cekSoalId['ans_id']) {
-                            $salah++;
-                        } elseif ($explodeSoalAns[$userAnsId] == 0) {
-                            $kosong++;
-                        }
-                    }
-
-                    $dataAnsCategory[$namaSubjectSoal] = [
-                        'Benar' => $benar,
-                        'Salah' => $salah,
-                        'Kosong' => $kosong,
-                        'Poin' => $benar * (1000 / $questNumber)
-                    ];
-
-                    array_push($dataEachSubsubject, $dataAnsCategory);
-                }
-            }
-
-            $listUserEventData = [
-                'Nama' => $cekEventAccount['username'],
-                'Email' => $cekEventAccount['email'],
-                'Asal Sekolah' => $cekEventAccount['asal_sekolah'],
-                'Penalaran Umum (B)' => $dataEachSubsubject[0]['Penalaran Umum']['Benar'],
-                'Penalaran Umum (S)' => $dataEachSubsubject[0]['Penalaran Umum']['Salah'],
-                'Penalaran Umum (K)' => $dataEachSubsubject[0]['Penalaran Umum']['Kosong'],
-                'Penalaran Umum (P)' => $dataEachSubsubject[0]['Penalaran Umum']['Poin'],
-                'Pemahaman Bacaan & Menulis (B)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Benar'],
-                'Pemahaman Bacaan & Menulis (S)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Salah'],
-                'Pemahaman Bacaan & Menulis (K)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Kosong'],
-                'Pemahaman Bacaan & Menulis (P)' => $dataEachSubsubject[0]['Pemahaman Bacaan & Menulis']['Poin'],
-                'Pengetahuan & Pemahaman Umum (B)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Benar'],
-                'Pengetahuan & Pemahaman Umum (S)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Salah'],
-                'Pengetahuan & Pemahaman Umum (K)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Kosong'],
-                'Pengetahuan & Pemahaman Umum (P)' => $dataEachSubsubject[0]['Pengetahuan & Pemahaman Umum']['Poin'],
-                'Pengetahuan Kuantitatif (B)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Benar'],
-                'Pengetahuan Kuantitatif (S)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Salah'],
-                'Pengetahuan Kuantitatif (K)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Kosong'],
-                'Pengetahuan Kuantitatif (P)' => $dataEachSubsubject[0]['Pengetahuan Kuantitatif']['Poin'],
-                'Literasi Bahasa Indonesia (B)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Benar'],
-                'Literasi Bahasa Indonesia (S)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Salah'],
-                'Literasi Bahasa Indonesia (K)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Kosong'],
-                'Literasi Bahasa Indonesia (P)' => $dataEachSubsubject[0]['Literasi Bahasa Indonesia']['Poin'],
-                'Literasi Bahasa Inggris (B)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Benar'],
-                'Literasi Bahasa Inggris (S)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Salah'],
-                'Literasi Bahasa Inggris (K)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Kosong'],
-                'Literasi Bahasa Inggris (P)' => $dataEachSubsubject[0]['Literasi Bahasa Inggris']['Poin'],
-                'Penalaran Matematika (B)' => $dataEachSubsubject[0]['Penalaran Matematika']['Benar'],
-                'Penalaran Matematika (S)' => $dataEachSubsubject[0]['Penalaran Matematika']['Salah'],
-                'Penalaran Matematika (K)' => $dataEachSubsubject[0]['Penalaran Matematika']['Kosong'],
-                'Penalaran Matematika (P)' => $dataEachSubsubject[0]['Penalaran Matematika']['Poin'],
-            ];
-
-            array_push($dataSiswaMedc, $listUserEventData);
-        }
-
-        $fp_medc = fopen('Data-Simulasi-MEdC-Makassar.csv', 'w');
-        foreach ($dataSiswaMedc as $fields) {
-            fputcsv($fp_medc, $fields);
-        }
-
-        fclose($fp_medc);
-
-        dd('Done');
     }
 }

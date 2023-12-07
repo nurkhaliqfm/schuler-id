@@ -41,6 +41,7 @@
                                             <td style="border-bottom: 0px;" class="text-center">Soal</td>
                                             <td style="border-bottom: 0px;" class="text-center">Id</td>
                                             <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
+                                            <td style="border-bottom: 0px;" class="text-center">Pembuatan</td>
                                             <td style="border-bottom: 0px;" class="text-center">Action</td>
                                         </tr>
                                     </thead>
@@ -49,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="<?= base_url('admin/daftar_quiz/' . $uri . '?slug=' . $_GET['slug']); ?>" class="box_item__Btn list_quiz_button delete__btn">Kembali</a>
+                    <a href="<?= base_url('admin/daftar_quiz/' . $_GET['u'] . '?slug=' . $_GET['slug']); ?>" class="box_item__Btn list_quiz_button delete__btn">Kembali</a>
                 </div>
             </div>
         </div>
@@ -93,8 +94,8 @@
                             <tr>
                                 <td style="border-bottom: 0px;" class="text-center"></td>
                                 <td style="border-bottom: 0px;" class="text-center">Soal</td>
-                                <td style="border-bottom: 0px;" class="text-center">Id Soal</td>
                                 <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
+                                <td style="border-bottom: 0px;" class="text-center">Pembuatan</td>
                             </tr>
                         </thead>
                         <tbody id="item-table-modal"></tbody>
@@ -115,13 +116,6 @@
     let dataCategory = <?= json_encode($bank_soal); ?>;
     let dataCategoryOption = <?= json_encode($bank_soal_option); ?>;
 
-    function convertToTitleCase(str) {
-        let newStr = str.replace(/_/g, " "); // Replace all underscores with spaces
-        return newStr.replace(/\w\S*/g, (txt) => {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        });
-    }
-
     function CreateItem(categoryItems, query) {
         var container = document.getElementById("item-table");
         container.innerHTML = '';
@@ -134,11 +128,13 @@
             var itemJenis = document.createElement("td");
             var itemAction = document.createElement("td");
             var itemActionBtn = document.createElement("a");
+            var itemSoalTgl = document.createElement("td");
 
             itemNo.className = "text-center"
             itemJenis.className = "text-center"
             itemSoal.className = "text-center"
             itemIdSoal.className = "text-center"
+            itemSoalTgl.className = "text-center"
             itemAction.className = "text-center"
 
             itemNo.innerHTML = i + 1;
@@ -155,10 +151,13 @@
             itemActionBtn.innerHTML = "Hapus Soal"
             itemAction.appendChild(itemActionBtn);
 
+            itemSoalTgl.innerHTML = categoryItems[i]['created_at']
+
             itemBox.appendChild(itemNo);
             itemBox.appendChild(itemSoal);
             itemBox.appendChild(itemIdSoal);
             itemBox.appendChild(itemJenis);
+            itemBox.appendChild(itemSoalTgl);
             itemBox.appendChild(itemAction);
 
             container.appendChild(itemBox);
@@ -236,13 +235,13 @@
                 var checkbox = document.createElement('input');
                 var itemSoal = document.createElement("td");
                 var itemSoalBtn = document.createElement("a");
-                var itemIdSoal = document.createElement("td");
                 var itemJenis = document.createElement("td");
+                var itemSoalTgl = document.createElement("td");
 
                 itemCheckbox.className = "text-center"
                 itemJenis.className = "text-center"
-                itemIdSoal.className = "text-center"
                 itemSoal.className = "text-center"
+                itemSoalTgl.className = "text-center"
 
                 checkbox.className = "custom-control-input";
                 checkbox.type = "checkbox";
@@ -251,18 +250,17 @@
                 itemCheckbox.appendChild(checkbox);
                 itemJenis.innerHTML = query[categoryItems[i]['sub_type_soal']];
 
-
-                itemIdSoal.innerHTML = convertToTitleCase(categoryItems[i]['soal_style']);
-
                 itemSoalBtn.className = "preview_modal_btn box_item__Btn list_quiz_button selected";
                 itemSoalBtn.id = categoryItems[i]['id_soal'];
                 itemSoalBtn.innerHTML = "Preview Soal"
                 itemSoal.appendChild(itemSoalBtn);
 
+                itemSoalTgl.innerHTML = categoryItems[i]['created_at']
+
                 itemBox.appendChild(itemCheckbox);
                 itemBox.appendChild(itemSoal);
-                itemBox.appendChild(itemIdSoal);
                 itemBox.appendChild(itemJenis);
+                itemBox.appendChild(itemSoalTgl);
 
                 container.appendChild(itemBox);
             }

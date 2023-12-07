@@ -23,11 +23,10 @@
                         <?php $i = 1; ?>
                         <?php foreach ($bankQuiz as $bQ) : ?>
                             <?php if ($uri == $bQ['quiz_category']) { ?>
-                                <?php $index = $i - 1; ?>
                                 <tr>
                                     <td class="text-center"><?= $i++; ?></td>
                                     <td class="text-center"><?= $bQ['quiz_name']; ?></td>
-                                    <td class="text-center"><?= $quiz_number[$index]; ?></td>
+                                    <td class="text-center"><?= $bQ['number_soal']; ?></td>
                                     <td class="text-center">
                                         <form action="<?= base_url("admin/deleted_quiz/" . $bQ['quiz_id'] . '?slug=' . $_GET['slug'] . '&u=' . $uri); ?>" method="post" class="d-inline">
                                             <?= csrf_field(); ?>

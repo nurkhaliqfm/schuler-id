@@ -45,6 +45,7 @@
                                                 <td style="border-bottom: 0px;" class="text-center"></td>
                                                 <td style="border-bottom: 0px;" class="text-center">Soal</td>
                                                 <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
+                                                <td style="border-bottom: 0px;" class="text-center">Pembuatan</td>
                                             </tr>
                                         </thead>
                                         <tbody id="item-table"></tbody>
@@ -91,12 +92,14 @@
             var itemSoal = document.createElement("td");
             var itemSoalBtn = document.createElement("a");
             var itemJenis = document.createElement("td");
+            var itemSoalTgl = document.createElement("td");
 
             itemBox.id = 'item-box';
             itemBox.setAttribute('box-name', query[0]['type_soal_name'])
             itemCheckbox.className = "text-center";
             itemJenis.className = "text-center";
             itemSoal.className = "text-center";
+            itemSoalTgl.className = "text-center"
 
             checkbox.className = "custom-control-input";
             checkbox.type = "checkbox";
@@ -111,9 +114,12 @@
             itemSoalBtn.innerHTML = "Preview Soal"
             itemSoal.appendChild(itemSoalBtn);
 
+            itemSoalTgl.innerHTML = categoryItems[i]['created_at']
+
             itemBox.appendChild(itemCheckbox);
             itemBox.appendChild(itemSoal);
             itemBox.appendChild(itemJenis);
+            itemBox.appendChild(itemSoalTgl);
 
             container.appendChild(itemBox);
         }
