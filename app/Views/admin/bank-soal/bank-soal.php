@@ -10,8 +10,8 @@
                         <h3 class="box-title simulation">Daftar <span>Bank Soal</span></h3>
                         <p class="box__subtitle">Pilih kategori Soal</p>
                         <div id="tab_header_button" class="button__container">
-                            <?php foreach ($type_soal as $type) : ?>
-                                <div class="tab_button tab_button_style" id="<?= $type['slug']; ?>"><?= strtoupper(str_replace('_', ' ', $type['slug'])); ?></div>
+                            <?php foreach ($category as $item) : ?>
+                                <div class="tab_button tab_button_style" id="<?= $item['id']; ?>"><?= strtoupper(str_replace('_', ' ', $item['name'])); ?></div>
                             <?php endforeach; ?>
                         </div>
                     </div>
@@ -42,13 +42,13 @@
 <script>
     const tabButton = document.querySelectorAll('div.tab_button_style');
 
-    let dataType = <?= json_encode($type_soal); ?>;
-    let dataCategory = <?= json_encode($data_category); ?>;
+    let category = <?= json_encode($category); ?>;
+    let subCategory = <?= json_encode($sub_category); ?>;
 
-    function CreateItem(categoryItems, query) {
+    function CreateItem(subCategoryItem, query) {
         var container = document.getElementById("item-table");
         container.innerHTML = '';
-        for (let i = 0; i < categoryItems.length; i++) {
+        for (let i = 0; i < subCategoryItem.length; i++) {
             var itemBox = document.createElement("tr");
             var itemNo = document.createElement("td");
             var itemJenis = document.createElement("td");
@@ -60,15 +60,15 @@
             itemJenis.className = "text-center"
             itemJumlah.className = "text-center"
             itemAction.className = "text-center"
-            itemBox.setAttribute('data-box', categoryItems[i]['slug'])
+            itemBox.setAttribute('data-box', subCategoryItem[i]['kode'])
 
             itemNo.innerHTML = i + 1;
-            itemJenis.innerHTML = categoryItems[i]['dataName']
-            itemJumlah.innerHTML = categoryItems[i]['dataNumb']
+            itemJenis.innerHTML = subCategoryItem[i]['name']
+            itemJumlah.innerHTML = subCategoryItem[i]['jumlah']
 
             itemActionBtn.className = "box_item__Btn list_quiz_button selected";
-            itemActionBtn.setAttribute('data-button', categoryItems[i]['dataId']);
-            itemActionBtn.setAttribute('href', "<?= base_url('admin/daftar_soal/'); ?>" + "/" + query + "/" + categoryItems[i]['dataId'])
+            itemActionBtn.setAttribute('data-button', subCategoryItem[i]['id']);
+            itemActionBtn.setAttribute('href', "<?= base_url('admin/daftar_soal/'); ?>" + "/" + query + "/" + subCategoryItem[i]['id'])
             itemActionBtn.innerHTML = "Detail"
             itemAction.appendChild(itemActionBtn);
 
@@ -81,20 +81,20 @@
         }
     }
 
-    function DefaultTabButton(typeItems, categoryItems) {
-        document.getElementById(typeItems[0].slug).classList.add('active');
+    function DefaultTabButton(categoryItem, subCategoryItem) {
+        document.getElementById(categoryItem[0].id).classList.add('active');
 
-        let data = categoryItems.filter(categoryItems => {
-            return categoryItems.slug == typeItems[0].slug
+        let data = subCategoryItem.filter(item => {
+            return item.category_id == categoryItem[0].id
         })
 
-        CreateItem(data, typeItems[0].id_main_type_soal);
+        CreateItem(data, categoryItem[0].id);
     }
 
-    function TabButtonControl(typeItems, categoryItems) {
-        for (let i = 0; i < typeItems.length; i++) {
-            let item = typeItems[i];
-            let btnId = item.slug;
+    function TabButtonControl(categoryItem, subCategoryItem) {
+        for (let i = 0; i < categoryItem.length; i++) {
+            let category = categoryItem[i];
+            let btnId = category.id;
             document.getElementById(btnId).addEventListener("click", el => {
                 tabButton.forEach(itemBtnTab => {
                     itemBtnTab.classList.remove("active");
@@ -102,18 +102,18 @@
 
                 document.getElementById(el.target.id).classList.add("active");
 
-                let data = categoryItems.filter(categoryItems => {
-                    return categoryItems.slug == item.slug
+                let data = subCategoryItem.filter(item => {
+                    return item.category_id == category.id
                 })
 
-                CreateItem(data, item['id_main_type_soal']);
+                CreateItem(data, category['id']);
             })
 
         }
     }
 
-    DefaultTabButton(dataType, dataCategory);
-    TabButtonControl(dataType, dataCategory);
+    DefaultTabButton(category, subCategory);
+    TabButtonControl(category, subCategory);
 </script>
 
 <?= $this->endSection(); ?>

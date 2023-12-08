@@ -15,8 +15,38 @@
                         <?= csrf_field(); ?>
                         <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
                         <input hidden type="text" name="id" value="<?= $bank_soal['id']; ?>">
-                        <input hidden type="text" name="MenuSoal" value="<?= $menu_soal; ?>">
-                        <input hidden type="text" name="SubmenuSoal" value="<?= $submenu_soal; ?>">
+                        <input hidden type="text" name="category" value="<?= $category; ?>">
+                        <input hidden type="text" name="sub_category" value="<?= $sub_category; ?>">
+
+                        <h3 class="custom-box-title">Nomor Soal</h3>
+                        <div class="mb-3">
+                            <input name="nomorSoal" min="1" type="number" class="form-control <?= ($validation->hasError('nomorSoal')) ? 'is-invalid' : ''; ?>" id="nomorSoal" value="<?= old('nomorSoal') ? old('nomorSoal') : $bank_soal['nomor_soal']; ?>" />
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('nomorSoal'); ?>
+                            </div>
+                        </div>
+
+                        <h3 class="custom-box-title">Paket Soal</h3>
+                        <div class="mb-3">
+                            <input name="paketSoal" min="1" type="number" class="form-control <?= ($validation->hasError('paketSoal')) ? 'is-invalid' : ''; ?>" id="paketSoal" value="<?= old('paketSoal') ? old('paketSoal') : $bank_soal['paket_soal']; ?>" />
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('paketSoal'); ?>
+                            </div>
+                        </div>
+
+                        <h3 class="custom-box-title">Sumber Soal</h3>
+                        <div class="mb-3">
+                            <select name="sumberPaket" class="form-select <?= ($validation->hasError('sumberPaket')) ? 'is-invalid' : ''; ?>" aria-label="Default select example">
+                                <option disabled selected>Pilih Sumber Paket</option>
+                                <?php foreach ($ref_sumber as $sumber) : ?>
+                                    <option <?= old('sumberPaket') ? (old('sumberPaket') == $sumber['id'] ? "selected" : "") : ($bank_soal['sumber_id'] == $sumber['id'] ? "selected" : ""); ?> value="<?= $sumber['id'] ?>"><?= $sumber['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('sumberPaket'); ?>
+                            </div>
+                        </div>
+
                         <!-- Pertanyaan -->
                         <h3 class="custom-box-title">Edit Soal</h3>
                         <div class="mb-3">

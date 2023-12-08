@@ -18,14 +18,14 @@
                 <div class="white-box">
                     <div class="container__title__box daftar__soal">
                         <h3 class="box-title">Daftar Soal</h3>
-                        <a href="<?= base_url('admin/input_soal/' . $menu_soal . '/' . $submenu_soal); ?>" class="box_item__Btn list_quiz_button selected"">Tambahkan Soal</a>
+                        <a href="<?= base_url('admin/input_soal/' . $category . '/' . $sub_category); ?>" class="box_item__Btn list_quiz_button selected"">Tambahkan Soal</a>
                     </div>
                     <div class=" container__body__box daftar__soal">
                             <table class="table">
                                 <tr>
                                     <td class="text-center">No</td>
-                                    <td class="text-center">Soal</td>
-                                    <td class="text-center">Id</td>
+                                    <td class="text-center">Preview</td>
+                                    <td class="text-center">Kode Soal</td>
                                     <td class="text-center">Pembuatan</td>
                                     <td class="text-center">Update</td>
                                     <td class="text-center">Action</td>
@@ -37,15 +37,15 @@
                                         <td class="text-center">
                                             <a id="<?= $bs['id_soal']; ?>" class="preview_btn box_item__Btn list_quiz_button selected">View</a>
                                         </td>
-                                        <td class="text-center"><?= $bs['id_soal']; ?></td>
+                                        <td class="text-center"><?= $bs['kode_soal']; ?></td>
                                         <td class="text-center"><?= $bs['created_at']; ?></td>
                                         <td class="text-center"><?= $bs['updated_at']; ?></td>
                                         <td class="text-center">
-                                            <form action="<?= base_url("admin/deleted_soal/" . $bs['id_soal']); ?>" method="post" class="d-inline">
+                                            <form action="<?= base_url("admin/deleted_soal/" . $bs['id']); ?>" method="post" class="d-inline">
                                                 <?= csrf_field(); ?>
                                                 <button type="submit" type="submit" class="box_item__Btn list_quiz_button delete__btn"><i class="fa-solid fa-trash-alt"></i></button>
-                                                <a href="<?= base_url('admin/edit_soal/' . $bs['id_soal']); ?>" class="box_item__Btn list_quiz_button edit__btn"><i class="fa-solid fa-pen-alt"></i></a>
-                                                <a href="<?= base_url('admin/duplicat_soal/' . $bs['id_soal']); ?>" class="box_item__Btn list_quiz_button selected"><i class="fa-solid fa-copy"></i></a>
+                                                <a href="<?= base_url('admin/edit_soal/' . $bs['id']); ?>" class="box_item__Btn list_quiz_button edit__btn"><i class="fa-solid fa-pen-alt"></i></a>
+                                                <a href="<?= base_url('admin/duplicat_soal/' . $bs['id']); ?>" class="box_item__Btn list_quiz_button selected"><i class="fa-solid fa-copy"></i></a>
                                             </form>
                                         </td>
                                     </tr>

@@ -14,10 +14,40 @@
                     <form action="<?= base_url('admin/save_soal'); ?>" method="POST">
                         <?= csrf_field(); ?>
                         <input type="hidden" id="txt_csrfname" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>" />
-                        <input hidden type="text" name="MenuSoal" value="<?= $menu_soal; ?>">
-                        <input hidden type="text" name="SubmenuSoal" value="<?= $submenu_soal; ?>">
+                        <input hidden type="text" name="category" value="<?= $category; ?>">
+                        <input hidden type="text" name="sub_category" value="<?= $sub_category; ?>">
+
+                        <h3 class="custom-box-title">Nomor Soal</h3>
+                        <div class="mb-3">
+                            <input name="nomorSoal" value="1" min="1" type="number" class="form-control <?= ($validation->hasError('nomorSoal')) ? 'is-invalid' : ''; ?>" id="nomorSoal"><?= old('nomorSoal'); ?></input>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('nomorSoal'); ?>
+                            </div>
+                        </div>
+
+                        <h3 class="custom-box-title">Paket Soal</h3>
+                        <div class="mb-3">
+                            <input name="paketSoal" value="1" min="1" type="number" class="form-control <?= ($validation->hasError('paketSoal')) ? 'is-invalid' : ''; ?>" id="paketSoal"><?= old('paketSoal'); ?></input>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('paketSoal'); ?>
+                            </div>
+                        </div>
+
+                        <h3 class="custom-box-title">Sumber Soal</h3>
+                        <div class="mb-3">
+                            <select name="sumberPaket" class="form-select <?= ($validation->hasError('sumberPaket')) ? 'is-invalid' : ''; ?>" aria-label="Default select example">
+                                <option disabled selected>Pilih Sumber Paket</option>
+                                <?php foreach ($ref_sumber as $sumber) : ?>
+                                    <option <?= old('sumberPaket') == $sumber['id'] ? "selected" : ""; ?> value="<?= $sumber['id'] ?>"><?= $sumber['name'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <div class="invalid-feedback">
+                                <?= $validation->getError('sumberPaket'); ?>
+                            </div>
+                        </div>
+
                         <!-- Pertanyaan -->
-                        <h3 class="custom-box-title">Input Soal</h3>
+                        <h3 class="custom-box-title">Soal</h3>
                         <div class="mb-3">
                             <textarea rows="10" name="editorQuestion" type="text" class="form-control <?= ($validation->hasError('editorQuestion')) ? 'is-invalid' : ''; ?>" id="editorQuestion"><?= old('editorQuestion'); ?></textarea>
                             <div class="invalid-feedback">
@@ -26,7 +56,7 @@
                         </div>
 
                         <!-- Option -->
-                        <h3 class="custom-box-title">Input Option</h3>
+                        <h3 class="custom-box-title">Option</h3>
                         <div class="grid-container option__style">
                             <div class="checkbox checkbox__form">
                                 <input checked type="checkbox" value="option_a" name="checkbox[]" id="checkbox">
@@ -99,7 +129,7 @@
                         </div>
 
                         <!-- Pertanyaan -->
-                        <h3 class="custom-box-title">Input Nilai</h3>
+                        <h3 class="custom-box-title">Nilai</h3>
                         <div class="mb-3">
                             <select name="questionValue" class="form-select <?= ($validation->hasError('questionValue')) ? 'is-invalid' : ''; ?>" aria-label="Default select example">
                                 <option disabled selected>Pilih Nilai</option>
@@ -116,7 +146,7 @@
 
 
                         <!-- Pembahasaan -->
-                        <h3 class="custom-box-title">Input Pembahasan</h3>
+                        <h3 class="custom-box-title">Pembahasan</h3>
                         <div class="mb-3">
                             <textarea rows="10" type="text" class="form-control <?= ($validation->hasError('editorExplanation')) ? 'is-invalid' : ''; ?>" name="editorExplanation" id="editorExplanation"><?= old('editorExplanation'); ?></textarea>
                             <div class="invalid-feedback">

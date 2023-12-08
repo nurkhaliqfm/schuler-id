@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\TypeSoalModel;
+use App\Models\RefCategoryModel;
+use App\Models\RefSubCategoryModel;
+use App\Models\RefSumberPaketModel;
 use App\Models\BankSoalModel;
 use App\Models\BankQuizModel;
 use App\Models\CategoryQuizModel;
@@ -16,6 +19,9 @@ use Ramsey\Uuid\Uuid;
 class Admin extends BaseController
 {
     protected $typeSoalModel;
+    protected $refCategoryModel;
+    protected $refSubCategoryModel;
+    protected $refSumberPaketModel;
     protected $bankSoalModel;
     protected $bankQuizModel;
     protected $categoryQuizModel;
@@ -27,6 +33,9 @@ class Admin extends BaseController
     public function __construct()
     {
         $this->typeSoalModel = new TypeSoalModel();
+        $this->refCategoryModel = new RefCategoryModel();
+        $this->refSubCategoryModel = new RefSubCategoryModel();
+        $this->refSumberPaketModel = new RefSumberPaketModel();
         $this->bankSoalModel = new BankSoalModel();
         $this->bankQuizModel = new BankQuizModel();
         $this->categoryQuizModel = new CategoryQuizModel();
@@ -59,30 +68,15 @@ class Admin extends BaseController
             return redirect()->to(base_url('home/error_404'));
         }
 
-        $typeSoalModel = $this->typeSoalModel->findAll();
+        $refCategory = $this->refCategoryModel->findAll();
 
-        $data = [];
-        foreach ($typeSoalModel as $ts) {
-            $dataId = explode(',', $ts['list_type_soal_id']);
-            $dataName = explode(',', $ts['list_type_soal']);
-            $dataNumb = explode(',', $ts['list_type_soal_jumlah']);
-
-            for ($i = 0; $i < count($dataId); $i++) {
-                $item = [
-                    'dataId' => $dataId[$i],
-                    'dataName' => $dataName[$i],
-                    'dataNumb' => $dataNumb[$i],
-                    'slug' => $ts['slug']
-                ];
-                array_push($data, $item);
-            }
-        }
+        $refSubCategory = $this->refSubCategoryModel->findAll();
 
         $data = [
             'title' => 'Bank Soal Schuler.id',
             'user_name' => $user['username'],
-            'type_soal' => $typeSoalModel,
-            'data_category' => $data
+            'category' => $refCategory,
+            'sub_category' => $refSubCategory
         ];
 
         return view('admin/bank-soal/bank-soal', $data);
@@ -107,7 +101,7 @@ class Admin extends BaseController
         return view('admin/bank-soal/bank-soal-type', $data);
     }
 
-    public function daftar_soal($menuSoal, $submenuSoal)
+    public function daftar_soal($categoryId, $subCategoryId)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
         if (session()->get('user_level') != 'admin super') {
@@ -115,24 +109,27 @@ class Admin extends BaseController
         }
 
         $bankSoalModel = $this->bankSoalModel->where([
-            'type_soal' => $menuSoal,
-            'sub_type_soal' => $submenuSoal
+            'category_id' => $categoryId,
+            'sub_category_id' => $subCategoryId
         ])->findAll();
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
             'bank_soal' => $bankSoalModel,
-            'menu_soal' => $menuSoal,
-            'submenu_soal' => $submenuSoal
+            'category' => $categoryId,
+            'sub_category' => $subCategoryId
         ];
 
         return view('admin/bank-soal/daftar-soal', $data);
     }
 
-    public function input_soal($id, $type)
+    public function input_soal($category, $sub_category)
     {
         $user = $this->usersModel->where(['email' => session()->get('username')])->first();
+
+        $refSumberPaket = $this->refSumberPaketModel->findAll();
+
         if (session()->get('user_level') != 'admin super') {
             return redirect()->to(base_url('home/error_404'));
         }
@@ -140,8 +137,9 @@ class Admin extends BaseController
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
-            'menu_soal' => $id,
-            'submenu_soal' => $type,
+            'category' => $category,
+            'ref_sumber' => $refSumberPaket,
+            'sub_category' => $sub_category,
             'validation' => \Config\Services::validation()
         ];
 
@@ -156,8 +154,10 @@ class Admin extends BaseController
         }
 
         $bankSoalModel = $this->bankSoalModel->where([
-            'id_soal' => $idSoal
+            'id' => $idSoal
         ])->first();
+
+        $refSumberPaket = $this->refSumberPaketModel->findAll();
 
         $listOption = ['option_a', 'option_b', 'option_c', 'option_d', 'option_e'];
         foreach ($listOption as $lo) {
@@ -169,8 +169,9 @@ class Admin extends BaseController
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
-            'menu_soal' => $bankSoalModel['type_soal'],
-            'submenu_soal' => $bankSoalModel['sub_type_soal'],
+            'category' => $bankSoalModel['category_id'],
+            'ref_sumber' => $refSumberPaket,
+            'sub_category' => $bankSoalModel['sub_category_id'],
             'bank_soal' => $bankSoalModel,
             'answer_quest' => $questionAns,
             'validation' => \Config\Services::validation()
@@ -185,17 +186,40 @@ class Admin extends BaseController
             return redirect()->to(base_url('home/error_404'));
         }
 
-        $menuSoal = $this->request->getVar('MenuSoal');
-        $submenuSoal = $this->request->getVar('SubmenuSoal');
+        $category = $this->request->getVar('category');
+        $subCategory = $this->request->getVar('sub_category');
+        $sumberPaket = $this->request->getVar('sumberPaket');
+        $nomorSoal = $this->request->getVar('nomorSoal');
+        $paketSoal = $this->request->getVar('paketSoal');
+        $tahun = date('Y');
 
-        $soal  = $this->request->getVar('editorQuestion');
-        $soal = str_replace("Love", "Sarange", $soal);
+        $refSubCategory = $this->refSubCategoryModel->where(['id' => $subCategory])->first();
+        $refSumberPaket = $this->refSumberPaketModel->where(['id' => $sumberPaket])->first();
+        $kodeSoal = $tahun . $refSumberPaket['kode'] . '-' . $paketSoal . $refSubCategory['kode'] . '-' . $nomorSoal;
 
         if (!$this->validate([
             'editorQuestion' => [
                 'rules' => 'required',
                 'errors' => [
                     'required' => 'Soal Harus Diisi',
+                ]
+            ],
+            'nomorSoal' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Nomor Soal Harus Diisi',
+                ]
+            ],
+            'paketSoal' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Paket Soal Harus Diisi',
+                ]
+            ],
+            'sumberPaket' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Sumber Paket Soal Harus Dipilih',
                 ]
             ],
             'option_a' => [
@@ -248,14 +272,21 @@ class Admin extends BaseController
             ],
         ])) {
             session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
-            return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+            return redirect()->to(base_url('admin/input_soal/' . $category . '/' . $subCategory))->withInput();
         }
 
         $questionAns = $this->request->getVar('checkbox');
         $bankSoalModel = $this->bankSoalModel;
         $bankSoalModel->save([
-            'type_soal' => $menuSoal,
-            'sub_type_soal' => $submenuSoal,
+            'type_soal' => $category,
+            'sub_type_soal' => $subCategory,
+            'category_id' => $category,
+            'sub_category_id' => $subCategory,
+            'sumber_id' => $sumberPaket,
+            'nomor_soal' => $nomorSoal,
+            'paket_soal' => $paketSoal,
+            'tahun' => $tahun,
+            'kode_soal' => $kodeSoal,
             'id_soal' => uniqid(),
             'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
             'option_a' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('option_a')),
@@ -269,23 +300,15 @@ class Admin extends BaseController
             'value' => $this->request->getVar('questionValue')
         ]);
 
-        $TypeSoalModel = $this->typeSoalModel;
-        $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
-        $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
-        $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
-        $arrayLong = sizeof($valueSoal);
-        for ($i = 0; $i < $arrayLong; $i++) {
-            if ($typeSoalId[$i] == $submenuSoal) {
-                $valueSoal[$i] = $valueSoal[$i] + 1;
-            }
-        };
+        $subCategoryModel = $this->refSubCategoryModel;
+        $currentCategoryState = $subCategoryModel->where(['id' => $subCategory])->first();
 
-        $TypeSoalModel->update($getTypeSoal['id'], [
-            'list_type_soal_jumlah' => join(",", $valueSoal)
+        $subCategoryModel->update($subCategory, [
+            'jumlah' => $currentCategoryState['jumlah'] + 1
         ]);
 
         session()->setFlashdata('success', "Soal Berhasil Ditambahkan.");
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+        return redirect()->to(base_url('admin/daftar_soal/' . $category . '/' . $subCategory))->withInput();
     }
 
     public function duplicat_soal($idSoal)
@@ -295,7 +318,7 @@ class Admin extends BaseController
         }
 
         $getBankSoal = $this->bankSoalModel->where([
-            'id_soal' => $idSoal
+            'id' => $idSoal
         ])->first();
 
         $new_image_soal = [];
@@ -425,13 +448,28 @@ class Admin extends BaseController
         $new_option_d = str_replace($old_image_optionD, $new_image_optionD, $getBankSoal['option_d']);
         $new_option_e = str_replace($old_image_optionE, $new_image_optionE, $getBankSoal['option_e']);
 
-        $menuSoal = $getBankSoal['type_soal'];
-        $submenuSoal = $getBankSoal['sub_type_soal'];
+        $category = $getBankSoal['category_id'];
+        $subCategory = $getBankSoal['sub_category_id'];
+        $sumberPaket = $getBankSoal['sumber_id'];
+        $nomorSoal = $getBankSoal['nomor_soal'];
+        $paketSoal = $getBankSoal['paket_soal'];
+        $tahun = date('Y');
+
+        $refSubCategory = $this->refSubCategoryModel->where(['id' => $subCategory])->first();
+        $refSumberPaket = $this->refSumberPaketModel->where(['id' => $sumberPaket])->first();
+        $kodeSoal = $tahun . $refSumberPaket['kode'] . '-' . $paketSoal . $refSubCategory['kode'] . '-' .  $nomorSoal;
 
         $bankSoalModel = $this->bankSoalModel;
         $bankSoalModel->save([
-            'type_soal' => $menuSoal,
-            'sub_type_soal' => $submenuSoal,
+            'type_soal' => $category,
+            'sub_type_soal' => $subCategory,
+            'category_id' => $category,
+            'sub_category_id' => $subCategory,
+            'sumber_id' => $sumberPaket,
+            'nomor_soal' => $nomorSoal,
+            'paket_soal' => $paketSoal,
+            'tahun' => $tahun,
+            'kode_soal' => $kodeSoal,
             'id_soal' => uniqid(),
             'soal' => $new_soal,
             'option_a' => $new_option_a,
@@ -445,23 +483,16 @@ class Admin extends BaseController
             'value' => $getBankSoal['value']
         ]);
 
-        $TypeSoalModel = $this->typeSoalModel;
-        $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
-        $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
-        $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
-        $arrayLong = sizeof($valueSoal);
-        for ($i = 0; $i < $arrayLong; $i++) {
-            if ($typeSoalId[$i] == $submenuSoal) {
-                $valueSoal[$i] = $valueSoal[$i] + 1;
-            }
-        };
 
-        $TypeSoalModel->update($getTypeSoal['id'], [
-            'list_type_soal_jumlah' => join(",", $valueSoal)
+        $subCategoryModel = $this->refSubCategoryModel;
+        $currentCategoryState = $subCategoryModel->where(['id' => $subCategory])->first();
+
+        $subCategoryModel->update($subCategory, [
+            'jumlah' => $currentCategoryState['jumlah'] + 1
         ]);
 
         session()->setFlashdata('success', "Soal Berhasil Diduplikat.");
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+        return redirect()->to(base_url('admin/daftar_soal/' . $category . '/' . $subCategory))->withInput();
     }
 
     public function update_soal()
@@ -470,8 +501,16 @@ class Admin extends BaseController
             return redirect()->to(base_url('home/error_404'));
         }
 
-        $menuSoal = $this->request->getVar('MenuSoal');
-        $submenuSoal = $this->request->getVar('SubmenuSoal');
+        $category = $this->request->getVar('category');
+        $subCategory = $this->request->getVar('sub_category');
+        $sumberPaket = $this->request->getVar('sumberPaket');
+        $nomorSoal = $this->request->getVar('nomorSoal');
+        $paketSoal = $this->request->getVar('paketSoal');
+        $tahun = date('Y');
+
+        $refSubCategory = $this->refSubCategoryModel->where(['id' => $subCategory])->first();
+        $refSumberPaket = $this->refSumberPaketModel->where(['id' => $sumberPaket])->first();
+        $kodeSoal = $tahun . $refSumberPaket['kode'] . '-' . $paketSoal . $refSubCategory['kode'] . '-' . $nomorSoal;
 
         if (!$this->validate([
             'editorQuestion' => [
@@ -530,7 +569,7 @@ class Admin extends BaseController
             ],
         ])) {
             session()->setFlashdata('failed', "Soal Gagal Ditambahkan.");
-            return redirect()->to(base_url('admin/input_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+            return redirect()->to(base_url('admin/input_soal/' . $category . '/' . $subCategory))->withInput();
         }
 
         $cleanList = ['<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '<p><br></p>', '<p>', '</p>'];
@@ -550,6 +589,11 @@ class Admin extends BaseController
         $questionAns = $this->request->getVar('checkbox');
         $bankSoalModel = $this->bankSoalModel;
         $bankSoalModel->update($this->request->getVar('id'), [
+            'sumber_id' => $sumberPaket,
+            'nomor_soal' => $nomorSoal,
+            'tahun' => $tahun,
+            'kode_soal' => $kodeSoal,
+            'paket_soal' => $paketSoal,
             'soal' => str_replace('<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>', '', $this->request->getVar('editorQuestion')),
             'option_a' => $optionA,
             'option_b' => $optionB,
@@ -563,7 +607,7 @@ class Admin extends BaseController
         ]);
 
         session()->setFlashdata('success_ubah', "Soal Berhasil Diubah.");
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+        return redirect()->to(base_url('admin/daftar_soal/' . $category . '/' . $subCategory))->withInput();
     }
 
     public function upload_image()
@@ -620,7 +664,7 @@ class Admin extends BaseController
         }
 
         $bank_soal = $this->bankSoalModel;
-        $selectedSoal = $bank_soal->where(['id_soal' => $id_soal])->first();
+        $selectedSoal = $bank_soal->where(['id' => $id_soal])->first();
         $cekInQuiz = $this->bankQuizModel->where(['quiz_question' => $id_soal])->first();
         $explodeSoal = explode('/assets/upload_image/', $selectedSoal['soal']);
         $explodePembahasan = explode('/assets/upload_image/', $selectedSoal['pembahasan']);
@@ -630,8 +674,8 @@ class Admin extends BaseController
         $explodeoptionD = explode('/assets/upload_image/', $selectedSoal['option_d']);
         $explodeoptionE = explode('/assets/upload_image/', $selectedSoal['option_e']);
 
-        $menuSoal = $selectedSoal['type_soal'];
-        $submenuSoal = $selectedSoal['sub_type_soal'];
+        $category = $selectedSoal['category_id'];
+        $subCategory = $selectedSoal['sub_category_id'];
 
         if (!$cekInQuiz) {
             if ($selectedSoal) {
@@ -712,19 +756,11 @@ class Admin extends BaseController
                     }
                 }
 
-                $TypeSoalModel = $this->typeSoalModel;
-                $getTypeSoal = $TypeSoalModel->where(['id_main_type_soal' => $menuSoal])->first();
-                $typeSoalId = explode(",", $getTypeSoal['list_type_soal_id']);
-                $valueSoal = explode(",", $getTypeSoal['list_type_soal_jumlah']);
-                $arrayLong = sizeof($valueSoal);
-                for ($i = 0; $i < $arrayLong; $i++) {
-                    if ($typeSoalId[$i] == $submenuSoal) {
-                        $valueSoal[$i] = $valueSoal[$i] - 1;
-                    }
-                };
+                $subCategoryModel = $this->refSubCategoryModel;
+                $currentCategoryState = $subCategoryModel->where(['id' => $subCategory])->first();
 
-                $TypeSoalModel->update($getTypeSoal['id'], [
-                    'list_type_soal_jumlah' => join(",", $valueSoal)
+                $subCategoryModel->update($subCategory, [
+                    'jumlah' => $currentCategoryState['jumlah'] - 1
                 ]);
 
                 $bank_soal->delete($selectedSoal['id']);
@@ -733,7 +769,7 @@ class Admin extends BaseController
         } else {
             session()->setFlashdata('failed', "Soal gagal dihapus karena terdaftar dalam quiz " . $cekInQuiz['quiz_name']);
         }
-        return redirect()->to(base_url('admin/daftar_soal/' . $menuSoal . '/' . $submenuSoal))->withInput();
+        return redirect()->to(base_url('admin/daftar_soal/' . $category . '/' . $subCategory))->withInput();
     }
 
     // QUIZ SECTION
@@ -1188,6 +1224,73 @@ class Admin extends BaseController
     public function error_404()
     {
         return view('errors/html/error_404');
+    }
+
+    public function renew_bank_soal()
+    {
+        $bank_soal = $this->bankSoalModel->findAll();
+
+        $listType = [
+            '22b9f14e-867a-41d0-a758-55070c6bd603' => 1,
+            '399da42a-5c50-431e-8601-7cb58c30e1e8' => 2,
+            'abca1845-062f-46dc-8eb3-56ff6dc0508c' => 2,
+            'ef304127-7592-422d-ab27-7248c4a706c9' => 2,
+            '8a7baa68-e091-498e-821c-fed64230e12f' => 3,
+            'ee88908b-8d8c-4815-8898-f6bd6d07b147' => 4,
+            '33c2f14e-867z-41d9-d758-34070c6bd603' => 0
+        ];
+
+        $listSubType = [
+            '9b97b305-93c0-49d0-b60b-5ae02315a62f' => 1,
+            'b664ce29-a532-47aa-a56c-6cd911ddbd9d' => 2,
+            'be81bf87-f836-4e14-bf36-b5b4310a285a' => 3,
+            '5d79fefb-1c32-48cb-a576-c7b37a7d31b9' => 4,
+            '06834f36-fee9-4f77-a7e1-cb1509514dc7' => 5,
+            'ze85bf87-f892-5h15-bf36-j1k4310a292z' => 6,
+            'v665ce29-j537-47aa-x56w-6cd956ddbd9m' => 7,
+            'f9ff51b1-36b0-4023-8f2c-63bc567bc0a1' => 8,
+            'c4dde305-7508-4e5c-acdd-7be0af66e133' => 9,
+            'c8d8ada8-bbb0-4b1c-a2bd-5f26321ebd87' => 10,
+            '77090d1a-07cd-4123-8bbf-8e288ef0fbe0' => 11,
+            '3c7ae53c-4999-4857-bb8f-b258c7c6fc25' => 12,
+            '6f27c012-4ac2-4340-94c4-d425e3b23fc4' => 13,
+            '221586a5-79b6-4199-a5d6-3557d3ff8635' => 14,
+            'dec0e691-7f62-4766-972b-32cc5f6db700' => 15,
+            '3u97b382-51c0-49d0-b60b-9st02315a62f' => 0
+        ];
+
+        $db = \Config\Database::connect();
+        $builder = $db->query('SELECT bank_soal.id, bank_soal.tahun,bank_soal.nomor_soal, bank_soal.paket_soal ref_sumber_paket.kode as sumber_paket_kode, ref_sub_category.kode as sub_category_kode FROM bank_soal INNER JOIN ref_sumber_paket ON ref_sumber_paket.id = bank_soal.sumber_id INNER JOIN ref_category ON ref_category.id = bank_soal.category_id INNER JOIN ref_sub_category ON ref_sub_category.id = bank_soal.sub_category_id');
+
+        $result = $builder->getResult();
+
+        foreach ($result as $row) {
+            $kodeSoal = $row->tahun . $row->sumber_paket_kode . '-' . $row->paket_soal . $row->sub_category_kode . '-' . $row->nomor_soal;
+
+            $idSoal = (int) $row->id;
+
+            $db->table('bank_soal')->where('id', $idSoal)->update([
+                'kode_soal' => $kodeSoal
+            ]);
+        }
+
+        // dd($result[0]->tahun . $result[0]->sumber_paket_kode . $result[0]->category_kode . $result[0]->sub_category_kode . $result[0]->category_kode);
+
+        // foreach ($bank_soal as $bs) {
+        //     $categoryId = $listType[$bs['type_soal']];
+        //     $subCategoryId = $listSubType[$bs['sub_type_soal']];
+        //     $tahun = date('Y', strtotime($bs['created_at']));
+        //     $this->bankSoalModel->update(
+        //         $bs['id'],
+        //         [
+        //             'category_id' => $categoryId,
+        //             'sub_category_id' => $subCategoryId,
+        //             'tahun' => $tahun
+        //         ]
+        //     );
+        // };
+
+        // dd('done');
     }
 
     public function clean()
