@@ -66,14 +66,18 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
       ({ id_soal }) => id_soal === item.quiz_question
     );
 
-    let qSubject = typeSoal.find(
-      ({ id_main_type_soal }) => id_main_type_soal === item.quiz_subject
-    );
-    let subjectListID = qSubject.list_type_soal_id.split(",");
-    let subjectListName = qSubject.list_type_soal.split(",");
-    let getId = subjectListID.findIndex(
-      (index) => index === item.quiz_sub_subject
-    );
+    // let qSubject = typeSoal.find(
+    //   ({ id_main_type_soal }) => id_main_type_soal === item.quiz_subject
+    // );
+    let qSubject = category.find(({ id }) => id === item.quiz_subject);
+    // let qSubSubject = subCategory.filter(
+    //   ({ category_id }) => category_id === item.quiz_subject
+    // );
+    // let subjectListID = qSubject.list_type_soal_id.split(",");
+    // let subjectListName = qSubject.list_type_soal.split(",");
+    // let getId = qSubSubject.filter(
+    //   (category_id) => category_id === item.quiz_subject
+    // );
 
     let yourAnsware = userAnsware[dataSoal.id_soal].split("_");
     let realAnsware = dataSoal.ans_id.split("_");
@@ -84,7 +88,7 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
 
     document.getElementById("question__number").innerHTML = page + 1;
     document.getElementById("question__subject").innerHTML =
-      subjectListName[getId];
+      qSubject["name"].toUpperCase();
 
     document.getElementById("box_desc").classList.remove("active");
     document.getElementById("box_desc").classList.remove("warning");
@@ -168,15 +172,17 @@ function DisplayList(items, rows_per_page, page, userAnsware) {
 }
 
 function PaginationListNumber(items, row_per_page, userAnsware, tab) {
-  let getType = typeSoal.find(
-    ({ id_main_type_soal }) => id_main_type_soal === items[0]["quiz_subject"]
+  let getType = category.find(({ id }) => id === items[0]["quiz_subject"]);
+  let splitAllType = subCategory.filter(
+    ({ category_id }) => category_id === getType.id
   );
-
-  let namaCategory = getType["list_type_soal"].split(",");
-  let idCategory = getType["list_type_soal_id"].split(",");
   let data = [];
-  for (let i = 0; i < idCategory.length; i++) {
-    data[i] = { id: idCategory[i], nama: namaCategory[i], value: 0 };
+  for (let i = 0; i < splitAllType.length; i++) {
+    data[i] = {
+      id: splitAllType[i]["id"],
+      nama: splitAllType[i]["name"],
+      value: 0,
+    };
   }
 
   let page_count = Math.ceil(items.length / row_per_page);
@@ -249,11 +255,11 @@ function UserResult() {
 
     if (allPart[x].length > 0) {
       for (let i = 0; i < allPart[x].length; i++) {
-        let getType = typeSoal.find(
-          ({ id_main_type_soal }) => id_main_type_soal === allPart[x][i].id
-        );
+        let getType = category.find(({ id }) => id === allPart[x][i].id);
 
-        let splitAllType = getType["list_type_soal_id"].split(",");
+        let splitAllType = subCategory.filter(
+          ({ category_id }) => category_id === getType.id
+        );
 
         numberCategory = numberCategory + splitAllType.length;
 

@@ -1146,6 +1146,8 @@ class Home extends BaseController
 
         $bankSoal = $this->bankSoalModel->findAll();
         $typeSoal = $this->typeSoalModel->findAll();
+        $refCategory = $this->refCategoryModel->findAll();
+        $refSubCategory = $this->refSubCategoryModel->findAll();
         $navbarTitle = $quizData[0]['quiz_name'];
 
         $data = [
@@ -1156,6 +1158,8 @@ class Home extends BaseController
             'bank_soal_remake' => $quizDataSplit,
             'type_soal' => $typeSoal,
             'type_soal_tab' => $remakeTypeSoal,
+            'category' => $refCategory,
+            'sub_category' => $refSubCategory,
             'question_number' => $questionNumber,
             'navbar_title' => $navbarTitle,
             'user_answare' => $userAnsware

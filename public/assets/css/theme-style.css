@@ -1671,8 +1671,13 @@ Admin Section
 }
 
 /* Bank Soal - Input Part */
-.fr-element.fr-view {
-  height: 200px;
+.form-i-soal .fr-element.fr-view {
+  min-height: 200px;
+}
+
+.form-i-pembahasan .fr-element.fr-view,
+.form-i-soal .fr-element.fr-view {
+  min-height: 500px;
 }
 
 .custom-box-title {
@@ -2304,7 +2309,7 @@ Responsive
   }
 
   .box_item__container .box_item__footer {
-    /* overflow-y: scroll; */
+    overflow-y: scroll;
     padding: 5px;
   }
 
