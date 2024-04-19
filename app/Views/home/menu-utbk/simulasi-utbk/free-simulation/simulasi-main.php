@@ -62,13 +62,14 @@
     let dataItems = <?= json_encode($bank_soal); ?>;
     let dataQuiz = <?= json_encode($quiz_data); ?>;
     let typeSoal = <?= json_encode($type_soal); ?>;
+    let category = <?= json_encode($category); ?>;
+    let subCategory = <?= json_encode($sub_category); ?>;
     let utbk_session = parseInt(<?= json_encode($utbk_session); ?>) + 1;
     let utbk_session_limit = <?= json_encode($utbk_session_limit); ?>;
     let navbarTitle = <?= json_encode($navbar_title); ?>;
     let sessionID = <?= json_encode($session_id); ?>;
     let id = <?= json_encode($_GET['id']); ?>;
     let query = <?= json_encode($_GET['query']); ?>;
-    let allQuizQuestNumber = <?= json_encode($question_number); ?>;
     let urlRedirect = "<?= base_url('home/hasil_simulasi'); ?>";
     let urlDone = "<?= base_url('home/save_simulasi_geratis') ?>";
     let current_page = 1;

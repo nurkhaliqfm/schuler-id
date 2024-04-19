@@ -77,43 +77,47 @@ function DisplayList(items, rows_per_page, page, csrfName, csrfHash) {
     let dataSoal = dataItems.find(
       ({ id_soal }) => id_soal === item.quiz_question
     );
-    let qSubject = typeSoal.find(
-      ({ id_main_type_soal }) => id_main_type_soal === item.quiz_subject
-    );
-    let subjectListID = qSubject.list_type_soal_id.split(",");
-    let subjectListName = qSubject.list_type_soal.split(",");
-    let getId = subjectListID.findIndex(
-      (index) => index === item.quiz_sub_subject
+
+    let qSubject = category.find(({ id }) => id === item.quiz_subject);
+    let qSubSubject = subCategory.filter(
+      ({ category_id }) => category_id === item.quiz_subject
     );
 
-    UserQuizStorage["quiz_sub_subject"] = subjectListID[getId];
+    // let subjectListID = qSubject.list_type_soal_id.split(",");
+    // let subjectListName = qSubject.list_type_soal.split(",");
+    let getId = qSubSubject.findIndex(
+      (index) => index.id === item.quiz_sub_subject
+    );
+
+    UserQuizStorage["quiz_sub_subject"] = qSubSubject[getId]["id"];
     localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
 
     document.getElementById("question__number").innerHTML = page + 1;
     document.getElementById("question__subject").innerHTML =
-      subjectListName[getId].toUpperCase();
+      qSubject["name"].toUpperCase();
 
     if (utbk_session < utbk_session_limit) {
-      if (subjectListName[getId + 1] == null) {
-        let labelIndex = typeSoal
-          .map((e) => e.id_main_type_soal)
+      if (qSubSubject[getId + 1] == null) {
+        let labelIndex = subCategory
+          .map((e) => e.category_id)
           .indexOf(item.quiz_subject);
-
         var subjectListNameNext;
-        if (labelIndex + 1 <= typeSoal.length) {
-          let nextSubject = typeSoal[labelIndex + 1];
-          subjectListNameNext = nextSubject.list_type_soal.split(",");
+        if (labelIndex + 1 <= category.length) {
+          let nextSubject = category[labelIndex + 1];
+          subjectListNameNext = subCategory.filter(
+            ({ category_id }) => category_id === nextSubject["id"]
+          );
         }
 
         document.getElementById("next_session").innerHTML =
-          subjectListNameNext[0];
+          subjectListNameNext[0]["name"];
       } else {
         document.getElementById("next_session").innerHTML =
-          subjectListName[getId + 1];
+          qSubSubject[getId + 1]["name"];
       }
     }
 
-    let simulation_subtitle = qSubject.slug.replace("_", " ");
+    let simulation_subtitle = qSubSubject[getId]["name"].toUpperCase();
 
     document.getElementById("question__part").innerHTML = dataSoal.soal;
 
@@ -239,7 +243,6 @@ function ButtonPagination(items, url, urlRedirect) {
   notif_button.addEventListener("click", () => {
     var UserQuizStorage = localStorage.getItem(sessionID);
     UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
-
     if (
       UserQuizStorage["session_timeout"] == 0 ||
       UserQuizStorage["session_timeout"] == null ||
@@ -259,7 +262,6 @@ function ButtonPagination(items, url, urlRedirect) {
       UserQuizStorage = UserQuizStorage ? JSON.parse(UserQuizStorage) : {};
       UserQuizStorage["status_timer"] = "stop";
       localStorage.setItem(sessionID, JSON.stringify(UserQuizStorage));
-
       setInterval(function () {
         document.getElementById("timer_session_count").innerHTML =
           session_timeout.toString().padStart(2, "0");
@@ -284,7 +286,6 @@ function ButtonPagination(items, url, urlRedirect) {
           var response = JSON.parse(xhttp.responseText);
           document.getElementById("txt_csrfname").value = response["value"];
           document.getElementById("txt_csrfname").name = response["name"];
-
           if (response.status == "Success") {
             setTimeout(() => {
               window.location.replace(

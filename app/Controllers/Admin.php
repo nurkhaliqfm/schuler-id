@@ -69,7 +69,6 @@ class Admin extends BaseController
         }
 
         $refCategory = $this->refCategoryModel->findAll();
-
         $refSubCategory = $this->refSubCategoryModel->findAll();
 
         $data = [
@@ -832,6 +831,9 @@ class Admin extends BaseController
             return redirect()->to(base_url('home/error_404'));
         }
 
+        $refCategory = $this->refCategoryModel->findAll();
+        $refSubCategory = $this->refSubCategoryModel->findAll();
+
         $slug = $this->request->getVar('slug');
         $getBankSoalSubject = $this->categoryQuizModel->where(['slug' => $slug])->first();
         if (!$getBankSoalSubject) return redirect()->to(base_url('admin/quiz'));
@@ -855,13 +857,14 @@ class Admin extends BaseController
             }
         }
 
+
         $remakBankSoal = [];
-        $getBankSoal = $this->bankSoalModel->orderBy('sub_type_soal')->findAll();
+        $getBankSoal = $this->bankSoalModel->orderBy('sub_category_id')->findAll();
         foreach ($getBankSoal as $bs) {
-            for ($i = 0; $i < sizeof($subjectName); $i++) {
+            for ($i = 0; $i < sizeof($refCategory); $i++) {
                 $cekSoal = $this->bankQuizModel->where(['quiz_question' => $bs['id_soal']])->findAll();
                 if (!$cekSoal) {
-                    if ($subjectName[$i]['type_soal_id'] == $bs['type_soal']) {
+                    if ($refCategory[$i]['kode'] == $bs['category_id']) {
                         array_push($remakBankSoal, $bs);
                     }
                 }
@@ -869,17 +872,18 @@ class Admin extends BaseController
         }
 
         usort($remakBankSoal, function ($a, $b) {
-            if ($a['sub_type_soal'] === $b['sub_type_soal']) {
+            if ($a['sub_category_id'] === $b['sub_category_id']) {
                 return strtotime($a['created_at']) - strtotime($b['created_at']);
             } else {
-                return strcmp($a['sub_type_soal'], $b['sub_type_soal']);
+                return strcmp($a['sub_category_id'], $b['sub_category_id']);
             }
         });
 
         $data = [
             'title' => 'Daftar Soal Schuler.id',
             'user_name' => $user['username'],
-            'soal_subject' => $subjectName,
+            'category' => $refCategory,
+            'sub_category' => $refSubCategory,
             'bank_soal' => $remakBankSoal,
             'validation' => \Config\Services::validation()
         ];

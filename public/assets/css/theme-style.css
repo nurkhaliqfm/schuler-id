@@ -2304,7 +2304,7 @@ Responsive
   }
 
   .box_item__container .box_item__footer {
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     padding: 5px;
   }
 

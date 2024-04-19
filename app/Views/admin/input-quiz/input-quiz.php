@@ -32,8 +32,8 @@
                         <div class="container_header_1 daftar__soal">
                             <h3 style="margin-bottom: 4px;" class="box-title simulation">Daftar Soal</h3>
                             <div id="tab_header_button" class="button__container">
-                                <?php foreach ($soal_subject as $ss) : ?>
-                                    <div class="tab_button tab_button_style" id="<?= $ss['type_soal_name']; ?>"><?= strtoupper(str_replace('_', ' ', $ss['type_soal_name'])); ?></div>
+                                <?php foreach ($category as $item) : ?>
+                                    <div class="tab_button tab_button_style" id="<?= $item['id']; ?>"><?= strtoupper(str_replace('_', ' ', $item['name'])); ?></div>
                                 <?php endforeach; ?>
                             </div>
 
@@ -43,7 +43,8 @@
                                         <thead>
                                             <tr>
                                                 <td style="border-bottom: 0px;" class="text-center"></td>
-                                                <td style="border-bottom: 0px;" class="text-center">Soal</td>
+                                                <td style="border-bottom: 0px;" class="text-center">Preview</td>
+                                                <td style="border-bottom: 0px;" class="text-center">Kode Soal</td>
                                                 <td style="border-bottom: 0px;" class="text-center">Jenis Soal</td>
                                                 <td style="border-bottom: 0px;" class="text-center">Pembuatan</td>
                                             </tr>
@@ -74,16 +75,21 @@
 <script>
     const tabButton = document.querySelectorAll('div.tab_button_style');
 
-    let dataType = <?= json_encode($soal_subject); ?>;
-    let dataCategory = <?= json_encode($bank_soal); ?>;
+    let category = <?= json_encode($category); ?>;
+    let subCategory = <?= json_encode($sub_category); ?>;
+    let bankSoals = <?= json_encode($bank_soal); ?>;
 
-    function CreateItem(categoryItems, typeItems) {
+    function CreateItem(categoryItem, subCategoryItem, soalItems) {
         var container = document.getElementById("item-table");
         container.innerHTML = '';
-        for (let i = 0; i < categoryItems.length; i++) {
 
-            let query = typeItems.filter(typeItems => {
-                return typeItems.type_soal_id == categoryItems[i]['type_soal']
+        for (let i = 0; i < soalItems.length; i++) {
+            let selectedSubCategory = subCategoryItem.find(item => {
+                return item.id == soalItems[i]['sub_category_id']
+            })
+
+            let selectedCategory = categoryItem.find(item => {
+                return item.id == selectedSubCategory['category_id']
             })
 
             var itemBox = document.createElement("tr");
@@ -91,47 +97,53 @@
             var checkbox = document.createElement('input');
             var itemSoal = document.createElement("td");
             var itemSoalBtn = document.createElement("a");
+            var itemKodeSoal = document.createElement("td");
             var itemJenis = document.createElement("td");
-            var itemSoalTgl = document.createElement("td");
+            var itemSoalTglCreate = document.createElement("td");
 
             itemBox.id = 'item-box';
-            itemBox.setAttribute('box-name', query[0]['type_soal_name'])
+            itemBox.setAttribute('box-name', selectedCategory['id'])
             itemCheckbox.className = "text-center";
+            itemKodeSoal.className = "text-center";
             itemJenis.className = "text-center";
-            itemSoal.className = "text-center";
-            itemSoalTgl.className = "text-center"
+            itemSoal.className = "text-center"
+            itemSoalTglCreate.className = "text-center"
 
             checkbox.className = "custom-control-input";
             checkbox.type = "checkbox";
-            checkbox.value = categoryItems[i]['id_soal'];
-            checkbox.setAttribute('checkbox-name', query[0][categoryItems[i]['sub_type_soal']])
+            checkbox.value = soalItems[i]['id_soal'];
+            checkbox.setAttribute('checkbox-name', selectedSubCategory['name'])
             checkbox.name = "quiz_list_question[]";
             itemCheckbox.appendChild(checkbox);
-            itemJenis.innerHTML = query[0][categoryItems[i]['sub_type_soal']];
 
             itemSoalBtn.className = "preview_btn box_item__Btn list_quiz_button selected";
-            itemSoalBtn.id = categoryItems[i]['id_soal'];
-            itemSoalBtn.innerHTML = "Preview Soal"
+            itemSoalBtn.id = soalItems[i]['id_soal'];
+            itemSoalBtn.innerHTML = "View"
             itemSoal.appendChild(itemSoalBtn);
 
-            itemSoalTgl.innerHTML = categoryItems[i]['created_at']
+            itemKodeSoal.innerHTML = soalItems[i]['kode_soal'];
+            itemJenis.innerHTML = selectedSubCategory['name'];
+            itemSoalTglCreate.innerHTML = soalItems[i]['created_at']
 
             itemBox.appendChild(itemCheckbox);
             itemBox.appendChild(itemSoal);
+            itemBox.appendChild(itemKodeSoal);
             itemBox.appendChild(itemJenis);
-            itemBox.appendChild(itemSoalTgl);
+            itemBox.appendChild(itemSoalTglCreate);
 
             container.appendChild(itemBox);
         }
     }
 
-    function DefaultTabButton(typeItems, categoryItems) {
-        document.getElementById(typeItems[0].type_soal_name).classList.add('active');
+    function DefaultTabButton(categoryItem, subCategoryItem) {
+        document.getElementById(categoryItem[0]['id']).classList.add('active');
 
         let defaultitem = document.querySelectorAll('tr#item-box');
-        let selectedItem = document.querySelectorAll('tr[box-name="' + typeItems[0][
-            ['type_soal_name']
-        ] + '"]');
+        let selectedItem = document.querySelectorAll('tr[box-name="' + categoryItem[0]['id'] + '"]');
+
+        let selectSubCategory = subCategoryItem.filter(item => {
+            return item.category_id == categoryItem[0]['id']
+        })
 
         defaultitem.forEach(element => {
             element.setAttribute('style', 'display: none;');
@@ -144,27 +156,26 @@
         let floatingCountainer = document.getElementById('floatingContainer');
         floatingCountainer.innerHTML = '';
         var dataItem = {};
-        for (let k in typeItems[0]) {
-            if (k != 'type_soal_id' && k != 'type_soal_name') {
-                var floatingItem = document.createElement("div");
-                floatingItem.className = 'floating-item';
-                floatingItem.setAttribute('data-name', typeItems[0][k]);
 
-                var floatingTitle = document.createElement("div");
-                floatingTitle.className = 'floating-title';
-                floatingTitle.innerHTML = typeItems[0][k];
+        Object.keys(selectSubCategory).forEach(index => {
+            var floatingItem = document.createElement("div");
+            floatingItem.className = 'floating-item';
+            floatingItem.setAttribute('data-name', selectSubCategory[index]['name']);
 
-                var floatingValue = document.createElement("div");
-                floatingValue.className = 'floating-value';
-                floatingValue.innerHTML = '0';
+            var floatingTitle = document.createElement("div");
+            floatingTitle.className = 'floating-title';
+            floatingTitle.innerHTML = selectSubCategory[index]['name'];
 
-                floatingItem.appendChild(floatingTitle);
-                floatingItem.appendChild(floatingValue);
+            var floatingValue = document.createElement("div");
+            floatingValue.className = 'floating-value';
+            floatingValue.innerHTML = '0';
 
-                floatingCountainer.appendChild(floatingItem);
-                dataItem[typeItems[0][k]] = 0
-            }
-        }
+            floatingItem.appendChild(floatingTitle);
+            floatingItem.appendChild(floatingValue);
+
+            floatingCountainer.appendChild(floatingItem);
+            dataItem[selectSubCategory[index]['name']] = 0
+        })
 
         selectedItem.forEach(element => {
             element.addEventListener('click', (el) => {
@@ -187,14 +198,13 @@
             })
         })
 
-        PopUp(dataCategory);
+        PopUp(bankSoals);
     }
 
-    function TabButtonControl(typeItems, categoryItems) {
-        for (let i = 0; i < typeItems.length; i++) {
-            let item = typeItems[i];
-            let btnId = item.type_soal_name;
-            document.getElementById(btnId).addEventListener("click", el => {
+    function TabButtonControl(categoryItem, subCategoryItem, typeItems) {
+        for (let i = 0; i < categoryItem.length; i++) {
+            let selectedCategory = categoryItem[i]['id'];
+            document.getElementById(selectedCategory).addEventListener("click", el => {
                 tabButton.forEach(itemBtnTab => {
                     itemBtnTab.classList.remove("active");
                 })
@@ -202,9 +212,7 @@
                 document.getElementById(el.target.id).classList.add("active");
 
                 let defaultitem = document.querySelectorAll('tr#item-box');
-                let selectedItem = document.querySelectorAll('tr[box-name="' + item[
-                    ['type_soal_name']
-                ] + '"]');
+                let selectedItem = document.querySelectorAll('tr[box-name="' + selectedCategory + '"]');
 
                 defaultitem.forEach(element => {
                     element.setAttribute('style', 'display: none;');
@@ -217,27 +225,30 @@
                 let floatingCountainer = document.getElementById('floatingContainer');
                 floatingCountainer.innerHTML = '';
                 var dataItem = {};
-                for (let k in item) {
-                    if (k != 'type_soal_id' && k != 'type_soal_name') {
-                        var floatingItem = document.createElement("div");
-                        floatingItem.className = 'floating-item';
-                        floatingItem.setAttribute('data-name', item[k]);
 
-                        var floatingTitle = document.createElement("div");
-                        floatingTitle.className = 'floating-title';
-                        floatingTitle.innerHTML = item[k];
+                let selectSubCategory = subCategoryItem.filter(item => {
+                    return item.category_id == selectedCategory
+                })
 
-                        var floatingValue = document.createElement("div");
-                        floatingValue.className = 'floating-value';
-                        floatingValue.innerHTML = '0';
+                Object.keys(selectSubCategory).forEach(index => {
+                    var floatingItem = document.createElement("div");
+                    floatingItem.className = 'floating-item';
+                    floatingItem.setAttribute('data-name', selectSubCategory[index]['name']);
 
-                        floatingItem.appendChild(floatingTitle);
-                        floatingItem.appendChild(floatingValue);
+                    var floatingTitle = document.createElement("div");
+                    floatingTitle.className = 'floating-title';
+                    floatingTitle.innerHTML = selectSubCategory[index]['name'];
 
-                        floatingCountainer.appendChild(floatingItem);
-                        dataItem[item[k]] = 0
-                    }
-                }
+                    var floatingValue = document.createElement("div");
+                    floatingValue.className = 'floating-value';
+                    floatingValue.innerHTML = '0';
+
+                    floatingItem.appendChild(floatingTitle);
+                    floatingItem.appendChild(floatingValue);
+
+                    floatingCountainer.appendChild(floatingItem);
+                    dataItem[selectSubCategory[index]['name']] = 0
+                })
 
                 selectedItem.forEach(element => {
                     var build = {};
@@ -279,7 +290,7 @@
                     })
                 })
 
-                PopUp(dataCategory);
+                PopUp(bankSoals);
             })
 
         }
@@ -298,9 +309,9 @@
         })
     }
 
-    CreateItem(dataCategory, dataType);
-    DefaultTabButton(dataType, dataCategory);
-    TabButtonControl(dataType, dataCategory);
+    CreateItem(category, subCategory, bankSoals);
+    DefaultTabButton(category, subCategory);
+    TabButtonControl(category, subCategory, dataType);
 </script>
 
 <?= $this->endSection(); ?>
